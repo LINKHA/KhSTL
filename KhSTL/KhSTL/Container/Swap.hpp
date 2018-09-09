@@ -1,7 +1,7 @@
 #pragma once
 #include "../KhSTL.h"
 
-KH_STL_BEGIN
+namespace KH_STL {
 
 /**
 * Swap two values.
@@ -13,4 +13,4 @@ template <class T> inline void Swap(T& a, T& b)
 	b = t;
 }
 
-KH_STL_END
+}

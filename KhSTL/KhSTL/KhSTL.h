@@ -1,5 +1,5 @@
 #pragma once
-
+/*
 #ifndef KH_STL
 #	define KH_STL			LINKH_STL
 #endif 
@@ -11,5 +11,5 @@
 #endif 
 #ifndef KH_STL_USING
 #	define	KH_STL_USING	using LINKH_STL
-#endif 
+#endif */
 

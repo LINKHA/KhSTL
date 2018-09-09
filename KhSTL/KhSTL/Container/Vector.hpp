@@ -1,10 +1,10 @@
 #pragma once
 #include "../KhSTL.h"
 
-KH_STL_BEGIN
+namespace KH_STL {
 
 /**
-* Vector
+* Vector class
 */
 class Vector
 {
@@ -13,4 +13,6 @@ public:
 	~Vector() {}
 };
 
-KH_STL_END
+#include "Vector.inl"
+
+}
