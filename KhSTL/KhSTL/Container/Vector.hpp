@@ -1,18 +1,9 @@
-#pragma once
-#include "../KhSTL.h"
+#ifndef KH_STL_VECTOR_INCLUDE
+#define KH_STL_VECTOR_INCLUDE
 
+#include "Detail/Type_Vector.hpp"
 namespace KH_STL {
 
-/**
-* Vector class
-*/
-class Vector
-{
-public:
-	Vector() {}
-	~Vector() {}
-};
-
-#include "Vector.inl"
 
 }
+#endif //!KH_STL_VECTOR_INCLUDE
