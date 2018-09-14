@@ -1,6 +1,13 @@
 #ifndef KH_STL_CORE_TYPE_STRING_H_
 #define KH_STL_CORE_TYPE_STRING_H_
 
+
+#ifdef _MSC_VER
+//#pragma warning(disable:6293)
+#pragma warning(push)
+#pragma warning(disable:4996)
+#endif
+
 #include <cstring>
 #include <cstdio>
 #include <cassert>
@@ -664,13 +671,14 @@ tString::tString(wchar_t* str)
 	SetUTF8FromWChar(str);
 }
 
-tString::tString(const WString& str)
+tString::tString(const tWString& str)
 	: _length(0)
 	, _capacity(0)
 	, _buffer(&endZero)
 {
 	SetUTF8FromWChar(str.CStr());
 }
+
 tString::tString(int value)
 	: _length(0)
 	, _capacity(0)
@@ -942,7 +950,7 @@ tString tString::operator +(const tString& rhs) const
 
 	return str;
 }
-/*
+
 tString::tString::operator +(const char* rhs) const
 {
 	unsigned rhslength = CStrLength(rhs);
@@ -952,7 +960,7 @@ tString::tString::operator +(const char* rhs) const
 	CopyChars(str._buffer + _length, rhs, rhsLength);
 
 	return str;
-}*/
+}
 
 bool tString::operator ==(const tString& rhs) const 
 { 
@@ -1292,7 +1300,7 @@ tString tString::SubString(unsigned pos) const
 {
 	if (pos < _length)
 	{
-		String ret;
+		tString ret;
 		ret.Resize(_length - pos);
 		CopyChars(ret._buffer, _buffer + pos, ret._length);
 
@@ -1988,7 +1996,7 @@ tString& tString::AppendWithFormatArgs(const char* formatString, va_list args)
 		}
 
 		default:
-			KH_STL_LOG("Unsupported format specifier: '%c'", format);
+			printf("Unsupported format specifier: '%c'", format);
 			break;
 		}
 	}
