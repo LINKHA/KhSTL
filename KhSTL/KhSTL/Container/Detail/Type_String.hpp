@@ -4,15 +4,21 @@
 #include <cstring>
 #include <cstdio>
 #include <cassert>
+#include <cstdarg>
+#include <cctype>
 
 #include "Type_WString.hpp"
 #include "Type_Iterator.hpp"
 #include "Type_BasicString.hpp"
+#include "Type_Swap.hpp"
+
 namespace KH_STL {
 namespace Detail
 {
 
 class WString;
+
+#define GET_NEXT_CONTINUATION_BYTE(ptr) *(ptr); if ((unsigned char)*(ptr) < 0x80 || (unsigned char)*(ptr) >= 0xc0) return '?'; else ++(ptr);
 
 static const int BUFFER_LENGTH = 128;
 
@@ -35,7 +41,7 @@ public:
 	/**
 	* @brief : Move-construct from another string
 	*/
-	explicit tString(String && str) noexcept;
+	explicit tString(tString && str) noexcept;
 	/**
 	* @brief : Construct from the C string
 	*/
@@ -59,7 +65,7 @@ public:
 	/**
 	* @brief : Construct from the WString
 	*/
-	explicit tString(const WString& str);
+	explicit tString(const tWString& str);
 	/**
 	* @brief : Construct from the int
 	*/
@@ -136,7 +142,7 @@ public:
 	/**
 	* @brief : Add assign the string
 	*/
-	tString& operator +=(const String& rhs);
+	tString& operator +=(const tString& rhs);
 	/**
 	* @brief : Add assign the C str
 	*/
@@ -251,7 +257,7 @@ public:
 	*/
 	const char& At(unsigned index) const
 	{
-		assert(index < length);
+		assert(index < _length);
 		return _buffer[index];
 	}
 	/**
@@ -403,26 +409,152 @@ public:
 	*/
 	tVector<tString> Split(char separator, bool keepEmptyStrings = false) const;
 	/**
+	* @brief : Return index to the first occurrence of a character, or NO_POS if not found
+	*/
+	unsigned Find(char c, unsigned startPos = 0, bool caseSensitive = true) const;
+	/**
 	* @brief : Return index to the first occurrence of a string, or NO_POS if not found
 	*/
 	unsigned Find(const tString& str, unsigned startPos, bool caseSensitive) const;
-
 	/**
-	* @brief : Constructing UTF 8 content with wide characters
+	* @brief : Return index to the last occurrence of a string, or NPOS if not found
 	*/
-	void SetUTF8FromWChar(const wchar_t* str);
-
-
+	unsigned FindLast(const tString& str, unsigned startPos = NPOS, bool caseSensitive = true) const;
+	/**
+	* @brief : Return index to the last occurrence of a character, or NO_POS if not found
+	*/
+	unsigned FindLast(char c, unsigned startPos = NPOS, bool caseSensitive = true) const;
+	/**
+	* @brief : Return whether starts with a string
+	*/
+	bool StartsWith(const tString& str, bool caseSensitive = true) const;
+	/**
+	* @brief : Return whether ends with a string
+	*/
+	bool EndsWith(const tString& str, bool caseSensitive = true) const;
 	/**
 	* @brief : Return C str
 	*/
 	const char* CStr() const { return _buffer; }
-
-	static unsigned CStrLength(const char* str) { return str ? (unsigned)strlen(str) : 0; }
 	/**
-	* @brief : Return substrings split by a separator char. By default don't return empty strings.
+	* @brief : Return length
+	*/
+	unsigned Length() const { return _length; }
+	/**
+	* @brief : Return buffer capacity
+	*/
+	unsigned Capacity() const { return _capacity; }
+	/**
+	* @brief : Return whether the string is empty
+	*/
+	bool Empty() const { return _length == 0; }
+	/**
+	* @brief : Return comparison result with a string
+	*/
+	int Compare(const tString& str, bool caseSensitive = true) const;
+	/**
+	* @brief : Return comparison result with a C string
+	*/
+	int Compare(const char* str, bool caseSensitive = true) const;
+	/**
+	* @brief : Return whether contains a specific occurrence of a string
+	*/
+	bool Contains(const tString& str, bool caseSensitive = true) const { return Find(str, 0, caseSensitive) != NO_POS; }
+	/**
+	* @brief : Return whether contains a specific char
+	*/
+	bool Contains(char c, bool caseSensitive = true) const { return Find(c, 0, caseSensitive) != NO_POS; }
+
+	/**
+	* @brief : Construct UTF8 content from Latin1
+	*/
+	void SetUTF8FromLatin1(const char* str);
+	/**
+	* @brief : Constructing UTF 8 content with wide char
+	*/
+	void SetUTF8FromWChar(const wchar_t* str);
+	/**
+	* @brief : Calculate number of characters in UTF8 content
+	*/
+	unsigned LengthUTF8() const;
+	/**
+	* @brief : Return byte offset to char in UTF8 content
+	*/
+	unsigned ByteOffsetUTF8(unsigned index) const;
+	/**
+	* @brief : Return next Unicode character from UTF8 content and increase byte offset
+	*/
+	unsigned NextUTF8Char(unsigned& byteOffset) const;
+	/**
+	* @brief : Return Unicode character at index from UTF8 content
+	*/
+	unsigned AtUTF8(unsigned index) const;
+	/**
+	* @brief : Replace Unicode character at index from UTF8 content
+	*/
+	void ReplaceUTF8(unsigned index, unsigned unicodeChar);
+	/**
+	* @brief : Append Unicode character at the end as UTF8
+	*/
+	tString& AppendUTF8(unsigned unicodeChar);
+	/**
+	* @brief : Return a UTF8 substring from position to end
+	*/
+	tString SubstringUTF8(unsigned pos) const;
+	/**
+	* @brief : Return a UTF8 substring with length from position
+	*/
+	tString SubstringUTF8(unsigned pos, unsigned length) const;
+	/**
+	* @brief : Return hash value for HashSet & HashMap
+	*/
+	unsigned ToHash() const;
+
+	/**
+	* @brief : Return substrings split by a separator char. By default don't return empty strings
 	*/
 	static tVector<tString> Split(const char* str, char separator, bool keepEmptyStrings = false);
+	/**
+	* @brief : Return a string by joining substrings with a 'glue' string
+	*/
+	static tString Joined(const tVector<tString>& subStrings, const tString& glue);
+	/**
+	* @brief : Encode Unicode character to UTF8. Pointer will be incremented
+	*/
+	static void EncodeUTF8(char*& dest, unsigned unicodeChar);
+	/**
+	* @brief : Decode Unicode character from UTF8. Pointer will be incremented
+	*/
+	static unsigned DecodeUTF8(const char*& src);
+#ifdef _WIN32
+	/**
+	* @brief : Encode Unicode character to UTF16. Pointer will be incremented
+	*/
+	static void EncodeUTF16(wchar_t*& dest, unsigned unicodeChar);
+	/**
+	* @brief : Decode Unicode character from UTF16. Pointer will be incremented
+	*/
+	static unsigned DecodeUTF16(const wchar_t*& src);
+#endif
+	/**
+	* @brief : Return length of a C string
+	*/
+	static unsigned CStrLength(const char* str) { return str ? (unsigned)strlen(str) : 0; }
+
+	/**
+	* @brief : Append to string using formatting
+	*/
+	tString& AppendWithFormat(const char* formatString, ...);
+	/**
+	* @brief : Append to string using variable arguments
+	*/
+	tString& AppendWithFormatArgs(const char* formatString, va_list args);
+	/**
+	* @brief : Compare two C strings
+	*/
+	static int Compare(const char* lhs, const char* rhs, bool caseSensitive);
+
+
 	/// Position for "not found."
 	static const unsigned NO_POS = 0xffffffff;
 	/// Initial dynamic allocation size.
@@ -483,7 +615,7 @@ tString::tString(const tString& str)
 	*this = str;
 }
 
-tString::tString(String && str) noexcept
+tString::tString(tString && str) noexcept
 	: _length(0)
 	, _capacity(0)
 	, _buffer(&endZero)
@@ -537,7 +669,7 @@ tString::tString(const WString& str)
 	, _capacity(0)
 	, _buffer(&endZero)
 {
-	SetUTF8FromWChar(str.CString());
+	SetUTF8FromWChar(str.CStr());
 }
 tString::tString(int value)
 	: _length(0)
@@ -718,8 +850,7 @@ tString& tString::operator =(const char* rhs)
 
 	return *this;
 }
-
-tString& tString::operator +=(const String& rhs)
+tString& tString::operator+=(const tString & rhs)
 {
 	unsigned oldLength = _length;
 	Resize(_length + rhs._length);
@@ -811,17 +942,17 @@ tString tString::operator +(const tString& rhs) const
 
 	return str;
 }
-
+/*
 tString::tString::operator +(const char* rhs) const
 {
 	unsigned rhslength = CStrLength(rhs);
-	tString::str;
+	tString str;
 	str.Resize(_length + rhsLength);
 	CopyChars(str._buffer, _buffer, _length);
 	CopyChars(str._buffer + _length, rhs, rhsLength);
 
 	return str;
-}
+}*/
 
 bool tString::operator ==(const tString& rhs) const 
 { 
@@ -879,7 +1010,7 @@ void tString::Replace(unsigned pos, unsigned length, const char * srcStart, unsi
 {
 	int delta = (int)srcLength - (int)length;
 
-	if (pos + length < length_)
+	if (pos + length < _length)
 	{
 		if (delta < 0)
 		{
@@ -939,7 +1070,7 @@ void tString::Replace(unsigned pos, unsigned length, const tString & replacePara
 	if (pos + length > _length)
 		return;
 
-	Replace(pos, length, replaceWith._buffer, replaceWith._length);
+	Replace(pos, length, replaceParam._buffer, replaceParam._length);
 }
 
 void tString::Replace(unsigned pos, unsigned length, const char * replaceParam)
@@ -1171,7 +1302,7 @@ tString tString::SubString(unsigned pos) const
 		return tString();
 }
 
-tString tString::Substring(unsigned pos, unsigned length) const
+tString tString::SubString(unsigned pos, unsigned length) const
 {
 	if (pos < _length)
 	{
@@ -1233,6 +1364,29 @@ tVector<tString> tString::Split(char separator, bool keepEmptyStrings) const
 	return Split(CStr(), separator, keepEmptyStrings);
 }
 
+unsigned tString::Find(char c, unsigned startPos, bool caseSensitive) const
+{
+	if (caseSensitive)
+	{
+		for (unsigned i = startPos; i < _length; ++i)
+		{
+			if (_buffer[i] == c)
+				return i;
+		}
+	}
+	else
+	{
+		c = (char)tolower(c);
+		for (unsigned i = startPos; i < _length; ++i)
+		{
+			if (tolower(_buffer[i]) == c)
+				return i;
+		}
+	}
+
+	return NO_POS;
+}
+
 
 unsigned tString::Find(const tString& str, unsigned startPos, bool caseSensitive) const
 {
@@ -1282,6 +1436,116 @@ unsigned tString::Find(const tString& str, unsigned startPos, bool caseSensitive
 	return NO_POS;
 }
 
+unsigned tString::FindLast(const tString & str, unsigned startPos, bool caseSensitive) const
+{
+	if (!str._length || str._length > _length)
+		return NO_POS;
+	if (startPos > _length - str._length)
+		startPos = _length - str._length;
+
+	char first = str._buffer[0];
+	if (!caseSensitive)
+		first = (char)tolower(first);
+
+	for (unsigned i = startPos; i < _length; --i)
+	{
+		char c = _buffer[i];
+		if (!caseSensitive)
+			c = (char)tolower(c);
+
+		if (c == first)
+		{
+			bool found = true;
+			for (unsigned j = 1; j < str._length; ++j)
+			{
+				c = _buffer[i + j];
+				char d = str._buffer[j];
+				if (!caseSensitive)
+				{
+					c = (char)tolower(c);
+					d = (char)tolower(d);
+				}
+
+				if (c != d)
+				{
+					found = false;
+					break;
+				}
+			}
+			if (found)
+				return i;
+		}
+	}
+
+	return NO_POS;
+}
+
+unsigned tString::FindLast(char c, unsigned startPos, bool caseSensitive) const
+{
+	if (startPos >= _length)
+		startPos = _length - 1;
+
+	if (caseSensitive)
+	{
+		for (unsigned i = startPos; i < _length; --i)
+		{
+			if (_buffer[i] == c)
+				return i;
+		}
+	}
+	else
+	{
+		c = (char)tolower(c);
+		for (unsigned i = startPos; i < _length; --i)
+		{
+			if (tolower(_buffer[i]) == c)
+				return i;
+		}
+	}
+
+	return NO_POS;
+}
+
+bool tString::StartsWith(const tString & str, bool caseSensitive) const
+{
+	return Find(str, 0, caseSensitive) == 0;
+}
+
+bool tString::EndsWith(const tString& str, bool caseSensitive) const
+{
+	unsigned pos = FindLast(str, Length() - 1, caseSensitive);
+	return pos != NO_POS && pos == Length() - str.Length();
+}
+
+
+int tString::tString::Compare(const tString& str, bool caseSensitive) const
+{
+	return Compare(CStr(), str.CStr(), caseSensitive);
+}
+
+int tString::tString::Compare(const char* str, bool caseSensitive) const
+{
+	return Compare(CStr(), str, caseSensitive);
+}
+
+
+void tString::SetUTF8FromLatin1(const char * str)
+{
+	char tc[7];
+
+	Clear();
+	if (!str)
+		return;
+
+	while (*str)
+	{
+		char* dest = tc;
+		EncodeUTF8(dest, (unsigned)*str++);
+		*dest = 0;
+		Append(tc);
+	}
+}
+
 void tString::SetUTF8FromWChar(const wchar_t* str)
 {
 	char temp[7];
@@ -1311,6 +1575,134 @@ void tString::SetUTF8FromWChar(const wchar_t* str)
 #endif
 }
 
+unsigned tString::LengthUTF8() const
+{
+	unsigned ret = 0;
+
+	const char* src = _buffer;
+	if (!src)
+		return ret;
+	const char* end = _buffer + _length;
+
+	while (src < end)
+	{
+		DecodeUTF8(src);
+		++ret;
+	}
+
+	return ret;
+}
+
+unsigned tString::ByteOffsetUTF8(unsigned index) const
+{
+	unsigned byteOffset = 0;
+	unsigned utfPos = 0;
+
+	while (utfPos < index && byteOffset < _length)
+	{
+		NextUTF8Char(byteOffset);
+		++utfPos;
+	}
+
+	return byteOffset;
+}
+
+unsigned tString::NextUTF8Char(unsigned& byteOffset) const
+{
+	if (!_buffer)
+		return 0;
+
+	const char* src = _buffer + byteOffset;
+	unsigned ret = DecodeUTF8(src);
+	byteOffset = (unsigned)(src - _buffer);
+
+	return ret;
+}
+
+unsigned tString::AtUTF8(unsigned index) const
+{
+	unsigned byteOffset = ByteOffsetUTF8(index);
+	return NextUTF8Char(byteOffset);
+}
+
+void tString::ReplaceUTF8(unsigned index, unsigned unicodeChar)
+{
+	unsigned utfPos = 0;
+	unsigned byteOffset = 0;
+
+	while (utfPos < index && byteOffset < _length)
+	{
+		NextUTF8Char(byteOffset);
+		++utfPos;
+	}
+
+	if (utfPos < index)
+		return;
+
+	unsigned beginCharPos = byteOffset;
+	NextUTF8Char(byteOffset);
+
+	char temp[7];
+	char* dest = temp;
+	EncodeUTF8(dest, unicodeChar);
+	*dest = 0;
+
+	Replace(beginCharPos, byteOffset - beginCharPos, temp, (unsigned)(dest - temp));
+}
+
+tString& tString::AppendUTF8(unsigned unicodeChar)
+{
+	char temp[7];
+	char* dest = temp;
+	EncodeUTF8(dest, unicodeChar);
+	*dest = 0;
+	return Append(temp);
+}
+
+tString tString::SubstringUTF8(unsigned pos) const
+{
+	unsigned utf8Length = LengthUTF8();
+	unsigned byteOffset = ByteOffsetUTF8(pos);
+	tString ret;
+
+	while (pos < utf8Length)
+	{
+		ret.AppendUTF8(NextUTF8Char(byteOffset));
+		++pos;
+	}
+
+	return ret;
+}
+
+tString tString::SubstringUTF8(unsigned pos, unsigned length) const
+{
+	unsigned utf8Length = LengthUTF8();
+	unsigned byteOffset = ByteOffsetUTF8(pos);
+	unsigned endPos = pos + length;
+	tString ret;
+
+	while (pos < endPos && pos < utf8Length)
+	{
+		ret.AppendUTF8(NextUTF8Char(byteOffset));
+		++pos;
+	}
+
+	return ret;
+}
+
+unsigned tString::ToHash() const
+{
+	unsigned hash = 0;
+	const char* ptr = _buffer;
+	while (*ptr)
+	{
+		hash = *ptr + (hash << 6u) + (hash << 16u) - hash;
+		++ptr;
+	}
+
+	return hash;
+}
+
 tVector<tString> tString::Split(const char* str, char separator, bool keepEmptyStrings)
 {
 	tVector<tString> ret;
@@ -1332,6 +1724,300 @@ tVector<tString> tString::Split(const char* str, char separator, bool keepEmptyS
 		ret.Push(tString(str, splitLen));
 
 	return ret;
+}
+
+tString tString::Joined(const tVector<tString>& subStrings, const tString& glue)
+{
+	if (subStrings.Empty())
+		return tString();
+
+	tString joinedString(subStrings[0]);
+	for (unsigned i = 1; i < subStrings.Size(); ++i)
+		joinedString.Append(glue).Append(subStrings[i]);
+
+	return joinedString;
+}
+
+void tString::EncodeUTF8(char*& dest, unsigned unicodeChar)
+{
+	if (unicodeChar < 0x80)
+		*dest++ = unicodeChar;
+	else if (unicodeChar < 0x800)
+	{
+		dest[0] = (char)(0xc0u | ((unicodeChar >> 6u) & 0x1fu));
+		dest[1] = (char)(0x80u | (unicodeChar & 0x3fu));
+		dest += 2;
+	}
+	else if (unicodeChar < 0x10000)
+	{
+		dest[0] = (char)(0xe0u | ((unicodeChar >> 12u) & 0xfu));
+		dest[1] = (char)(0x80u | ((unicodeChar >> 6u) & 0x3fu));
+		dest[2] = (char)(0x80u | (unicodeChar & 0x3fu));
+		dest += 3;
+	}
+	else if (unicodeChar < 0x200000)
+	{
+		dest[0] = (char)(0xf0u | ((unicodeChar >> 18u) & 0x7u));
+		dest[1] = (char)(0x80u | ((unicodeChar >> 12u) & 0x3fu));
+		dest[2] = (char)(0x80u | ((unicodeChar >> 6u) & 0x3fu));
+		dest[3] = (char)(0x80u | (unicodeChar & 0x3fu));
+		dest += 4;
+	}
+	else if (unicodeChar < 0x4000000)
+	{
+		dest[0] = (char)(0xf8u | ((unicodeChar >> 24u) & 0x3u));
+		dest[1] = (char)(0x80u | ((unicodeChar >> 18u) & 0x3fu));
+		dest[2] = (char)(0x80u | ((unicodeChar >> 12u) & 0x3fu));
+		dest[3] = (char)(0x80u | ((unicodeChar >> 6u) & 0x3fu));
+		dest[4] = (char)(0x80u | (unicodeChar & 0x3fu));
+		dest += 5;
+	}
+	else
+	{
+		dest[0] = (char)(0xfcu | ((unicodeChar >> 30u) & 0x1u));
+		dest[1] = (char)(0x80u | ((unicodeChar >> 24u) & 0x3fu));
+		dest[2] = (char)(0x80u | ((unicodeChar >> 18u) & 0x3fu));
+		dest[3] = (char)(0x80u | ((unicodeChar >> 12u) & 0x3fu));
+		dest[4] = (char)(0x80u | ((unicodeChar >> 6u) & 0x3fu));
+		dest[5] = (char)(0x80u | (unicodeChar & 0x3fu));
+		dest += 6;
+	}
+}
+
+unsigned tString::DecodeUTF8(const char*& src)
+{
+	if (src == nullptr)
+		return 0;
+
+	unsigned char char1 = *src++;
+
+	// Check if we are in the middle of a UTF8 character
+	if (char1 >= 0x80 && char1 < 0xc0)
+	{
+		while ((unsigned char)*src >= 0x80 && (unsigned char)*src < 0xc0)
+			++src;
+		return '?';
+	}
+
+	if (char1 < 0x80)
+		return char1;
+	else if (char1 < 0xe0)
+	{
+		unsigned char char2 = GET_NEXT_CONTINUATION_BYTE(src);
+		return (unsigned)((char2 & 0x3fu) | ((char1 & 0x1fu) << 6u));
+	}
+	else if (char1 < 0xf0)
+	{
+		unsigned char char2 = GET_NEXT_CONTINUATION_BYTE(src);
+		unsigned char char3 = GET_NEXT_CONTINUATION_BYTE(src);
+		return (unsigned)((char3 & 0x3fu) | ((char2 & 0x3fu) << 6u) | ((char1 & 0xfu) << 12u));
+	}
+	else if (char1 < 0xf8)
+	{
+		unsigned char char2 = GET_NEXT_CONTINUATION_BYTE(src);
+		unsigned char char3 = GET_NEXT_CONTINUATION_BYTE(src);
+		unsigned char char4 = GET_NEXT_CONTINUATION_BYTE(src);
+		return (unsigned)((char4 & 0x3fu) | ((char3 & 0x3fu) << 6u) | ((char2 & 0x3fu) << 12u) | ((char1 & 0x7u) << 18u));
+	}
+	else if (char1 < 0xfc)
+	{
+		unsigned char char2 = GET_NEXT_CONTINUATION_BYTE(src);
+		unsigned char char3 = GET_NEXT_CONTINUATION_BYTE(src);
+		unsigned char char4 = GET_NEXT_CONTINUATION_BYTE(src);
+		unsigned char char5 = GET_NEXT_CONTINUATION_BYTE(src);
+		return (unsigned)((char5 & 0x3fu) | ((char4 & 0x3fu) << 6u) | ((char3 & 0x3fu) << 12u) | ((char2 & 0x3fu) << 18u) |
+			((char1 & 0x3u) << 24u));
+	}
+	else
+	{
+		unsigned char char2 = GET_NEXT_CONTINUATION_BYTE(src);
+		unsigned char char3 = GET_NEXT_CONTINUATION_BYTE(src);
+		unsigned char char4 = GET_NEXT_CONTINUATION_BYTE(src);
+		unsigned char char5 = GET_NEXT_CONTINUATION_BYTE(src);
+		unsigned char char6 = GET_NEXT_CONTINUATION_BYTE(src);
+		return (unsigned)((char6 & 0x3fu) | ((char5 & 0x3fu) << 6u) | ((char4 & 0x3fu) << 12u) | ((char3 & 0x3fu) << 18u) |
+			((char2 & 0x3fu) << 24u) | ((char1 & 0x1u) << 30u));
+	}
+}
+
+#ifdef _WIN32
+void tString::EncodeUTF16(wchar_t*& dest, unsigned unicodeChar)
+{
+	if (unicodeChar < 0x10000)
+		*dest++ = unicodeChar;
+	else
+	{
+		unicodeChar -= 0x10000;
+		*dest++ = 0xd800 | ((unicodeChar >> 10) & 0x3ff);
+		*dest++ = 0xdc00 | (unicodeChar & 0x3ff);
+	}
+}
+
+unsigned tString::DecodeUTF16(const wchar_t*& src)
+{
+	if (src == nullptr)
+		return 0;
+
+	unsigned short word1 = *src++;
+
+	// Check if we are at a low surrogate
+	if (word1 >= 0xdc00 && word1 < 0xe000)
+	{
+		while (*src >= 0xdc00 && *src < 0xe000)
+			++src;
+		return '?';
+	}
+
+	if (word1 < 0xd800 || word1 >= 0xe000)
+		return word1;
+	else
+	{
+		unsigned short word2 = *src++;
+		if (word2 < 0xdc00 || word2 >= 0xe000)
+		{
+			--src;
+			return '?';
+		}
+		else
+			return (((word1 & 0x3ff) << 10) | (word2 & 0x3ff)) + 0x10000;
+	}
+}
+#endif
+
+tString& tString::AppendWithFormat(const char* formatString, ...)
+{
+	va_list args;
+	va_start(args, formatString);
+	AppendWithFormatArgs(formatString, args);
+	va_end(args);
+	return *this;
+}
+
+tString& tString::AppendWithFormatArgs(const char* formatString, va_list args)
+{
+	int pos = 0, lastPos = 0;
+	auto length = (int)strlen(formatString);
+
+	while (true)
+	{
+		// Scan the format string and find %a argument where a is one of d, f, s ...
+		while (pos < length && formatString[pos] != '%') pos++;
+		Append(formatString + lastPos, (unsigned)(pos - lastPos));
+		if (pos >= length)
+			return *this;
+
+		char format = formatString[pos + 1];
+		pos += 2;
+		lastPos = pos;
+
+		switch (format)
+		{
+			// Integer
+		case 'd':
+		case 'i':
+		{
+			int arg = va_arg(args, int);
+			Append(tString(arg));
+			break;
+		}
+
+		// Unsigned
+		case 'u':
+		{
+			unsigned arg = va_arg(args, unsigned);
+			Append(tString(arg));
+			break;
+		}
+
+		// Unsigned long
+		case 'l':
+		{
+			unsigned long arg = va_arg(args, unsigned long);
+			Append(tString(arg));
+			break;
+		}
+
+		// Real
+		case 'f':
+		{
+			double arg = va_arg(args, double);
+			Append(tString(arg));
+			break;
+		}
+
+		// Character
+		case 'c':
+		{
+			int arg = va_arg(args, int);
+			Append((char)arg);
+			break;
+		}
+
+		// C string
+		case 's':
+		{
+			char* arg = va_arg(args, char*);
+			Append(arg);
+			break;
+		}
+
+		// Hex
+		case 'x':
+		{
+			char buf[BUFFER_LENGTH];
+			int arg = va_arg(args, int);
+			int arglen = ::sprintf(buf, "%x", arg);
+			Append(buf, (unsigned)arglen);
+			break;
+		}
+
+		// Pointer
+		case 'p':
+		{
+			char buf[BUFFER_LENGTH];
+			int arg = va_arg(args, int);
+			int arglen = ::sprintf(buf, "%p", reinterpret_cast<void*>(arg));
+			Append(buf, (unsigned)arglen);
+			break;
+		}
+
+		case '%':
+		{
+			Append("%", 1);
+			break;
+		}
+
+		default:
+			KH_STL_LOG("Unsupported format specifier: '%c'", format);
+			break;
+		}
+	}
+}
+
+int tString::Compare(const char* lhs, const char* rhs, bool caseSensitive)
+{
+	if (!lhs || !rhs)
+		return lhs ? 1 : (rhs ? -1 : 0);
+
+	if (caseSensitive)
+		return strcmp(lhs, rhs);
+	else
+	{
+		for (;;)
+		{
+			auto l = (char)tolower(*lhs);
+			auto r = (char)tolower(*rhs);
+			if (!l || !r)
+				return l ? 1 : (r ? -1 : 0);
+			if (l < r)
+				return -1;
+			if (l > r)
+				return 1;
+
+			++lhs;
+			++rhs;
+		}
+	}
 }
 
 

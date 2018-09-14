@@ -4,7 +4,6 @@
 #include "Detail/Type_String.hpp"
 
 namespace KH_STL {
-	typedef Detail::tString		String;
-
+	using String = Detail::tString;
 }
 #endif //!KH_STL_STRING_INCLUDE

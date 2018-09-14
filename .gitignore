@@ -4,3 +4,7 @@ KhSTL/KhSTL/KhSTL.vcxproj
 KhSTL/KhSTL/KhSTL.vcxproj.filters
 KhSTL/KhSTL/KhSTL.vcxproj.user
 KhSTL/Test/
+KhSTL/Debug/
+KhSTL/KhSTL/Debug/KhSTL.idb
+KhSTL/KhSTL/Debug/KhSTL.log
+KhSTL/KhSTL/Debug/

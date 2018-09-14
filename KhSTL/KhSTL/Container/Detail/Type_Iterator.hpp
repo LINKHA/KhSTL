@@ -1,5 +1,8 @@
 #ifndef KH_STL_CORE_TYPE_ITERATOR_H_
 #define KH_STL_CORE_TYPE_ITERATOR_H_
+
+#include "Type_BaseIterator.hpp"
+
 namespace KH_STL {
 namespace Detail
 {
@@ -147,11 +150,11 @@ public:
 	/**
 	* @brief : Point to the object
 	*/
-	const T* operator ->() const { return ptr; }
+	const _Container* operator ->() const { return ptr; }
 	/**
 	* @brief : Dereference the object
 	*/
-	const T& operator *() const { return *ptr; }
+	const _Container& operator *() const { return *ptr; }
 	/**
 	* @brief : Preincrement the pointer
 	*/
