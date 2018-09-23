@@ -1,5 +1,5 @@
-#ifndef KH_STL_CORE_TYPE_WIDE_STRING_H_
-#define KH_STL_CORE_TYPE_WIDE_STRING_H_
+#pragma once
+
 namespace KH_STL {
 namespace Detail
 {
@@ -60,73 +60,8 @@ private:
 	wchar_t* _buffer;
 };
 
-tWString::tWString()
-	: _length(0)
-	, _buffer(nullptr)
-{}
-
-tWString::tWString(const tString& str)
-	: _length(0)
-	, _buffer(nullptr)
-{}
-
-tWString::~tWString()
-{
-	delete[] _buffer;
-}
-
-wchar_t& tWString::operator [](unsigned index)
-{
-	assert(index < _length);
-	return _buffer[index];
-}
-
-const wchar_t& tWString::operator [](unsigned index) const
-{
-	assert(index < _length);
-	return _buffer[index];
-}
-
-wchar_t& tWString::At(unsigned index)
-{
-	assert(index < _length);
-	return _buffer[index];
-}
-
-const wchar_t& tWString::At(unsigned index) const
-{
-	assert(index < _length);
-	return _buffer[index];
-}
-
-void tWString::Resize(unsigned newLength)
-{
-	if (!newLength)
-	{
-		delete[] _buffer;
-		_buffer = nullptr;
-		_length = 0;
-	}
-	else
-	{
-		auto* newBuffer = new wchar_t[newLength + 1];
-		if (_buffer)
-		{
-			unsigned copyLength = _length < newLength ? _length : newLength;
-			memcpy(newBuffer, _buffer, copyLength * sizeof(wchar_t));
-			delete[] _buffer;
-		}
-		newBuffer[newLength] = 0;
-		_buffer = newBuffer;
-		_length = newLength;
-	}
-}
-
-
-
 
 
 }
 }
 
-#endif // ! KH_STL_CORE_TYPE_WIDE_STRING_H_

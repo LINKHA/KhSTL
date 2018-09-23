@@ -19,7 +19,7 @@ tString::tString(const tString& str)
 	*this = str;
 }
 
-tString::tString(tString && str) noexcept
+tString::tString(tString&& str) noexcept
 	: _length(0)
 	, _capacity(0)
 	, _buffer(&endZero)

@@ -1,5 +1,4 @@
-#ifndef KH_STL_CORE_TYPE_VECTOR_BASE_H_
-#define KH_STL_CORE_TYPE_VECTOR_BASE_H_
+#pragma once
 
 #include "Type_Swap.h"
 
@@ -50,5 +49,3 @@ protected:
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
-
-#endif // !KH_STL_CORE_TYPE_VECTOR_BASE_H_
