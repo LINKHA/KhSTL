@@ -1,7 +1,7 @@
 #ifndef KH_STL_CORE_TYPE_ITERATOR_H_
 #define KH_STL_CORE_TYPE_ITERATOR_H_
 
-#include "Type_BaseIterator.hpp"
+#include "Type_BaseIterator.h"
 
 namespace KH_STL {
 namespace Detail

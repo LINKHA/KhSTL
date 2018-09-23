@@ -7,6 +7,7 @@ class tString;
 
 class tWString
 {
+public:
 	/**
 	* @brief : Construct empty
 	*/
@@ -121,7 +122,9 @@ void tWString::Resize(unsigned newLength)
 	}
 }
 
-#include "Type_WString.inl"
+
+
+
 
 }
 }

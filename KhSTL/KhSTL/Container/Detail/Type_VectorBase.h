@@ -1,7 +1,7 @@
 #ifndef KH_STL_CORE_TYPE_VECTOR_BASE_H_
 #define KH_STL_CORE_TYPE_VECTOR_BASE_H_
 
-#include "Type_Swap.hpp"
+#include "Type_Swap.h"
 
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -14,7 +14,7 @@ namespace Detail
 /**
 * tpye vector base class
 */
-template <typename T> class tVectorBase
+class tVectorBase
 {
 public:
 	tVectorBase() noexcept :
