@@ -1,14 +1,18 @@
-#include "Type_String.h"
-#include "Type_WString.h"
+#include "Ty_String.h"
+#include "TY_WString.h"
 
 namespace KH_STL {
 namespace Detail
 {
+char tString::endZero = 0;
 
+const tString tString::EMPTY;
+
+		
 tString::tString() noexcept
-	: _length(0)
-	, _capacity(0)
-	, _buffer(&endZero)
+: _length(0)
+, _capacity(0)
+, _buffer(&endZero)
 {}
 
 tString::tString(const tString& str)
@@ -223,11 +227,11 @@ template <typename T> tString::tString(const T& value)
 {
 	*this = value.ToString();
 }
-
+		
 tString::~tString()
 {
-	if (_capacity)
-		delete[] _buffer;
+if (_capacity)
+delete[] _buffer;
 }
 
 tString& tString::operator =(const tString& rhs)
@@ -397,6 +401,17 @@ bool tString::operator <(const char* rhs) const
 bool tString::operator >(const char* rhs) const
 {
 	return strcmp(CStr(), rhs) > 0;
+}
+
+std::istream& operator >>(std::istream &in, tString& rhs) {
+	in >> rhs._buffer;
+	return in;
+}
+
+std::ostream& operator <<(std::ostream& out, tString& rhs)
+{
+	out << rhs._buffer;
+	return out;
 }
 
 char& tString::operator [](unsigned index)
@@ -1424,6 +1439,8 @@ int tString::Compare(const char* lhs, const char* rhs, bool caseSensitive)
 		}
 	}
 }
+
+
 
 
 

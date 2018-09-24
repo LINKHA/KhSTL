@@ -1,6 +1,6 @@
 #pragma once
-#include "Type_Swap.h"
-#include "Type_Allcator.h"
+#include "TY_Swap.h"
+#include "TY_Allcator.h"
 
 
 namespace KH_STL {

@@ -12,11 +12,13 @@
 #include <cassert>
 #include <cstdarg>
 #include <cctype>
+#include <iostream>
 
-#include "Type_Iterator.h"
-#include "Type_BasicString.h"
-#include "Type_Swap.h"
-#include "Type_Vector.h"
+
+#include "TY_Iterator.h"
+#include "TY_BasicString.h"
+#include "TY_Swap.h"
+#include "TY_Vector.h"
 
 namespace KH_STL {
 namespace Detail
@@ -162,15 +164,15 @@ public:
 	*/
 	tString& operator +=(int rhs);
 	/**
-	* @brief : Add assign the short(concatenate as string) 
+	* @brief : Add assign the short(concatenate as string)
 	*/
 	tString& operator +=(short rhs);
 	/**
-	* @brief : Add assign the long(concatenate as string) 
+	* @brief : Add assign the long(concatenate as string)
 	*/
 	tString& operator +=(long rhs);
 	/**
-	* @brief : Add assign the long long(concatenate as string) 
+	* @brief : Add assign the long long(concatenate as string)
 	*/
 	tString& operator +=(long long rhs);
 	/**
@@ -178,7 +180,7 @@ public:
 	*/
 	tString& operator +=(unsigned rhs);
 	/**
-	* @brief : Add assign the short unsigned(concatenate as string) 
+	* @brief : Add assign the short unsigned(concatenate as string)
 	*/
 	tString& operator +=(unsigned short rhs);
 	/**
@@ -190,7 +192,7 @@ public:
 	*/
 	tString& operator +=(unsigned long long rhs);
 	/**
-	* @brief : Add assign the float(concatenate as string) 
+	* @brief : Add assign the float(concatenate as string)
 	*/
 	tString& operator +=(float rhs);
 	/**
@@ -198,7 +200,7 @@ public:
 	*/
 	tString& operator +=(bool rhs);
 	/**
-	* @brief : Add assign the arbitrary type(concatenate as string) 
+	* @brief : Add assign the arbitrary type(concatenate as string)
 	*/
 	template <class T> tString& operator +=(const T& rhs);
 	/**
@@ -241,6 +243,14 @@ public:
 	* @brief : Test if string is greater than the C string
 	*/
 	bool operator >(const char* rhs) const;
+	/**
+	* @brief : Right shift import istream
+	*/
+	friend std::istream& operator >>(std::istream &in, tString& rhs);
+	/**
+	* @brief : Left shift import ostream
+	*/
+	friend std::ostream& operator <<(std::ostream &out, tString& rhs);
 	/**
 	* @brief :  Return char at index
 	*/
@@ -594,7 +604,7 @@ private:
 			++src;
 		}
 #endif
-}
+	}
 
 	/// string length
 	unsigned _length;
@@ -606,6 +616,9 @@ private:
 	/// end zero for empty strings
 	static char endZero;
 };
+
+
+
 
 
 

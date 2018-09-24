@@ -1,7 +1,7 @@
 #ifndef KH_STL_CORE_TYPE_ITERATOR_H_
 #define KH_STL_CORE_TYPE_ITERATOR_H_
 
-#include "Type_BaseIterator.h"
+#include "TY_BaseIterator.h"
 
 namespace KH_STL {
 namespace Detail
@@ -26,17 +26,17 @@ public:
 	/**
 	* @brief : Point to the object
 	*/
-	_Container* operator ->() const { return _ptr; }
+	_Container* operator ->() const { return ptr; }
 	/**
 	* @brief : Dereference the object
 	*/
-	_Container& operator *() const { return *_ptr; }
+	_Container& operator *() const { return *ptr; }
 	/**
 	* @brief : Preincrement the pointer
 	*/
 	tIterator<_Container>& operator ++()
 	{
-		++_ptr;
+		++ptr;
 		return *this;
 	}
 	/**
@@ -45,7 +45,7 @@ public:
 	tIterator<_Container> operator ++(int)
 	{
 		tIterator<_Container> it = *this;
-		++_ptr;
+		++ptr;
 		return it;
 	}
 	/**
@@ -53,7 +53,7 @@ public:
 	*/
 	tIterator<_Container>& operator --()
 	{
-		--_ptr;
+		--ptr;
 		return *this;
 	}
 	/**
@@ -62,53 +62,53 @@ public:
 	tIterator<_Container> operator --(int)
 	{
 		tIterator<_Container> it = *this;
-		--_ptr;
+		--ptr;
 		return it;
 	}
 	/**
 	* @brief : Add an offset to the pointer
 	*/
-	tIterator<_Container>& operator +=(int value){ _ptr += value;return *this;}
+	tIterator<_Container>& operator +=(int value){ ptr += value;return *this;}
 	/**
 	* @brief : Subtract an offset from the pointer
 	*/
-	tIterator<_Container>& operator -=(int value){ _ptr -= value; return *this;}
+	tIterator<_Container>& operator -=(int value){ ptr -= value; return *this;}
 	/**
 	* @brief : Add an offset to the pointer
 	*/
-	tIterator<_Container> operator +(int value) const { return tIterator<_Container>(_ptr + value); }
+	tIterator<_Container> operator +(int value) const { return tIterator<_Container>(ptr + value); }
 	/**
 	* @brief : Subtract an offset from the pointer
 	*/
-	tIterator<_Container> operator -(int value) const { return tIterator<_Container>(_ptr - value); }
+	tIterator<_Container> operator -(int value) const { return tIterator<_Container>(ptr - value); }
 	/**
 	* @brief : Calculate offset to another iterator
 	*/
-	int operator -(const tIterator& rhs) const { return (int)(_ptr - rhs._ptr); }
+	int operator -(const tIterator& rhs) const { return (int)(ptr - rhs.ptr); }
 	/**
 	* @brief : Test for equality with another iterator
 	*/
-	bool operator ==(const tIterator& rhs) const { return _ptr == rhs._ptr; }
+	bool operator ==(const tIterator& rhs) const { return ptr == rhs.ptr; }
 	/**
 	* @brief : Test for inequality with another iterator
 	*/
-	bool operator !=(const tIterator& rhs) const { return _ptr != rhs._ptr; }
+	bool operator !=(const tIterator& rhs) const { return ptr != rhs.ptr; }
 	/**
 	* @brief : Test for less than with another iterator
 	*/
-	bool operator <(const tIterator& rhs) const { return _ptr < rhs._ptr; }
+	bool operator <(const tIterator& rhs) const { return ptr < rhs.ptr; }
 	/**
 	* @brief : Test for greater than with another iterator
 	*/
-	bool operator >(const tIterator& rhs) const { return _ptr > rhs._ptr; }
+	bool operator >(const tIterator& rhs) const { return ptr > rhs.ptr; }
 	/**
 	* @brief : Test for less than or equal with another iterator
 	*/
-	bool operator <=(const tIterator& rhs) const { return _ptr <= rhs._ptr; }
+	bool operator <=(const tIterator& rhs) const { return ptr <= rhs.ptr; }
 	/**
 	* @brief : Test for greater than or equal with another iterator
 	*/
-	bool operator >=(const tIterator& rhs) const { return _ptr >= rhs._ptr; }
+	bool operator >=(const tIterator& rhs) const { return ptr >= rhs.ptr; }
 
 	/// Pointer.
 	_Container* ptr;

@@ -1,5 +1,5 @@
 #pragma once
-#include "Type_ListBase.h"
+#include "TY_ListBase.h"
 #include <initializer_list>
 
 namespace KH_STL {
@@ -14,7 +14,7 @@ template <class T> class List : public ListBase
 {
 public:
 	/**
-	* List node.
+	* List node
 	*/
 	struct Node : public ListNodeBase
 	{
@@ -25,8 +25,8 @@ public:
 		/**
 		* @brief : Construct with value
 		*/
-		explicit Node(const T& tValue) :
-			value(tValue)
+		explicit Node(const T& tValue) 
+			: value(tValue)
 		{}
 		/**
 		* @brief : Return next node
@@ -53,8 +53,8 @@ public:
 		/**
 		* @brief : Construct with a node pointer
 		*/
-		explicit Iterator(Node* ptr) :
-			ListIteratorBase(ptr)
+		explicit Iterator(Node* ptr) 
+			: ListIteratorBase(ptr)
 		{}
 		/**
 		* @brief : Preincrement the pointer
@@ -112,14 +112,14 @@ public:
 		/**
 		* @brief : Construct with a node pointer
 		*/
-		explicit ConstIterator(Node* ptr) :
-			ListIteratorBase(ptr)
+		explicit ConstIterator(Node* ptr)
+			: ListIteratorBase(ptr)
 		{}
 		/**
 		* @brief : Construct from a non-const iterator
 		*/
-		ConstIterator(const Iterator& rhs) :        // NOLINT(google-explicit-constructor)
-			ListIteratorBase(rhs.ptr)
+		ConstIterator(const Iterator& rhs)         // NOLINT(google-explicit-constructor)
+			: ListIteratorBase(rhs.ptr)
 		{}
 		/**
 		* @brief : Assign from a non-const iterator

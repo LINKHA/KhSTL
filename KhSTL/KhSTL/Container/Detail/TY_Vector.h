@@ -1,9 +1,10 @@
 #pragma once
 
-#include "Type_VectorBase.h"
-#include "Type_Iterator.h"
+#include "TY_VectorBase.h"
+#include "TY_Iterator.h"
 #include <initializer_list>
-
+#include <utility>
+#include <algorithm>
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable:6293)
@@ -68,7 +69,8 @@ public:
 	/**
 	* @brief : Aggregate initialization constructor
 	*/
-	tVector(const std::initializer_list<T>& list) : tVector()
+	tVector(const std::initializer_list<T>& list) 
+		: tVector()
 	{
 		for (auto it = list.begin(); it != list.end(); it++)
 		{
@@ -467,7 +469,7 @@ public:
 
 			if (_capacity)
 			{
-				newBuffer = reinterpret_cast<T*>(AllocateBuffer((unsigned)(_capacity * sizeof(T))));
+				newBuffer = reinterpret_cast<T*>(allocateBuffer((unsigned)(_capacity * sizeof(T))));
 				// Move the data into the new buffer
 				constructElements(newBuffer, Begin(), End(), MoveTag{});
 			}
@@ -699,7 +701,7 @@ private:
 			}
 
 			// Update size
-			size_ += numElements;
+			_size += numElements;
 		}
 
 		return Begin() + pos;

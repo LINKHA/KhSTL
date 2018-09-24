@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Type_Swap.h"
+#include "TY_Swap.h"
 
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -16,10 +16,10 @@ namespace Detail
 class tVectorBase
 {
 public:
-	tVectorBase() noexcept :
-		_size(0),
-		_capacity(0),
-		_buffer(nullptr)
+	tVectorBase() noexcept 
+		: _size(0)
+		, _capacity(0)
+		, _buffer(nullptr)
 	{}
 	~tVectorBase() = default;
 	/**

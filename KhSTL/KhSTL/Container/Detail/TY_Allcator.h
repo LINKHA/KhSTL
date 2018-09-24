@@ -62,8 +62,8 @@ public:
 	/**
 	* @brief : Construct
 	*/
-	explicit Allocator(unsigned initialCapacity = 0) :
-		allocator_(nullptr)
+	explicit Allocator(unsigned initialCapacity = 0) 
+		: allocator_(nullptr)
 	{
 		if (initialCapacity)
 			allocator_ = AllocatorInitialize((unsigned)sizeof(T), initialCapacity);
