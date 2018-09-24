@@ -1,24 +1,24 @@
-#pragma once
-
-namespace KH_STL {
+#ifndef KH_STL_TYPEE_ALLCATOR_H_
+#define KH_STL_TYPEE_ALLCATOR_H_
+namespace KhSTL {
 namespace Detail
 {
-struct AllocatorBlock;
-struct AllocatorNode;
+struct tAllocatorBlock;
+struct tAllocatorNode;
 
 /**
 * Allocator memory block
 */
-struct AllocatorBlock
+struct tAllocatorBlock
 {
 	/// Size of a node.
 	unsigned nodeSize;
 	/// Number of nodes in this block.
 	unsigned capacity;
 	/// First free node.
-	AllocatorNode* free;
+	tAllocatorNode* free;
 	/// Next allocator block.
-	AllocatorBlock* next;
+	tAllocatorBlock* next;
 	/// Nodes follow.
 };
 
@@ -26,10 +26,10 @@ struct AllocatorBlock
 /**
 * Allocator node
 */
-struct AllocatorNode
+struct tAllocatorNode
 {
 	/// Next free node.
-	AllocatorNode* next;
+	tAllocatorNode* next;
 	/// Data follows.
 };
 
@@ -37,60 +37,60 @@ struct AllocatorNode
 /**
 * @brief : Initialize a fixed-size allocator with the node size and initial capacity
 */
-AllocatorBlock* AllocatorInitialize(unsigned nodeSize, unsigned initialCapacity = 1);
+tAllocatorBlock* AllocatorInitialize(unsigned nodeSize, unsigned initialCapacity = 1);
 /**
 * @brief : Uninitialize a fixed-size allocator. Frees all blocks in the chain
 */
-void AllocatorUninitialize(AllocatorBlock* allocator);
+void AllocatorUninitialize(tAllocatorBlock* allocator);
 /**
 * @brief : Reserve a node. Creates a new block if necessary
 */
-void* AllocatorReserve(AllocatorBlock* allocator);
+void* AllocatorReserve(tAllocatorBlock* allocator);
 /**
 * @brief : Free a node. Does not free any blocks
 */
-void AllocatorFree(AllocatorBlock* allocator, void* ptr);
+void AllocatorFree(tAllocatorBlock* allocator, void* ptr);
 
 
 /**
 * Allocator template class. Allocates objects of a specific class
 */
-template <class T> class Allocator
+template <class T> class tAllocator
 {
 public:
 
 	/**
 	* @brief : Construct
 	*/
-	explicit Allocator(unsigned initialCapacity = 0) 
-		: allocator_(nullptr)
+	explicit tAllocator(unsigned initialCapacity = 0) 
+		: _allocator(nullptr)
 	{
 		if (initialCapacity)
-			allocator_ = AllocatorInitialize((unsigned)sizeof(T), initialCapacity);
+			_allocator = AllocatorInitialize((unsigned)sizeof(T), initialCapacity);
 	}
 	/**
 	* @brief : Destruct
 	*/
-	~Allocator()
+	~tAllocator()
 	{
-		AllocatorUninitialize(allocator_);
+		AllocatorUninitialize(_allocator);
 	}
 	/**
 	* @brief : Prevent copy construction
 	*/
-	Allocator(const Allocator<T>& rhs) = delete;
+	tAllocator(const tAllocator<T>& rhs) = delete;
 	/**
 	* @brief : Prevent assignment
 	*/
-	Allocator<T>& operator =(const Allocator<T>& rhs) = delete;
+	tAllocator<T>& operator =(const tAllocator<T>& rhs) = delete;
 	/**
 	* @brief : Reserve and default-construct an object
 	*/
 	T* Reserve()
 	{
-		if (!allocator_)
-			allocator_ = AllocatorInitialize((unsigned)sizeof(T));
-		auto* newObject = static_cast<T*>(AllocatorReserve(allocator_));
+		if (!_allocator)
+			_allocator = AllocatorInitialize((unsigned)sizeof(T));
+		auto* newObject = static_cast<T*>(AllocatorReserve(_allocator));
 		new(newObject) T();
 
 		return newObject;
@@ -100,9 +100,9 @@ public:
 	*/
 	T* Reserve(const T& object)
 	{
-		if (!allocator_)
-			allocator_ = AllocatorInitialize((unsigned)sizeof(T));
-		auto* newObject = static_cast<T*>(AllocatorReserve(allocator_));
+		if (!_allocator)
+			_allocator = AllocatorInitialize((unsigned)sizeof(T));
+		auto* newObject = static_cast<T*>(AllocatorReserve(_allocator));
 		new(newObject) T(object);
 
 		return newObject;
@@ -113,12 +113,12 @@ public:
 	void Free(T* object)
 	{
 		(object)->~T();
-		AllocatorFree(allocator_, object);
+		AllocatorFree(_allocator, object);
 	}
 
 private:
 	/// Allocator block
-	AllocatorBlock * allocator_;
+	tAllocatorBlock* _allocator;
 };
 
 
@@ -126,3 +126,5 @@ private:
 
 }
 }
+
+#endif //!KH_STL_TYPEE_ALLCATOR_H_

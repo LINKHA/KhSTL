@@ -1,7 +1,7 @@
-#include "Ty_String.h"
-#include "TY_WString.h"
+#include "TypeString.h"
+#include "TypeWString.h"
 
-namespace KH_STL {
+namespace KhSTL {
 namespace Detail
 {
 char tString::endZero = 0;
@@ -703,9 +703,9 @@ void tString::Clear()
 
 void tString::Swap(tString & str)
 {
-	KH_STL::Detail::Swap(_length, str._length);
-	KH_STL::Detail::Swap(_capacity, str._capacity);
-	KH_STL::Detail::Swap(_buffer, str._buffer);
+	KhSTL::Detail::Swap(_length, str._length);
+	KhSTL::Detail::Swap(_capacity, str._capacity);
+	KhSTL::Detail::Swap(_buffer, str._buffer);
 }
 
 tString tString::SubString(unsigned pos) const

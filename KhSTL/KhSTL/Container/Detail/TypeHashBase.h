@@ -1,58 +1,59 @@
-#pragma once
-#include "TY_Allcator.h"
-#include "TY_Swap.h"
+#ifndef KH_STL_TYPE_HASH_BASE_H_
+#define KH_STL_TYPE_HASH_BASE_H_
+#include "TypeAllcator.h"
+#include "TypeSwap.h"
 
-namespace KH_STL 
+namespace KhSTL {
+namespace Detail 
 {
-namespace Detail {
 
 /**
 * Hash set/map node base class
 */
-struct HashNodeBase
+struct tHashNodeBase
 {
 	/**
 	* @brief : Construct
 	*/
-	HashNodeBase() 
+	tHashNodeBase()
 		: down(nullptr)
 		, prev(nullptr)
 		, next(nullptr)
 	{}
 
 	/// Next node in the bucket.
-	HashNodeBase* down;
+	tHashNodeBase* down;
 	/// Previous node.
-	HashNodeBase* prev;
+	tHashNodeBase* prev;
 	/// Next node.
-	HashNodeBase* next;
+	tHashNodeBase* next;
 };
 
 /**
 * Hash set/map iterator base class
 */
-struct HashIteratorBase
+struct tHashIteratorBase
 {
 	/**
 	* @brief : Construct
 	*/
-	HashIteratorBase()
+	tHashIteratorBase()
 		: ptr(nullptr)
 	{}
 	/**
 	* @brief : Construct with a node pointer
 	*/
-	explicit HashIteratorBase(HashNodeBase* ptr)
+	explicit tHashIteratorBase(tHashNodeBase* ptr)
 		: ptr(ptr)
 	{}
 	/**
 	* @brief : Test for equality with another iterator
 	*/
-	bool operator ==(const HashIteratorBase& rhs) const { return ptr == rhs.ptr; }
+	bool operator ==(const tHashIteratorBase& rhs) const { return ptr == rhs.ptr; }
 	/**
 	* @brief : Test for inequality with another iterator
 	*/
-	bool operator !=(const HashIteratorBase& rhs) const { return ptr != rhs.ptr; }
+	bool operator !=(const tHashIteratorBase& rhs) const { return ptr != rhs.ptr; }
 	/**
 	* @brief : Go to the next node
 	*/
@@ -71,10 +72,10 @@ struct HashIteratorBase
 	}
 
 	/// Node pointer
-	HashNodeBase* ptr;
+	tHashNodeBase* ptr;
 };
 
-class HashBase 
+class tHashBase 
 {
 public:
 	/// Initial amount of buckets
@@ -85,7 +86,7 @@ public:
 	/**
 	* @brief : Construct
 	*/
-	HashBase() :
+	tHashBase() :
 		_head(nullptr),
 		_tail(nullptr),
 		_ptrs(nullptr),
@@ -94,12 +95,12 @@ public:
 	/**
 	* @brief : Swap with another hash set or map
 	*/
-	void Swap(HashBase& rhs)
+	void Swap(tHashBase& rhs)
 	{
-		KH_STL::Detail::Swap(_head, rhs._head);
-		KH_STL::Detail::Swap(_tail, rhs._tail);
-		KH_STL::Detail::Swap(_ptrs, rhs._ptrs);
-		KH_STL::Detail::Swap(_allocator, rhs._allocator);
+		KhSTL::Detail::Swap(_head, rhs._head);
+		KhSTL::Detail::Swap(_tail, rhs._tail);
+		KhSTL::Detail::Swap(_ptrs, rhs._ptrs);
+		KhSTL::Detail::Swap(_allocator, rhs._allocator);
 	}
 	/**
 	* @brief : Return number of elements
@@ -129,16 +130,16 @@ protected:
 	/**
 	* @brief : Return bucket head pointers
 	*/
-	HashNodeBase** ptrs() const { return _ptrs ? _ptrs + 2 : nullptr; }
+	tHashNodeBase** ptrs() const { return _ptrs ? _ptrs + 2 : nullptr; }
 
 	/// List head node pointer.
-	HashNodeBase* _head;
+	tHashNodeBase* _head;
 	/// List tail node pointer.
-	HashNodeBase* _tail;
+	tHashNodeBase* _tail;
 	/// Bucket head pointers.
-	HashNodeBase** _ptrs;
+	tHashNodeBase** _ptrs;
 	/// Node allocator.
-	AllocatorBlock* _allocator;
+	tAllocatorBlock* _allocator;
 
 };
 
@@ -147,3 +148,5 @@ protected:
 
 }
 }
+
+#endif //!KH_STL_TYPE_HASH_BASE_H_

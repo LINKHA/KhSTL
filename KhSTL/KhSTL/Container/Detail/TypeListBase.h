@@ -1,9 +1,11 @@
-#pragma once
-#include "TY_Swap.h"
-#include "TY_Allcator.h"
+#ifndef KH_STL_TYPE_LIST_BASE_H_
+#define KH_STL_TYPE_LIST_BASE_H_
+
+#include "TypeSwap.h"
+#include "TypeAllcator.h"
 
 
-namespace KH_STL {
+namespace KhSTL {
 namespace Detail
 {
 
@@ -11,47 +13,47 @@ namespace Detail
 /**
 * Doubly-linked list node base class
 */
-struct ListNodeBase
+struct tListNodeBase
 {
 	/**
 	* @brief : Construct
 	*/
-	ListNodeBase() :
-		prev(nullptr),
-		next(nullptr)
+	tListNodeBase() 
+		: prev(nullptr)
+		, next(nullptr)
 	{}
 
 	/// Previous node.
-	ListNodeBase* prev;
+	tListNodeBase* prev;
 	/// Next node.
-	ListNodeBase* next;
+	tListNodeBase* next;
 };
 
 /**
 * Doubly-linked list iterator base class
 */
-struct ListIteratorBase
+struct tListIteratorBase
 {
 	/**
 	* @brief : Construct
 	*/
-	ListIteratorBase() :
-		ptr(nullptr)
+	tListIteratorBase() 
+		: ptr(nullptr)
 	{}
 	/**
 	* @brief : Construct with a node pointer
 	*/
-	explicit ListIteratorBase(ListNodeBase* ptr) :
-		ptr(ptr)
+	explicit tListIteratorBase(tListNodeBase* ptr) 
+		: ptr(ptr)
 	{}
 	/**
 	* @brief : Test for equality with another iterator
 	*/
-	bool operator ==(const ListIteratorBase& rhs) const { return ptr == rhs.ptr; }
+	bool operator ==(const tListIteratorBase& rhs) const { return ptr == rhs.ptr; }
 	/**
 	* @brief : Test for inequality with another iterator
 	*/
-	bool operator !=(const ListIteratorBase& rhs) const { return ptr != rhs.ptr; }
+	bool operator !=(const tListIteratorBase& rhs) const { return ptr != rhs.ptr; }
 	/**
 	* @brief : Go to the next node
 	*/
@@ -70,13 +72,13 @@ struct ListIteratorBase
 	}
 
 	/// Node pointer.
-	ListNodeBase* ptr;
+	tListNodeBase* ptr;
 };
 
-class ListBase 
+class tListBase 
 {
 public:
-	ListBase() :
+	tListBase() :
 		_head(nullptr),
 		_tail(nullptr),
 		_allocator(nullptr),
@@ -85,7 +87,7 @@ public:
 	}
 
 	/// Swap with another linked list.
-	void Swap(ListBase& rhs)
+	void Swap(tListBase& rhs)
 	{
 		Detail::Swap(_head, rhs._head);
 		Detail::Swap(_tail, rhs._tail);
@@ -95,11 +97,11 @@ public:
 
 protected:
 	/// Head node pointer.
-	ListNodeBase* _head;
+	tListNodeBase* _head;
 	/// Tail node pointer.
-	ListNodeBase* _tail;
+	tListNodeBase* _tail;
 	/// Node allocator.
-	AllocatorBlock* _allocator;
+	tAllocatorBlock* _allocator;
 	/// Number of nodes.
 	unsigned _size;
 
@@ -109,3 +111,5 @@ protected:
 
 }
 }
+
+#endif //!KH_STL_TYPE_LIST_BASE_H_

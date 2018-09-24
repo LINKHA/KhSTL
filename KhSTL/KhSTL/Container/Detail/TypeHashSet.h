@@ -1,18 +1,19 @@
-#pragma once
-#include "TY_HashBase.h"
-#include "TY_Iterator.h"
-#include "TY_Hash.h"
+#ifndef KH_STL_TYPE_HASH_SET_H_
+#define KH_STL_TYPE_HASH_SET_H_
+#include "TypeHashBase.h"
+#include "TypeIterator.h"
+#include "TypeHash.h"
 
-namespace KH_STL {
+namespace KhSTL {
 namespace Detail {
 
-template <typename T> class HashSet : public HashBase
+template <typename _Key> class tHashSet : public tHashBase
 {
 public:
 	/**
 	* Hash set node
 	*/
-	struct Node : public HashNodeBase
+	struct Node : public tHashNodeBase
 	{
 		/**
 		* @brief : Construct undefined
@@ -21,8 +22,8 @@ public:
 		/**
 		* @brief : Construct with key
 		*/
-		explicit Node(const T& skey) :
-			key(skey)
+		explicit Node(const _Key& skey) 
+			: key(skey)
 		{
 		}
 		/**
@@ -39,13 +40,13 @@ public:
 		Node* Down() const { return static_cast<Node*>(down); }
 
 		/// Key.
-		T key;
+		_Key key;
 		
 	};
 	/**
 	*  Hash set node iterator
 	*/
-	struct Iterator : public HashIteratorBase
+	struct Iterator : public tHashIteratorBase
 	{ 
 		/**
 		* @brief : Construct
@@ -54,8 +55,8 @@ public:
 		/**
 		* @brief : Construct with a node pointer
 		*/
-		explicit Iterator(Node* ptr) :
-			HashIteratorBase(ptr)
+		explicit Iterator(Node* ptr) 
+			: tHashIteratorBase(ptr)
 		{
 		}
 		/**
@@ -95,16 +96,16 @@ public:
 		/**
 		* @brief : Point to the key
 		*/
-		const T* operator ->() const { return &(static_cast<Node*>(ptr))->key; }
+		const _Key* operator ->() const { return &(static_cast<Node*>(ptr))->key; }
 		/**
 		* @brief : Dereference the key
 		*/
-		const T& operator *() const { return (static_cast<Node*>(ptr))->key; }
+		const _Key& operator *() const { return (static_cast<Node*>(ptr))->key; }
 	};
 	/**
 	* Hash set node const iterator
 	*/
-	struct ConstIterator : public HashIteratorBase
+	struct ConstIterator : public tHashIteratorBase
 	{
 		/**
 		* @brief : Construct
@@ -114,14 +115,14 @@ public:
 		* @brief : Construct with a node pointer
 		*/
 		explicit ConstIterator(Node* ptr) :
-			HashIteratorBase(ptr)
+			tHashIteratorBase(ptr)
 		{
 		}
 		/**
 		* @brief : Construct from a non-const iterator
 		*/
 		ConstIterator(const Iterator& rhs) :    // NOLINT(google-explicit-constructor)
-			HashIteratorBase(rhs._ptr)
+			tHashIteratorBase(rhs._ptr)
 		{
 		}
 		/**
@@ -169,16 +170,16 @@ public:
 		/**
 		* @brief : Point to the key
 		*/
-		const T* operator ->() const { return &(static_cast<Node*>(_ptr))->key; }
+		const _Key* operator ->() const { return &(static_cast<Node*>(_ptr))->key; }
 		/**
 		* @brief : Dereference the key
 		*/
-		const T& operator *() const { return (static_cast<Node*>(_ptr))->key; }
+		const _Key& operator *() const { return (static_cast<Node*>(_ptr))->key; }
 	};
 	/**
 	* @brief : Construct empty
 	*/
-	HashSet()
+	tHashSet()
 	{
 		// Reserve the tail node
 		_allocator = AllocatorInitialize((unsigned)sizeof(Node));
@@ -187,7 +188,7 @@ public:
 	/**
 	* @brief : Construct from another hash set
 	*/
-	HashSet(const HashSet<T>& set)
+	tHashSet(const tHashSet<_Key>& set)
 	{
 		// Reserve the tail node + initial capacity according to the set's size
 		allocator_ = AllocatorInitialize((unsigned)sizeof(Node), set.Size() + 1);
@@ -197,14 +198,14 @@ public:
 	/**
 	* @brief : Move-construct from another hash set
 	*/
-	HashSet(HashSet<T> && set) noexcept
+	tHashSet(tHashSet<_Key> && set) noexcept
 	{
 		Swap(set);
 	}
 	/**
 	* @brief : Aggregate initialization constructor
 	*/
-	HashSet(const std::initializer_list<T>& list) : HashSet()
+	tHashSet(const std::initializer_list<_Key>& list) : tHashSet()
 	{
 		for (auto it = list.begin(); it != list.end(); it++)
 		{
@@ -214,7 +215,7 @@ public:
 	/**
 	* @brief : Destruct
 	*/
-	~HashSet()
+	~tHashSet()
 	{
 		if (_allocator)
 		{
@@ -227,7 +228,7 @@ public:
 	/**
 	* @brief : Assign a hash set
 	*/
-	HashSet& operator =(const HashSet<T>& rhs)
+	tHashSet& operator =(const tHashSet<_Key>& rhs)
 	{
 		// In case of self-assignment do nothing
 		if (&rhs != this)
@@ -240,7 +241,7 @@ public:
 	/**
 	* @brief : Move-assign a hash set
 	*/
-	HashSet& operator =(HashSet<T> && rhs) noexcept
+	tHashSet& operator =(tHashSet<_Key> && rhs) noexcept
 	{
 		assert(&rhs != this);
 		Swap(rhs);
@@ -249,7 +250,7 @@ public:
 	/**
 	* @brief : Add-assign a value
 	*/
-	HashSet& operator +=(const T& rhs)
+	tHashSet& operator +=(const _Key& rhs)
 	{
 		Insert(rhs);
 		return *this;
@@ -257,7 +258,7 @@ public:
 	/**
 	* @brief : Add-assign a hash set
 	*/
-	HashSet& operator +=(const HashSet<T>& rhs)
+	tHashSet& operator +=(const tHashSet<_Key>& rhs)
 	{
 		Insert(rhs);
 		return *this;
@@ -265,7 +266,7 @@ public:
 	/**
 	* @brief : Test for equality with another hash set
 	*/
-	bool operator ==(const HashSet<T>& rhs) const
+	bool operator ==(const tHashSet<_Key>& rhs) const
 	{
 		if (rhs.Size() != Size())
 			return false;
@@ -283,7 +284,7 @@ public:
 	/**
 	* @brief : Test for inequality with another hash set
 	*/
-	bool operator !=(const HashSet<T>& rhs) const
+	bool operator !=(const tHashSet<_Key>& rhs) const
 	{
 		if (rhs.Size() != Size())
 			return true;
@@ -301,7 +302,7 @@ public:
 	/**
 	* @brief : Insert a key. Return an iterator to it
 	*/
-	Iterator Insert(const T& key)
+	Iterator Insert(const _Key& key)
 	{
 		// If no pointers yet, allocate with minimum bucket count
 		if (!_ptrs)
@@ -333,7 +334,7 @@ public:
 	* @brief : Insert a key. Return an iterator and set exists 
 	*			flag according to whether the key already existed
 	*/
-	Iterator Insert(const T& key, bool& exists)
+	Iterator Insert(const _Key& key, bool& exists)
 	{
 		unsigned oldSize = Size();
 		Iterator ret = Insert(key);
@@ -343,7 +344,7 @@ public:
 	/**
 	* @brief : Insert a set
 	*/
-	void Insert(const HashSet<T>& set)
+	void Insert(const tHashSet<_Key>& set)
 	{
 		ConstIterator it = set.Begin();
 		ConstIterator end = set.End();
@@ -360,7 +361,7 @@ public:
 	/**
 	* @brief : Erase a key. Return true if was found
 	*/
-	bool Erase(const T& key)
+	bool Erase(const _Key& key)
 	{
 		if (!_ptrs)
 			return false;
@@ -450,7 +451,7 @@ public:
 			ptr = ptr->Next();
 		}
 
-		KH_STL::Detail::Sort(tIterator<Node*>(ptrs), tIterator<Node*>(ptrs + numKeys), CompareNodes);
+		KhSTL::Detail::Sort(tIterator<Node*>(ptrs), tIterator<Node*>(ptrs + numKeys), CompareNodes);
 
 		_head = ptrs[0];
 		ptrs[0]->prev = 0;
@@ -489,7 +490,7 @@ public:
 	/**
 	* @brief : Return iterator to the key, or end iterator if not found
 	*/
-	Iterator Find(const T& key)
+	Iterator Find(const _Key& key)
 	{
 		if (!_ptrs)
 			return End();
@@ -504,7 +505,7 @@ public:
 	/**
 	* @brief : Return const iterator to the key, or end iterator if not found
 	*/
-	ConstIterator Find(const T& key) const
+	ConstIterator Find(const _Key& key) const
 	{
 		if (!_ptrs)
 			return End();
@@ -519,7 +520,7 @@ public:
 	/**
 	* @brief : Return whether contains a key
 	*/
-	bool Contains(const T& key) const
+	bool Contains(const _Key& key) const
 	{
 		if (!_ptrs)
 			return false;
@@ -546,11 +547,11 @@ public:
 	/**
 	* @brief : Return first key
 	*/
-	const T& Front() const { return *Begin(); }
+	const _Key& Front() const { return *Begin(); }
 	/**
 	* @brief : Return last key
 	*/
-	const T& Back() const { return *(--End()); }
+	const _Key& Back() const { return *(--End()); }
 
 private:
 	/**
@@ -565,7 +566,7 @@ private:
 	* @brief : Find a node from the buckets. Do not call if 
 	*			the buckets have not been allocated
 	*/
-	Node* findNode(const T& key, unsigned hashKey) const
+	Node* findNode(const _Key& key, unsigned hashKey) const
 	{
 		auto* node = static_cast<Node*>(ptrs()[hashKey]);
 		while (node)
@@ -581,7 +582,7 @@ private:
 	* @brief : Find a node and the previous node from the buckets. 
 	*			Do not call if the buckets have not been allocated
 	*/
-	Node* findNode(const T& key, unsigned hashKey, Node*& previous) const
+	Node* findNode(const _Key& key, unsigned hashKey, Node*& previous) const
 	{
 		previous = 0;
 
@@ -599,7 +600,7 @@ private:
 	/**
 	* @brief : Insert a node into the list. Return the new node
 	*/
-	Node* insertNode(Node* dest, const T& key)
+	Node* insertNode(Node* dest, const _Key& key)
 	{
 		if (!dest)
 			return 0;
@@ -657,7 +658,7 @@ private:
 	/**
 	* @brief : Reserve a node with specified key
 	*/
-	Node* reserveNode(const T& key)
+	Node* reserveNode(const _Key& key)
 	{
 		auto* newNode = static_cast<Node*>(AllocatorReserve(_allocator));
 		new(newNode) Node(key);
@@ -691,16 +692,18 @@ private:
 	/**
 	* @brief : Compute a hash based on the key and the bucket size
 	*/
-	unsigned hash(const T& key) const { return makeHash(key) & (NumBuckets() - 1); }
+	unsigned hash(const _Key& key) const { return MakeHash(key) & (NumBuckets() - 1); }
 };
-template <typename T> typename KH_STL::Detail::HashSet<T>::ConstIterator begin(const KH_STL::Detail::HashSet<T>& v) { return v.Begin(); }
+template <typename _Key> typename Detail::tHashSet<_Key>::ConstIterator begin(const Detail::tHashSet<_Key>& v) { return v.Begin(); }
 
-template <typename T> typename KH_STL::Detail::HashSet<T>::ConstIterator end(const KH_STL::Detail::HashSet<T>& v) { return v.End(); }
+template <typename _Key> typename Detail::tHashSet<_Key>::ConstIterator end(const Detail::tHashSet<_Key>& v) { return v.End(); }
 
-template <typename T> typename KH_STL::Detail::HashSet<T>::Iterator begin(KH_STL::Detail::HashSet<T>& v) { return v.Begin(); }
+template <typename _Key> typename Detail::tHashSet<_Key>::Iterator begin(Detail::tHashSet<_Key>& v) { return v.Begin(); }
 
-template <typename T> typename KH_STL::Detail::HashSet<T>::Iterator end(KH_STL::Detail::HashSet<T>& v) { return v.End(); }
+template <typename _Key> typename Detail::tHashSet<_Key>::Iterator end(Detail::tHashSet<_Key>& v) { return v.End(); }
 
 
 }
 }
+
+#endif //!KH_STL_TYPE_HASH_SET_H_

@@ -1,9 +1,8 @@
-#ifndef KH_STL_CORE_TYPE_ITERATOR_H_
-#define KH_STL_CORE_TYPE_ITERATOR_H_
+#ifndef KH_STL_TYPE_ITERATOR_H_
+#define KH_STL_TYPE_ITERATOR_H_
+#include "TypeBaseIterator.h"
 
-#include "TY_BaseIterator.h"
-
-namespace KH_STL {
+namespace KhSTL {
 namespace Detail
 {
 template <typename _Container> class tIterator
@@ -249,4 +248,5 @@ public:
 
 }
 }
-#endif //!KH_STL_CORE_TYPE_ITERATOR_H_
+
+#endif //!KH_STL_TYPE_ITERATOR_H_

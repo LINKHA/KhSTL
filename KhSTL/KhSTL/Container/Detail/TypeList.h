@@ -1,8 +1,10 @@
-#pragma once
-#include "TY_ListBase.h"
+#ifndef KH_STL_TYPE_LIST_H_
+#define KH_STL_TYPE_LIST_H_
+
+#include "TypeListBase.h"
 #include <initializer_list>
 
-namespace KH_STL {
+namespace KhSTL {
 namespace Detail
 {
 
@@ -10,13 +12,13 @@ namespace Detail
 /**
 * Doubly-linked list template class
 */
-template <typename T> class List : public ListBase
+template <typename _Value> class tList : public tListBase
 {
 public:
 	/**
 	* List node
 	*/
-	struct Node : public ListNodeBase
+	struct Node : public tListNodeBase
 	{
 		/**
 		* @brief : Construct undefined
@@ -25,7 +27,7 @@ public:
 		/**
 		* @brief : Construct with value
 		*/
-		explicit Node(const T& tValue) 
+		explicit Node(const _Value& tValue) 
 			: value(tValue)
 		{}
 		/**
@@ -38,13 +40,13 @@ public:
 		Node* Prev() { return static_cast<Node*>(prev); }
 
 		/// Node value
-		T value;
+		_Value value;
 	};
 
 	/**
 	* List iterator
 	*/
-	struct Iterator : public ListIteratorBase
+	struct Iterator : public tListIteratorBase
 	{
 		/**
 		* @brief : Construct
@@ -54,7 +56,7 @@ public:
 		* @brief : Construct with a node pointer
 		*/
 		explicit Iterator(Node* ptr) 
-			: ListIteratorBase(ptr)
+			: tListIteratorBase(ptr)
 		{}
 		/**
 		* @brief : Preincrement the pointer
@@ -93,17 +95,17 @@ public:
 		/**
 		* @brief : Point to the node value
 		*/
-		T* operator ->() const { return &(static_cast<Node*>(ptr))->value; }
+		_Value* operator ->() const { return &(static_cast<Node*>(ptr))->value; }
 		/**
 		* @brief : Dereference the node value
 		*/
-		T& operator *() const { return (static_cast<Node*>(ptr))->value; }
+		_Value& operator *() const { return (static_cast<Node*>(ptr))->value; }
 	};
 
 	/**
 	* List const iterator
 	*/
-	struct ConstIterator : public ListIteratorBase
+	struct ConstIterator : public tListIteratorBase
 	{
 		/**
 		* @brief : Construct
@@ -113,13 +115,13 @@ public:
 		* @brief : Construct with a node pointer
 		*/
 		explicit ConstIterator(Node* ptr)
-			: ListIteratorBase(ptr)
+			: tListIteratorBase(ptr)
 		{}
 		/**
 		* @brief : Construct from a non-const iterator
 		*/
 		ConstIterator(const Iterator& rhs)         // NOLINT(google-explicit-constructor)
-			: ListIteratorBase(rhs.ptr)
+			: tListIteratorBase(rhs.ptr)
 		{}
 		/**
 		* @brief : Assign from a non-const iterator
@@ -166,17 +168,17 @@ public:
 		/**
 		* @brief : Point to the node value
 		*/
-		const T* operator ->() const { return &(static_cast<Node*>(ptr))->value; }
+		const _Value* operator ->() const { return &(static_cast<Node*>(ptr))->value; }
 		/**
 		* @brief : Dereference the node value
 		*/
-		const T& operator *() const { return (static_cast<Node*>(ptr))->value; }
+		const _Value& operator *() const { return (static_cast<Node*>(ptr))->value; }
 	};
 
 	/**
 	* @brief : Construct empty
 	*/
-	List()
+	tList()
 	{
 		_allocator = AllocatorInitialize((unsigned)sizeof(Node));
 		_head = _tail = ReserveNode();
@@ -184,7 +186,7 @@ public:
 	/**
 	* @brief : Construct from another list
 	*/
-	List(const List<T>& list)
+	tList(const tList<_Value>& list)
 	{
 		// Reserve the tail node + initial capacity according to the list's size
 		_allocator = AllocatorInitialize((unsigned)sizeof(Node), list.Size() + 1);
@@ -194,14 +196,15 @@ public:
 	/**
 	* @brief : Move-construct from another list
 	*/
-	List(List<T> && list) noexcept
+	tList(tList<_Value> && list) noexcept
 	{
 		Swap(list);
 	}
 	/**
 	* @brief : Aggregate initialization constructor
 	*/
-	List(const std::initializer_list<T>& list) : List()
+	tList(const std::initializer_list<_Value>& list) 
+		: tList()
 	{
 		for (auto it = list.begin(); it != list.end(); it++)
 		{
@@ -211,7 +214,7 @@ public:
 	/**
 	* @brief : Destruct
 	*/
-	~List()
+	~tList()
 	{
 		Clear();
 		FreeNode(Tail());
@@ -220,7 +223,7 @@ public:
 	/**
 	* @brief : Assign from another list
 	*/
-	List& operator =(const List<T>& rhs)
+	tList& operator =(const tList<_Value>& rhs)
 	{
 		// Clear, then insert the nodes of the other list. In case of self-assignment do nothing
 		if (&rhs != this)
@@ -233,7 +236,7 @@ public:
 	/**
 	* @brief : Move-assign from another list
 	*/
-	List& operator =(List<T> && rhs) noexcept
+	tList& operator =(tList<_Value> && rhs) noexcept
 	{
 		assert(&rhs != this);
 		Swap(rhs);
@@ -242,7 +245,7 @@ public:
 	/**
 	* @brief : Add-assign an element
 	*/
-	List& operator +=(const T& rhs)
+	tList& operator +=(const _Value& rhs)
 	{
 		Push(rhs);
 		return *this;
@@ -250,7 +253,7 @@ public:
 	/**
 	* @brief : Add-assign a list
 	*/
-	List& operator +=(const List<T>& rhs)
+	tList& operator +=(const tList<_Value>& rhs)
 	{
 		Insert(End(), rhs);
 		return *this;
@@ -258,7 +261,7 @@ public:
 	/**
 	* @brief : Test for equality with another list
 	*/
-	bool operator ==(const List<T>& rhs) const
+	bool operator ==(const tList<_Value>& rhs) const
 	{
 		if (rhs._size != _size)
 			return false;
@@ -278,7 +281,7 @@ public:
 	/**
 	* @brief : Test for inequality with another list
 	*/
-	bool operator !=(const List<T>& rhs) const
+	bool operator !=(const tList<_Value>& rhs) const
 	{
 		if (rhs._size != _size)
 			return true;
@@ -298,19 +301,19 @@ public:
 	/**
 	* @brief : Insert an element to the end
 	*/
-	void Push(const T& value) { InsertNode(Tail(), value); }
+	void Push(const _Value& value) { InsertNode(Tail(), value); }
 	/**
 	* @brief : Insert an element to the beginning
 	*/
-	void PushFront(const T& value) { InsertNode(Head(), value); }
+	void PushFront(const _Value& value) { InsertNode(Head(), value); }
 	/**
 	* @brief : Insert an element at position
 	*/
-	void Insert(const Iterator& dest, const T& value) { InsertNode(static_cast<Node*>(dest.ptr), value); }
+	void Insert(const Iterator& dest, const _Value& value) { InsertNode(static_cast<Node*>(dest.ptr), value); }
 	/**
 	* @brief : Insert a list at position
 	*/
-	void Insert(const Iterator& dest, const List<T>& list)
+	void Insert(const Iterator& dest, const tList<_Value>& list)
 	{
 		auto* destNode = static_cast<Node*>(dest.ptr);
 		ConstIterator it = list.Begin();
@@ -331,10 +334,10 @@ public:
 	/**
 	* @brief : Insert elements
 	*/
-	void Insert(const Iterator& dest, const T* start, const T* end)
+	void Insert(const Iterator& dest, const _Value* start, const _Value* end)
 	{
 		auto* destNode = static_cast<Node*>(dest.ptr);
-		const T* ptr = start;
+		const _Value* ptr = start;
 		while (ptr != end)
 			InsertNode(destNode, *ptr++);
 	}
@@ -398,12 +401,12 @@ public:
 			Pop();
 
 		while (_size < newSize)
-			InsertNode(Tail(), T());
+			InsertNode(Tail(), _Value());
 	}
 	/**
 	* @brief : Return iterator to value, or to the end if not found
 	*/
-	Iterator Find(const T& value)
+	Iterator Find(const _Value& value)
 	{
 		Iterator it = Begin();
 		while (it != End() && *it != value)
@@ -413,7 +416,7 @@ public:
 	/**
 	* @brief : Return const iterator to value, or to the end if not found
 	*/
-	ConstIterator Find(const T& value) const
+	ConstIterator Find(const _Value& value) const
 	{
 		ConstIterator it = Begin();
 		while (it != End() && *it != value)
@@ -423,7 +426,7 @@ public:
 	/**
 	* @brief : Return whether contains a specific value
 	*/
-	bool Contains(const T& value) const { return Find(value) != End(); }
+	bool Contains(const _Value& value) const { return Find(value) != End(); }
 	/**
 	* @brief : Return iterator to the first element
 	*/
@@ -443,19 +446,19 @@ public:
 	/**
 	* @brief : Return first element
 	*/
-	T& Front() { return *Begin(); }
+	_Value& Front() { return *Begin(); }
 	/**
 	* @brief : Return const first element
 	*/
-	const T& Front() const { return *Begin(); }
+	const _Value& Front() const { return *Begin(); }
 	/**
 	* @brief : Return last element
 	*/
-	T& Back() { return *(--End()); }
+	_Value& Back() { return *(--End()); }
 	/**
 	* @brief : Return const last element
 	*/
-	const T& Back() const { return *(--End()); }
+	const _Value& Back() const { return *(--End()); }
 	/**
 	* @brief : Return number of elements
 	*/
@@ -479,7 +482,7 @@ private:
 	/**
 	* @brief : Allocate and insert a node into the list
 	*/
-	void InsertNode(Node* dest, const T& value)
+	void InsertNode(Node* dest, const _Value& value)
 	{
 		if (!dest)
 			return;
@@ -533,7 +536,7 @@ private:
 	}
 
 	/// Reserve a node with initial value.
-	Node* ReserveNode(const T& value)
+	Node* ReserveNode(const _Value& value)
 	{
 		auto* newNode = static_cast<Node*>(AllocatorReserve(allocator_));
 		new(newNode) Node(value);
@@ -548,15 +551,16 @@ private:
 	}
 };
 	
-template <typename T> typename KH_STL::Detail::List<T>::ConstIterator begin(const KH_STL::Detail::List<T>& v) { return v.Begin(); }
+template <typename _Value> typename Detail::tList<_Value>::ConstIterator begin(const Detail::tList<_Value>& v) { return v.Begin(); }
 
-template <typename T> typename KH_STL::Detail::List<T>::ConstIterator end(const KH_STL::Detail::List<T>& v) { return v.End(); }
+template <typename _Value> typename Detail::tList<_Value>::ConstIterator end(const Detail::tList<_Value>& v) { return v.End(); }
 
-template <typename T> typename KH_STL::Detail::List<T>::Iterator begin(KH_STL::Detail::List<T>& v) { return v.Begin(); }
+template <typename _Value> typename Detail::tList<_Value>::Iterator begin(Detail::tList<_Value>& v) { return v.Begin(); }
 
-template <typename T> typename KH_STL::Detail::List<T>::Iterator end(KH_STL::Detail::List<T>& v) { return v.End(); }
+template <typename _Value> typename Detail::tList<_Value>::Iterator end(Detail::tList<_Value>& v) { return v.End(); }
 
 
 }
 }
 
+#endif //!KH_STL_TYPE_LIST_H_

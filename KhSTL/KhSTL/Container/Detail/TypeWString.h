@@ -1,6 +1,7 @@
-#pragma once
+#ifndef KH_STL_TYPE_WSTRING_H_
+#define KH_STL_TYPE_WSTRING_H_
 
-namespace KH_STL {
+namespace KhSTL {
 namespace Detail
 {
 class tString;
@@ -65,3 +66,5 @@ private:
 }
 }
 
+
+#endif //!KH_STL_TYPE_WSTRING_H_

@@ -1,8 +1,8 @@
-#include "TY_Swap.h"
-#include "TY_String.h"
-#include "TY_VectorBase.h"
+#include "TypeSwap.h"
+#include "TypeString.h"
+#include "TypeVectorBase.h"
 
-namespace KH_STL {
+namespace KhSTL {
 namespace Detail
 {
 

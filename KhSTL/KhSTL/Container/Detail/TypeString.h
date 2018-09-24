@@ -1,4 +1,5 @@
-#pragma once
+#ifndef KH_STL_TYPE_STRING_H_
+#define KH_STL_TYPE_STRING_H_
 
 
 #ifdef _MSC_VER
@@ -15,12 +16,12 @@
 #include <iostream>
 
 
-#include "TY_Iterator.h"
-#include "TY_BasicString.h"
-#include "TY_Swap.h"
-#include "TY_Vector.h"
+#include "TypeIterator.h"
+#include "TypeBasicString.h"
+#include "TypeSwap.h"
+#include "TypeVector.h"
 
-namespace KH_STL {
+namespace KhSTL {
 namespace Detail
 {
 
@@ -522,7 +523,7 @@ public:
 	*/
 	tString SubstringUTF8(unsigned pos, unsigned length) const;
 	/**
-	* @brief : Return hash value for HashSet & HashMap
+	* @brief : Return hash value for tHashSet & tHashMap
 	*/
 	unsigned ToHash() const;
 
@@ -619,8 +620,7 @@ private:
 
 
 
-
-
-
 }
 }
+
+#endif //!KH_STL_TYPE_STRING_H_

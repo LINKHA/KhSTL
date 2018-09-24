@@ -1,8 +1,8 @@
-#include "TY_WString.h"
+#include "TypeWString.h"
 #include <assert.h>
 #include <string.h>
 
-namespace KH_STL {
+namespace KhSTL {
 namespace Detail
 {
 

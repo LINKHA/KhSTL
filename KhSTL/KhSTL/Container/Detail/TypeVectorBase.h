@@ -1,13 +1,14 @@
-#pragma once
+#ifndef KH_STL_TYPE_VECTOR_BASE_H_
+#define KH_STL_TYPE_VECTOR_BASE_H_
 
-#include "TY_Swap.h"
+#include "TypeSwap.h"
 
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable:6293)
 #endif
 
-namespace KH_STL {
+namespace KhSTL {
 namespace Detail
 {
 /**
@@ -27,9 +28,9 @@ public:
 	*/
 	void Swap(tVectorBase& rhs)
 	{
-		KH_STL::Detail::Swap(_size, rhs._size);
-		KH_STL::Detail::Swap(_capacity, rhs._capacity);
-		KH_STL::Detail::Swap(_buffer, rhs._buffer);
+		Detail::Swap(_size, rhs._size);
+		Detail::Swap(_capacity, rhs._capacity);
+		Detail::Swap(_buffer, rhs._buffer);
 	}
 
 protected:
@@ -49,3 +50,5 @@ protected:
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
+
+#endif //!KH_STL_TYPE_VECTOR_BASE_H_

@@ -1,15 +1,15 @@
-#include "TY_HashBase.h"
+#include "TypeHashBase.h"
 
-namespace KH_STL {
+namespace KhSTL {
 namespace Detail {
 	
 
 
-void HashBase::allocateBuckets(unsigned size, unsigned numBuckets)
+void tHashBase::allocateBuckets(unsigned size, unsigned numBuckets)
 {
 	delete[] _ptrs;
 
-	auto ptrs = new HashNodeBase*[numBuckets + 2];
+	auto ptrs = new tHashNodeBase*[numBuckets + 2];
 	auto* data = reinterpret_cast<unsigned*>(ptrs);
 	data[0] = size;
 	data[1] = numBuckets;
@@ -18,14 +18,14 @@ void HashBase::allocateBuckets(unsigned size, unsigned numBuckets)
 	resetPtrs();
 }
 
-void HashBase::resetPtrs()
+void tHashBase::resetPtrs()
 {
 	// Reset bucket pointers
 	if (!_ptrs)
 		return;
 
 	unsigned numBuckets = NumBuckets();
-	HashNodeBase** tptrs = ptrs();
+	tHashNodeBase** tptrs = ptrs();
 	for (unsigned i = 0; i < numBuckets; ++i)
 		tptrs[i] = nullptr;
 }
