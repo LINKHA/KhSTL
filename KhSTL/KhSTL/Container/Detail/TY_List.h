@@ -10,7 +10,7 @@ namespace Detail
 /**
 * Doubly-linked list template class
 */
-template <class T> class List : public ListBase
+template <typename T> class List : public ListBase
 {
 public:
 	/**
@@ -548,13 +548,13 @@ private:
 	}
 };
 	
-template <class T> typename KH_STL::Detail::List<T>::ConstIterator begin(const KH_STL::Detail::List<T>& v) { return v.Begin(); }
+template <typename T> typename KH_STL::Detail::List<T>::ConstIterator begin(const KH_STL::Detail::List<T>& v) { return v.Begin(); }
 
-template <class T> typename KH_STL::Detail::List<T>::ConstIterator end(const KH_STL::Detail::List<T>& v) { return v.End(); }
+template <typename T> typename KH_STL::Detail::List<T>::ConstIterator end(const KH_STL::Detail::List<T>& v) { return v.End(); }
 
-template <class T> typename KH_STL::Detail::List<T>::Iterator begin(KH_STL::Detail::List<T>& v) { return v.Begin(); }
+template <typename T> typename KH_STL::Detail::List<T>::Iterator begin(KH_STL::Detail::List<T>& v) { return v.Begin(); }
 
-template <class T> typename KH_STL::Detail::List<T>::Iterator end(KH_STL::Detail::List<T>& v) { return v.End(); }
+template <typename T> typename KH_STL::Detail::List<T>::Iterator end(KH_STL::Detail::List<T>& v) { return v.End(); }
 
 
 }
