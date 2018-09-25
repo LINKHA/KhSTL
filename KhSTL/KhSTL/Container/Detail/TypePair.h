@@ -1,5 +1,5 @@
-#ifndef KH_STL_TYPE_PAIR_H_
-#define KH_STL_TYPE_PAIR_H_
+#ifndef KhSTL_TYPE_PAIR_H_
+#define KhSTL_TYPE_PAIR_H_
 
 namespace KhSTL {
 namespace Detail {
@@ -83,4 +83,4 @@ template <typename T> T end(const KhSTL::Detail::tPair<T, T>& range) { return ra
 }
 }
 
-#endif //!KH_STL_TYPE_PAIR_H_
+#endif //!KhSTL_TYPE_PAIR_H_

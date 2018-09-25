@@ -1,5 +1,5 @@
-#ifndef KH_STL_TYPE_VECTOR_BASE_H_
-#define KH_STL_TYPE_VECTOR_BASE_H_
+#ifndef KhSTL_TYPE_VECTOR_BASE_H_
+#define KhSTL_TYPE_VECTOR_BASE_H_
 
 #include "TypeSwap.h"
 
@@ -51,4 +51,4 @@ protected:
 #pragma warning(pop)
 #endif
 
-#endif //!KH_STL_TYPE_VECTOR_BASE_H_
+#endif //!KhSTL_TYPE_VECTOR_BASE_H_

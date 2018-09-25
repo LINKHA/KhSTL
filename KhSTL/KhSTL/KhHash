@@ -1,0 +1,3 @@
+#ifndef KH_STL_HASH_H_
+#	include "KhHash.h"
+#endif

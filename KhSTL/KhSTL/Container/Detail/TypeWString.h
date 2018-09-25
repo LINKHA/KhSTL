@@ -1,5 +1,5 @@
-#ifndef KH_STL_TYPE_WSTRING_H_
-#define KH_STL_TYPE_WSTRING_H_
+#ifndef KhSTL_TYPE_WSTRING_H_
+#define KhSTL_TYPE_WSTRING_H_
 
 namespace KhSTL {
 namespace Detail
@@ -67,4 +67,4 @@ private:
 }
 
 
-#endif //!KH_STL_TYPE_WSTRING_H_
+#endif //!KhSTL_TYPE_WSTRING_H_

@@ -4,6 +4,7 @@
 #include "TypePair.h"
 #include "TypeVector.h"
 #include "TypeIterator.h"
+#include "TypeSort.h"
 
 #include <initializer_list>
 
@@ -349,7 +350,7 @@ public:
 	*/
 	_Value& operator [](const _Key& key)
 	{
-		if (!ptrs)
+		if (!_ptrs)
 			return InsertNode(key, _Value(), false)->pair.second;
 
 		unsigned hashKey = Hash(key);
@@ -404,7 +405,9 @@ public:
 		exists = (Size() == oldSize);
 		return ret;
 	}
-	/// Insert a map.
+	/**
+	* @brief : Insert a map
+	*/
 	void Insert(const tHashMap<_Key, _Value>& map)
 	{
 		ConstIterator it = map.Begin();
@@ -436,7 +439,7 @@ public:
 	*/
 	bool Erase(const _Key& key)
 	{
-		if (!ptrs)
+		if (!_ptrs)
 			return false;
 
 		unsigned hashKey = Hash(key);
@@ -459,7 +462,7 @@ public:
 	*/
 	Iterator Erase(const Iterator& it)
 	{
-		if (!ptrs || !it.ptr)
+		if (!_ptrs || !it.ptr)
 			return End();
 
 		auto* node = static_cast<Node*>(it.ptr);
@@ -485,10 +488,8 @@ public:
 		EraseNode(node);
 		return Iterator(next);
 	}
-
-	/// Clear the map
 	/**
-	* @brief :
+	* @brief : Clear the map
 	*/
 	void Clear()
 	{
@@ -508,7 +509,8 @@ public:
 		}
 	}
 	/**
-	* @brief : Sort pairs. After sorting the map can be iterated in order until new elements are inserted
+	* @brief : Sort pairs. After sorting the map can be iterated in order
+	*			until new elements are inserted
 	*/
 	void Sort()
 	{
@@ -525,7 +527,7 @@ public:
 			ptr = ptr->Next();
 		}
 
-		KhSTL::Detail::Sort(tIterator<Node*>(ptrs), tIterator<Node*>(ptrs + numKeys), CompareNodes);
+		Detail::Sort(tIterator<Node*>(ptrs), tIterator<Node*>(ptrs + numKeys), CompareNodes);
 
 		_head = ptrs[0];
 		ptrs[0]->prev = 0;
@@ -534,7 +536,7 @@ public:
 			ptrs[i - 1]->next = ptrs[i];
 			ptrs[i]->prev = ptrs[i - 1];
 		}
-		ptrs[numKeys - 1]->next = tail_;
+		ptrs[numKeys - 1]->next = _tail;
 		_tail->prev = ptrs[numKeys - 1];
 
 		delete[] ptrs;
@@ -546,7 +548,7 @@ public:
 	{
 		if (numBuckets == NumBuckets())
 			return true;
-		if (!numBuckets || numBuckets < Size() / MAX_LOAD_FAC_KeyOR)
+		if (!numBuckets || numBuckets < Size() / MAX_LOAD_FACTOR)
 			return false;
 
 		// Check for being power of two
@@ -565,7 +567,7 @@ public:
 	*/
 	Iterator Find(const _Key& key)
 	{
-		if (!ptrs_)
+		if (!_ptrs)
 			return End();
 
 		unsigned hashKey = Hash(key);
@@ -602,9 +604,9 @@ public:
 		return FindNode(key, hashKey) != 0;
 	}
 	/**
-	* @brief : _Keyry to copy value to output. Return true if was found
+	* @brief : try to copy value to output. Return true if was found
 	*/
-	bool _KeyryGetValue(const _Key& key, _Value& out) const
+	bool TryGetValue(const _Key& key, _Value& out) const
 	{
 		if (!_ptrs)
 			return false;
@@ -713,9 +715,9 @@ private:
 	Node* InsertNode(const _Key& key, const _Value& value, bool findExisting = true)
 	{
 		// If no pointers yet, allocate with minimum bucket count
-		if (!ptrs)
+		if (!_ptrs)
 		{
-			allocateBuckets(Size(), MIN_B_ValueCKE_KeyS);
+			allocateBuckets(Size(), MIN_BUCKETS);
 			Rehash();
 		}
 
@@ -737,7 +739,7 @@ private:
 		ptrs()[hashKey] = newNode;
 
 		// Rehash if the maximum load factor has been exceeded
-		if (Size() > NumBuckets() * MAX_LOAD_FAC_KeyOR)
+		if (Size() > NumBuckets() * MAX_LOAD_FACTOR)
 		{
 			allocateBuckets(Size(), NumBuckets() << 1);
 			Rehash();
@@ -776,7 +778,7 @@ private:
 	Node* EraseNode(Node* node)
 	{
 		// _Keyhe tail node can not be removed
-		if (!node || node == tail_)
+		if (!node || node == _tail)
 			return Tail();
 
 		Node* prev = node->Prev();
@@ -787,7 +789,7 @@ private:
 
 		// Reassign the head node if necessary
 		if (node == Head())
-			head_ = next;
+			_head = next;
 
 		FreeNode(node);
 		setSize(Size() - 1);

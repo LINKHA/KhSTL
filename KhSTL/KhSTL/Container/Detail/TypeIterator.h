@@ -1,5 +1,5 @@
-#ifndef KH_STL_TYPE_ITERATOR_H_
-#define KH_STL_TYPE_ITERATOR_H_
+#ifndef KhSTL_TYPE_ITERATOR_H_
+#define KhSTL_TYPE_ITERATOR_H_
 #include "TypeBaseIterator.h"
 
 namespace KhSTL {
@@ -249,4 +249,4 @@ public:
 }
 }
 
-#endif //!KH_STL_TYPE_ITERATOR_H_
+#endif //!KhSTL_TYPE_ITERATOR_H_

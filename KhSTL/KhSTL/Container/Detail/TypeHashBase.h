@@ -97,10 +97,10 @@ public:
 	*/
 	void Swap(tHashBase& rhs)
 	{
-		KhSTL::Detail::Swap(_head, rhs._head);
-		KhSTL::Detail::Swap(_tail, rhs._tail);
-		KhSTL::Detail::Swap(_ptrs, rhs._ptrs);
-		KhSTL::Detail::Swap(_allocator, rhs._allocator);
+		Detail::Swap(_head, rhs._head);
+		Detail::Swap(_tail, rhs._tail);
+		Detail::Swap(_ptrs, rhs._ptrs);
+		Detail::Swap(_allocator, rhs._allocator);
 	}
 	/**
 	* @brief : Return number of elements

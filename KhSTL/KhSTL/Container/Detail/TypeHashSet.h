@@ -1,5 +1,5 @@
-#ifndef KH_STL_TYPE_HASH_SET_H_
-#define KH_STL_TYPE_HASH_SET_H_
+#ifndef KhSTL_TYPE_HASH_SET_H_
+#define KhSTL_TYPE_HASH_SET_H_
 #include "TypeHashBase.h"
 #include "TypeIterator.h"
 #include "TypeHash.h"
@@ -130,7 +130,7 @@ public:
 		*/
 		ConstIterator& operator =(const Iterator& rhs)
 		{
-			_ptr = rhs._ptr;
+			ptr = rhs.ptr;
 			return *this;
 		}
 		/**
@@ -170,11 +170,11 @@ public:
 		/**
 		* @brief : Point to the key
 		*/
-		const _Key* operator ->() const { return &(static_cast<Node*>(_ptr))->key; }
+		const _Key* operator ->() const { return &(static_cast<Node*>(ptr))->key; }
 		/**
 		* @brief : Dereference the key
 		*/
-		const _Key& operator *() const { return (static_cast<Node*>(_ptr))->key; }
+		const _Key& operator *() const { return (static_cast<Node*>(ptr))->key; }
 	};
 	/**
 	* @brief : Construct empty
@@ -191,8 +191,8 @@ public:
 	tHashSet(const tHashSet<_Key>& set)
 	{
 		// Reserve the tail node + initial capacity according to the set's size
-		allocator_ = AllocatorInitialize((unsigned)sizeof(Node), set.Size() + 1);
-		head_ = tail_ = reserveNode();
+		_allocator = AllocatorInitialize((unsigned)sizeof(Node), set.Size() + 1);
+		_head = _tail = reserveNode();
 		*this = set;
 	}
 	/**
@@ -451,7 +451,7 @@ public:
 			ptr = ptr->Next();
 		}
 
-		KhSTL::Detail::Sort(tIterator<Node*>(ptrs), tIterator<Node*>(ptrs + numKeys), CompareNodes);
+		Detail::Sort(tIterator<Node*>(ptrs), tIterator<Node*>(ptrs + numKeys), compareNodes);
 
 		_head = ptrs[0];
 		ptrs[0]->prev = 0;
@@ -628,7 +628,7 @@ private:
 	Node* eraseNode(Node* node)
 	{
 		// The tail node can not be removed
-		if (!node || node == tail_)
+		if (!node || node == _tail)
 			return tail();
 
 		Node* prev = node->Prev();
@@ -706,4 +706,4 @@ template <typename _Key> typename Detail::tHashSet<_Key>::Iterator end(Detail::t
 }
 }
 
-#endif //!KH_STL_TYPE_HASH_SET_H_
+#endif //!KhSTL_TYPE_HASH_SET_H_

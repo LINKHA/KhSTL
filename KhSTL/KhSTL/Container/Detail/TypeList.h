@@ -508,7 +508,7 @@ private:
 	Node* EraseNode(Node* node)
 	{
 		// The tail node can not be removed
-		if (!node || node == tail_)
+		if (!node || node == _tail)
 			return Tail();
 
 		Node* prev = node->Prev();
@@ -519,10 +519,10 @@ private:
 
 		// Reassign the head node if necessary
 		if (node == Head())
-			head_ = next;
+			_head = next;
 
 		FreeNode(node);
-		--size_;
+		--_size;
 
 		return next;
 	}
@@ -530,7 +530,7 @@ private:
 	/// Reserve a node.
 	Node* ReserveNode()
 	{
-		auto* newNode = static_cast<Node*>(AllocatorReserve(allocator_));
+		auto* newNode = static_cast<Node*>(AllocatorReserve(_allocator));
 		new(newNode) Node();
 		return newNode;
 	}
@@ -538,7 +538,7 @@ private:
 	/// Reserve a node with initial value.
 	Node* ReserveNode(const _Value& value)
 	{
-		auto* newNode = static_cast<Node*>(AllocatorReserve(allocator_));
+		auto* newNode = static_cast<Node*>(AllocatorReserve(_allocator));
 		new(newNode) Node(value);
 		return newNode;
 	}
@@ -547,7 +547,7 @@ private:
 	void FreeNode(Node* node)
 	{
 		(node)->~Node();
-		AllocatorFree(allocator_, node);
+		AllocatorFree(_allocator, node);
 	}
 };
 	

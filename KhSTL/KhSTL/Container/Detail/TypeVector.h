@@ -7,7 +7,7 @@
 
 #include <initializer_list>
 #include <utility>
-#include <algorithm>
+//#include <algorithm>
 #include <cassert>
 
 #ifdef _MSC_VER
