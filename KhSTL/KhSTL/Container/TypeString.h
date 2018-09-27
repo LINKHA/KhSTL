@@ -17,13 +17,10 @@
 
 
 #include "TypeIterator.h"
-#include "TypeBasicString.h"
-#include "TypeSwap.h"
+#include "../Algorithms/TypeSwap.h"
 #include "TypeVector.h"
 
 namespace KhSTL {
-namespace Detail
-{
 
 class tWString;
 
@@ -34,7 +31,7 @@ static const int BUFFER_LENGTH = 128;
 /**
 * String class for LINKH STL
 */
-class tString //: public tBasic_String<>
+class tString 
 {
 	using Iterator = tIterator<char>;
 	using ConstIterator = tConstIterator<char>;
@@ -621,6 +618,4 @@ private:
 
 
 }
-}
-
 #endif //!KH_STL_TYPE_STRING_H_

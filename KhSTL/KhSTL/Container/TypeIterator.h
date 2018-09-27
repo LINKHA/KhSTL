@@ -1,14 +1,10 @@
-#ifndef KhSTL_TYPE_ITERATOR_H_
-#define KhSTL_TYPE_ITERATOR_H_
-#include "TypeBaseIterator.h"
+#ifndef KH_STL_TYPE_ITERATOR_H_
+#define KH_STL_TYPE_ITERATOR_H_
 
 namespace KhSTL {
-namespace Detail
-{
 template <typename _Container> class tIterator
-	:tBase_Iterator<_Container>
 {
-	typedef tIterator<_Container> This;
+	using This = tIterator<_Container> ;
 public:
 	/**
 	* @brief : Construct
@@ -113,12 +109,9 @@ public:
 	_Container* ptr;
 };
 
-
-
 template <typename _Container> class tConstIterator
-	:tBase_Iterator<_Container>
 {
-	typedef tConstIterator<_Container> This;
+	using This = tConstIterator<_Container>;
 public:
 	/**
 	* @brief : Construct
@@ -135,7 +128,7 @@ public:
 	/**
 	* @brief : Construct from a non-const iterator
 	*/
-	tConstIterator(const tConstIterator<_Container>& rhs)     // NOLINT(google-explicit-constructor)
+	tConstIterator(const tConstIterator<_Container>& rhs) 
 		: ptr(rhs.ptr)
 	{}
 	/**
@@ -245,8 +238,20 @@ public:
 	const _Container* ptr;
 };
 
+template <typename _Container,unsigned _Max> class tArrayIterator
+{
+	using This = tArrayIterator<_Container, _Max>;
+public:
+	tArrayIterator() : ptr(nullptr)
+	{}
+private:
+	_Container* ptr;
+};
+
+template <typename _Container, unsigned _Max> class tArrayConstIterator
+{
+
+};
 
 }
-}
-
-#endif //!KhSTL_TYPE_ITERATOR_H_
+#endif //!KH_STL_TYPE_ITERATOR_H_

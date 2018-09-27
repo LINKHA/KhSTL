@@ -1,14 +1,11 @@
-#ifndef KhSTL_TYPE_LIST_BASE_H_
-#define KhSTL_TYPE_LIST_BASE_H_
+#ifndef KH_STL_TYPE_LIST_BASE_H_
+#define KH_STL_TYPE_LIST_BASE_H_
 
-#include "TypeSwap.h"
-#include "TypeAllcator.h"
+#include "../Algorithms/TypeSwap.h"
+#include "../Allocator/TypeAllcator.h"
 
 
 namespace KhSTL {
-namespace Detail
-{
-
 
 /**
 * Doubly-linked list node base class
@@ -89,10 +86,10 @@ public:
 	/// Swap with another linked list.
 	void Swap(tListBase& rhs)
 	{
-		Detail::Swap(_head, rhs._head);
-		Detail::Swap(_tail, rhs._tail);
-		Detail::Swap(_allocator, rhs._allocator);
-		Detail::Swap(_size, rhs._size);
+		KhSTL::Swap(_head, rhs._head);
+		KhSTL::Swap(_tail, rhs._tail);
+		KhSTL::Swap(_allocator, rhs._allocator);
+		KhSTL::Swap(_size, rhs._size);
 	}
 
 protected:
@@ -110,6 +107,4 @@ protected:
 
 
 }
-}
-
-#endif //!KhSTL_TYPE_LIST_BASE_H_
+#endif //!KH_STL_TYPE_LIST_BASE_H_

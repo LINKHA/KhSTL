@@ -16,13 +16,13 @@
 #endif
 
 namespace KhSTL {
-namespace Detail
-{
+
 /**
 * Vector class
 */
 template <typename _Value> class tVector : public tVectorBase
 {
+public:
 	struct CopyTag {};
 	struct MoveTag {};
 
@@ -597,7 +597,7 @@ private:
 	/**
 	* @brief : Copy-construct elements
 	*/
-	template <class _RandomIterator>
+	template <typename _RandomIterator>
 	static void constructElements(_Value* dest, _RandomIterator start, _RandomIterator end, CopyTag)
 	{
 		const unsigned count = end - start;
@@ -607,7 +607,7 @@ private:
 	/**
 	* @brief : Move-construct elements
 	*/
-	template <class _RandomIterator>
+	template <typename _RandomIterator>
 	static void constructElements(_Value* dest, _RandomIterator start, _RandomIterator end, MoveTag)
 	{
 		const unsigned count = end - start;
@@ -664,8 +664,8 @@ private:
 	/**
 	* @brief : Insert elements into the vector using copy or move constructor
 	*/
-	template <class Tag, class RandomIteratorT>
-	Iterator doInsertElements(unsigned pos, RandomIteratorT start, RandomIteratorT end, Tag)
+	template <typename _Tag, typename _RandomIterator>
+	Iterator doInsertElements(unsigned pos, _RandomIterator start, _RandomIterator end, _Tag)
 	{
 		if (pos > _size)
 			pos = _size;
@@ -682,7 +682,7 @@ private:
 			_Value* dest = newVector.Buffer();
 
 			// Copy or move new elements
-			constructElements(dest + pos, start, end, Tag{});
+			constructElements(dest + pos, start, end, _Tag{});
 
 			// Move old elements
 			if (pos > 0)
@@ -697,7 +697,7 @@ private:
 			_Value* buffer = Buffer();
 
 			// Copy or move new elements
-			constructElements(buffer + _size, start, end, Tag{});
+			constructElements(buffer + _size, start, end, _Tag{});
 
 			// Rotate buffer
 			if (pos < _size)
@@ -740,8 +740,6 @@ private:
 
 
 }
-}
-
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif

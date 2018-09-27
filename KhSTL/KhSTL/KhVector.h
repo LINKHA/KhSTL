@@ -2,7 +2,7 @@
 #define KH_STL_VECTOR_H_
 
 #ifndef KH_STL_TYPE_VECTOR_H_
-#	include "Container/Detail/TypeVector.h"
+#	include "Container/TypeVector.h"
 #endif
 
 
@@ -10,7 +10,7 @@ namespace KhSTL {
 ///
 ///
 ///
-template<typename _Value> using Vector = KhSTL::Detail::tVector<_Value>;
+template<typename _Value> using Vector = KhSTL::tVector<_Value>;
 
 }
 

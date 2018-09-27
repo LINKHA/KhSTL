@@ -1,11 +1,9 @@
 #ifndef KH_STL_TYPE_HASH_BASE_H_
 #define KH_STL_TYPE_HASH_BASE_H_
-#include "TypeAllcator.h"
-#include "TypeSwap.h"
+#include "../Allocator/TypeAllcator.h"
+#include "../Algorithms/TypeSwap.h"
 
 namespace KhSTL {
-namespace Detail 
-{
 
 /**
 * Hash set/map node base class
@@ -86,21 +84,21 @@ public:
 	/**
 	* @brief : Construct
 	*/
-	tHashBase() :
-		_head(nullptr),
-		_tail(nullptr),
-		_ptrs(nullptr),
-		_allocator(nullptr)
+	tHashBase() 
+		: _head(nullptr)
+		, _tail(nullptr)
+		, _ptrs(nullptr)
+		, _allocator(nullptr)
 	{}
 	/**
 	* @brief : Swap with another hash set or map
 	*/
 	void Swap(tHashBase& rhs)
 	{
-		Detail::Swap(_head, rhs._head);
-		Detail::Swap(_tail, rhs._tail);
-		Detail::Swap(_ptrs, rhs._ptrs);
-		Detail::Swap(_allocator, rhs._allocator);
+		KhSTL::Swap(_head, rhs._head);
+		KhSTL::Swap(_tail, rhs._tail);
+		KhSTL::Swap(_ptrs, rhs._ptrs);
+		KhSTL::Swap(_allocator, rhs._allocator);
 	}
 	/**
 	* @brief : Return number of elements
@@ -118,11 +116,32 @@ protected:
 	/**
 	* @brief : Allocate bucket head pointers + room for size and bucket count variables
 	*/
-	void allocateBuckets(unsigned size, unsigned numBuckets);
+	void allocateBuckets(unsigned size, unsigned numBuckets)
+	{
+		delete[] _ptrs;
+
+		auto ptrs = new tHashNodeBase*[numBuckets + 2];
+		auto* data = reinterpret_cast<unsigned*>(ptrs);
+		data[0] = size;
+		data[1] = numBuckets;
+		_ptrs = ptrs;
+
+		resetPtrs();
+	}
 	/**
 	* @brief : Reset bucket head pointers
 	*/
-	void resetPtrs();
+	void resetPtrs()
+	{
+		// Reset bucket pointers
+		if (!_ptrs)
+			return;
+
+		unsigned numBuckets = NumBuckets();
+		tHashNodeBase** tptrs = ptrs();
+		for (unsigned i = 0; i < numBuckets; ++i)
+			tptrs[i] = nullptr;
+	}
 	/**
 	* @brief : Set new size
 	*/
@@ -147,6 +166,4 @@ protected:
 
 
 }
-}
-
 #endif //!KH_STL_TYPE_HASH_BASE_H_

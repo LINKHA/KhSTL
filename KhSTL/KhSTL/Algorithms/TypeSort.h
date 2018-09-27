@@ -1,8 +1,6 @@
 #ifndef KH_STL_TYPE_SORT_H_
 #define KH_STL_TYPE_SORT_H_
 namespace KhSTL{
-namespace Detail
-{
 
 static const int QUICKSORT_THRESHOLD = 16;
 
@@ -125,6 +123,5 @@ template <class T, class U> void Sort(tIterator<T> begin, tIterator<T> end, U co
 }
 
 
-}
 }
 #endif //!KH_STL_TYPE_SORT_H_

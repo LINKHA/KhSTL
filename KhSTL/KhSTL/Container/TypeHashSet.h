@@ -1,12 +1,10 @@
-#ifndef KhSTL_TYPE_HASH_SET_H_
-#define KhSTL_TYPE_HASH_SET_H_
+#ifndef KH_STL_TYPE_HASH_SET_H_
+#define KH_STL_TYPE_HASH_SET_H_
 #include "TypeHashBase.h"
 #include "TypeIterator.h"
 #include "TypeHash.h"
 
 namespace KhSTL {
-namespace Detail {
-
 template <typename _Key> class tHashSet : public tHashBase
 {
 public:
@@ -451,7 +449,7 @@ public:
 			ptr = ptr->Next();
 		}
 
-		Detail::Sort(tIterator<Node*>(ptrs), tIterator<Node*>(ptrs + numKeys), compareNodes);
+		Sort(tIterator<Node*>(ptrs), tIterator<Node*>(ptrs + numKeys), compareNodes);
 
 		_head = ptrs[0];
 		ptrs[0]->prev = 0;
@@ -694,16 +692,14 @@ private:
 	*/
 	unsigned hash(const _Key& key) const { return MakeHash(key) & (NumBuckets() - 1); }
 };
-template <typename _Key> typename Detail::tHashSet<_Key>::ConstIterator begin(const Detail::tHashSet<_Key>& v) { return v.Begin(); }
+template <typename _Key> typename tHashSet<_Key>::ConstIterator begin(const tHashSet<_Key>& v) { return v.Begin(); }
 
-template <typename _Key> typename Detail::tHashSet<_Key>::ConstIterator end(const Detail::tHashSet<_Key>& v) { return v.End(); }
+template <typename _Key> typename tHashSet<_Key>::ConstIterator end(const tHashSet<_Key>& v) { return v.End(); }
 
-template <typename _Key> typename Detail::tHashSet<_Key>::Iterator begin(Detail::tHashSet<_Key>& v) { return v.Begin(); }
+template <typename _Key> typename tHashSet<_Key>::Iterator begin(tHashSet<_Key>& v) { return v.Begin(); }
 
-template <typename _Key> typename Detail::tHashSet<_Key>::Iterator end(Detail::tHashSet<_Key>& v) { return v.End(); }
+template <typename _Key> typename tHashSet<_Key>::Iterator end(tHashSet<_Key>& v) { return v.End(); }
 
 
 }
-}
-
-#endif //!KhSTL_TYPE_HASH_SET_H_
+#endif //!KH_STL_TYPE_HASH_SET_H_

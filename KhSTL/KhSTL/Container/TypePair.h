@@ -1,10 +1,7 @@
-#ifndef KhSTL_TYPE_PAIR_H_
-#define KhSTL_TYPE_PAIR_H_
+#ifndef KH_STL_TYPE_PAIR_H_
+#define KH_STL_TYPE_PAIR_H_
 
 namespace KhSTL {
-namespace Detail {
-
-
 /**
 * @brief : tPair template class
 */
@@ -71,16 +68,14 @@ template <typename _First, typename _Second> tPair<_First, _Second> MaketPair(co
 	return tPair<_First, _Second>(first, second);
 }
 
-template <typename T> T begin(KhSTL::Detail::tPair<T, T>& range) { return range.first; }
+template <typename T> T begin(KhSTL::tPair<T, T>& range) { return range.first; }
 
-template <typename T> T end(KhSTL::Detail::tPair<T, T>& range) { return range.second; }
+template <typename T> T end(KhSTL::tPair<T, T>& range) { return range.second; }
 
-template <typename T> T begin(const KhSTL::Detail::tPair<T, T>& range) { return range.first; }
+template <typename T> T begin(const KhSTL::tPair<T, T>& range) { return range.first; }
 
-template <typename T> T end(const KhSTL::Detail::tPair<T, T>& range) { return range.second; }
+template <typename T> T end(const KhSTL::tPair<T, T>& range) { return range.second; }
 
 
 }
-}
-
 #endif //!KhSTL_TYPE_PAIR_H_

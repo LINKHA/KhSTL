@@ -5,9 +5,6 @@
 #include <initializer_list>
 
 namespace KhSTL {
-namespace Detail
-{
-
 
 /**
 * Doubly-linked list template class
@@ -551,16 +548,14 @@ private:
 	}
 };
 	
-template <typename _Value> typename Detail::tList<_Value>::ConstIterator begin(const Detail::tList<_Value>& v) { return v.Begin(); }
+template <typename _Value> typename tList<_Value>::ConstIterator begin(const tList<_Value>& v) { return v.Begin(); }
 
-template <typename _Value> typename Detail::tList<_Value>::ConstIterator end(const Detail::tList<_Value>& v) { return v.End(); }
+template <typename _Value> typename tList<_Value>::ConstIterator end(const tList<_Value>& v) { return v.End(); }
 
-template <typename _Value> typename Detail::tList<_Value>::Iterator begin(Detail::tList<_Value>& v) { return v.Begin(); }
+template <typename _Value> typename tList<_Value>::Iterator begin(tList<_Value>& v) { return v.Begin(); }
 
-template <typename _Value> typename Detail::tList<_Value>::Iterator end(Detail::tList<_Value>& v) { return v.End(); }
+template <typename _Value> typename tList<_Value>::Iterator end(tList<_Value>& v) { return v.End(); }
 
 
 }
-}
-
 #endif //!KH_STL_TYPE_LIST_H_

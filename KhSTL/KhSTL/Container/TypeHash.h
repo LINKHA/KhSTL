@@ -4,7 +4,6 @@
 
 namespace KhSTL
 {
-namespace Detail { 
 /**
 * @brief : Pointer hash function
 */
@@ -99,6 +98,4 @@ template <> inline unsigned MakeHash(const unsigned char& value)
 
 
 }
-}
-
 #endif //!KH_STL_TYPE_HASH_H_

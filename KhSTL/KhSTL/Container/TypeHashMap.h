@@ -4,12 +4,11 @@
 #include "TypePair.h"
 #include "TypeVector.h"
 #include "TypeIterator.h"
-#include "TypeSort.h"
+#include "../Algorithms/TypeSort.h"
 
 #include <initializer_list>
 
 namespace KhSTL {
-namespace Detail {
 
 template <typename _Key, typename _Value> class tHashMap : public tHashBase 
 {
@@ -527,7 +526,7 @@ public:
 			ptr = ptr->Next();
 		}
 
-		Detail::Sort(tIterator<Node*>(ptrs), tIterator<Node*>(ptrs + numKeys), CompareNodes);
+		Sort(tIterator<Node*>(ptrs), tIterator<Node*>(ptrs + numKeys), CompareNodes);
 
 		_head = ptrs[0];
 		ptrs[0]->prev = 0;
@@ -846,16 +845,14 @@ private:
 	unsigned Hash(const _Key& key) const { return MakeHash(key) & (NumBuckets() - 1); }
 };
 
-template <typename _Key, typename _Value> typename Detail::tHashMap<_Key, _Value>::ConstIterator begin(const Detail::tHashMap<_Key, _Value>& v) { return v.Begin(); }
+template <typename _Key, typename _Value> typename tHashMap<_Key, _Value>::ConstIterator begin(const tHashMap<_Key, _Value>& v) { return v.Begin(); }
 
-template <typename _Key, typename _Value> typename Detail::tHashMap<_Key, _Value>::ConstIterator end(const Detail::tHashMap<_Key, _Value>& v) { return v.End(); }
+template <typename _Key, typename _Value> typename tHashMap<_Key, _Value>::ConstIterator end(const tHashMap<_Key, _Value>& v) { return v.End(); }
 
-template <typename _Key, typename _Value> typename Detail::tHashMap<_Key, _Value>::Iterator begin(Detail::tHashMap<_Key, _Value>& v) { return v.Begin(); }
+template <typename _Key, typename _Value> typename tHashMap<_Key, _Value>::Iterator begin(tHashMap<_Key, _Value>& v) { return v.Begin(); }
 
-template <typename _Key, typename _Value> typename Detail::tHashMap<_Key, _Value>::Iterator end(Detail::tHashMap<_Key, _Value>& v) { return v.End(); }
+template <typename _Key, typename _Value> typename tHashMap<_Key, _Value>::Iterator end(tHashMap<_Key, _Value>& v) { return v.End(); }
 
 
 }
-}
-
 #endif //!KH_STL_TYPE_HASH_MAP_H_

@@ -1,8 +1,7 @@
 #ifndef KH_STL_TYPEE_ALLCATOR_H_
 #define KH_STL_TYPEE_ALLCATOR_H_
 namespace KhSTL {
-namespace Detail
-{
+
 struct tAllocatorBlock;
 struct tAllocatorNode;
 
@@ -55,7 +54,7 @@ void AllocatorFree(tAllocatorBlock* allocator, void* ptr);
 /**
 * Allocator template class. Allocates objects of a specific class
 */
-template <class T> class tAllocator
+template <class _Value> class tAllocator
 {
 public:
 
@@ -66,7 +65,7 @@ public:
 		: _allocator(nullptr)
 	{
 		if (initialCapacity)
-			_allocator = AllocatorInitialize((unsigned)sizeof(T), initialCapacity);
+			_allocator = AllocatorInitialize((unsigned)sizeof(_Value), initialCapacity);
 	}
 	/**
 	* @brief : Destruct
@@ -78,41 +77,41 @@ public:
 	/**
 	* @brief : Prevent copy construction
 	*/
-	tAllocator(const tAllocator<T>& rhs) = delete;
+	tAllocator(const tAllocator<_Value>& rhs) = delete;
 	/**
 	* @brief : Prevent assignment
 	*/
-	tAllocator<T>& operator =(const tAllocator<T>& rhs) = delete;
+	tAllocator<_Value>& operator =(const tAllocator<_Value>& rhs) = delete;
 	/**
 	* @brief : Reserve and default-construct an object
 	*/
-	T* Reserve()
+	_Value* Reserve()
 	{
 		if (!_allocator)
-			_allocator = AllocatorInitialize((unsigned)sizeof(T));
-		auto* newObject = static_cast<T*>(AllocatorReserve(_allocator));
-		new(newObject) T();
+			_allocator = AllocatorInitialize((unsigned)sizeof(_Value));
+		auto* newObject = static_cast<_Value*>(AllocatorReserve(_allocator));
+		new(newObject) _Value();
 
 		return newObject;
 	}
 	/**
 	* @brief : Reserve and copy-construct an object
 	*/
-	T* Reserve(const T& object)
+	_Value* Reserve(const _Value& object)
 	{
 		if (!_allocator)
-			_allocator = AllocatorInitialize((unsigned)sizeof(T));
-		auto* newObject = static_cast<T*>(AllocatorReserve(_allocator));
-		new(newObject) T(object);
+			_allocator = AllocatorInitialize((unsigned)sizeof(_Value));
+		auto* newObject = static_cast<_Value*>(AllocatorReserve(_allocator));
+		new(newObject) _Value(object);
 
 		return newObject;
 	}
 	/**
 	* @brief : Destruct and free an object
 	*/
-	void Free(T* object)
+	void Free(_Value* object)
 	{
-		(object)->~T();
+		(object)->~_Value();
 		AllocatorFree(_allocator, object);
 	}
 
@@ -124,7 +123,6 @@ private:
 
 
 
-}
 }
 
 #endif //!KH_STL_TYPEE_ALLCATOR_H_

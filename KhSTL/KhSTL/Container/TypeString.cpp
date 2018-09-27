@@ -2,8 +2,7 @@
 #include "TypeWString.h"
 
 namespace KhSTL {
-namespace Detail
-{
+
 char tString::endZero = 0;
 
 const tString tString::EMPTY;
@@ -426,7 +425,7 @@ const char& tString::operator [](unsigned index) const
 	return _buffer[index];
 }
 
-void tString::Replace(unsigned pos, unsigned length, const char * srcStart, unsigned srcLength)
+void tString::Replace(unsigned pos, unsigned length, const char* srcStart, unsigned srcLength)
 {
 	int delta = (int)srcLength - (int)length;
 
@@ -703,9 +702,9 @@ void tString::Clear()
 
 void tString::Swap(tString & str)
 {
-	KhSTL::Detail::Swap(_length, str._length);
-	KhSTL::Detail::Swap(_capacity, str._capacity);
-	KhSTL::Detail::Swap(_buffer, str._buffer);
+	KhSTL::Swap(_length, str._length);
+	KhSTL::Swap(_capacity, str._capacity);
+	KhSTL::Swap(_buffer, str._buffer);
 }
 
 tString tString::SubString(unsigned pos) const
@@ -1440,10 +1439,5 @@ int tString::Compare(const char* lhs, const char* rhs, bool caseSensitive)
 	}
 }
 
-
-
-
-
-}
 
 }

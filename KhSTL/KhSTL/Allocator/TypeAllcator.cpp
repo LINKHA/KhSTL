@@ -1,8 +1,6 @@
 #include "TypeAllcator.h"
 
 namespace KhSTL {
-namespace Detail
-{
 
 tAllocatorBlock* AllocatorReserveBlock(tAllocatorBlock* allocator, unsigned nodeSize, unsigned capacity)
 {
@@ -98,5 +96,4 @@ void AllocatorFree(tAllocatorBlock* allocator, void* ptr)
 
 
 
-}
 }

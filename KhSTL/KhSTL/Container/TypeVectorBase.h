@@ -1,7 +1,7 @@
-#ifndef KhSTL_TYPE_VECTOR_BASE_H_
-#define KhSTL_TYPE_VECTOR_BASE_H_
+#ifndef KH_STL_TYPE_VECTOR_BASE_H_
+#define KH_STL_TYPE_VECTOR_BASE_H_
 
-#include "TypeSwap.h"
+#include "../Algorithms/TypeSwap.h"
 
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -9,8 +9,6 @@
 #endif
 
 namespace KhSTL {
-namespace Detail
-{
 /**
 * tpye vector base class
 */
@@ -28,9 +26,9 @@ public:
 	*/
 	void Swap(tVectorBase& rhs)
 	{
-		Detail::Swap(_size, rhs._size);
-		Detail::Swap(_capacity, rhs._capacity);
-		Detail::Swap(_buffer, rhs._buffer);
+		KhSTL::Swap(_size, rhs._size);
+		KhSTL::Swap(_capacity, rhs._capacity);
+		KhSTL::Swap(_buffer, rhs._buffer);
 	}
 
 protected:
@@ -45,10 +43,8 @@ protected:
 
 
 }
-}
-
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
 
-#endif //!KhSTL_TYPE_VECTOR_BASE_H_
+#endif //!KH_STL_TYPE_VECTOR_BASE_H_

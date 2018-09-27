@@ -4,22 +4,22 @@
 
 
 #ifndef KH_STL_TYPE_STRING_H_
-#	include "Container/Detail/TypeString.h"
+#	include "Container/TypeString.h"
 #endif //!KH_STL_TYPE_STRING_H_
 
 #ifndef KH_STL_TYPE_WSTRING_H_
-#	include "Container/Detail/TypeWString.h"
+#	include "Container/TypeWString.h"
 #endif //!KH_STL_TYPE_WSTRING_H_
 
 namespace KhSTL {
 ///
 ///
 ///
-using String = KhSTL::Detail::tString;
+using String = KhSTL::tString;
 ///
 ///
 ///
-using WString = KhSTL::Detail::tWString;
+using WString = KhSTL::tWString;
 }
 
 
