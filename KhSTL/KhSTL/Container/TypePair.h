@@ -5,7 +5,9 @@ namespace KhSTL {
 /**
 * @brief : tPair template class
 */
-template <typename _First, typename _Second> class tPair
+template <typename _First
+	, typename _Second> 
+	class tPair
 {
 public:
 	/**

@@ -5,7 +5,8 @@
 #include "TypeHash.h"
 
 namespace KhSTL {
-template <typename _Key> class tHashSet : public tHashBase
+template <typename _Key> 
+	class tHashSet : public tHashBase
 {
 public:
 	/**

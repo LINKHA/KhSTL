@@ -2,7 +2,8 @@
 #define KH_STL_TYPE_ITERATOR_H_
 
 namespace KhSTL {
-template <typename _Container> class tIterator
+template <typename _Container>
+	class tIterator
 {
 	using This = tIterator<_Container> ;
 public:
@@ -238,20 +239,6 @@ public:
 	const _Container* ptr;
 };
 
-template <typename _Container,unsigned _Max> class tArrayIterator
-{
-	using This = tArrayIterator<_Container, _Max>;
-public:
-	tArrayIterator() : ptr(nullptr)
-	{}
-private:
-	_Container* ptr;
-};
-
-template <typename _Container, unsigned _Max> class tArrayConstIterator
-{
-
-};
 
 }
 #endif //!KH_STL_TYPE_ITERATOR_H_

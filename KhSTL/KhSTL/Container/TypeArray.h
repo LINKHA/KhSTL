@@ -4,12 +4,12 @@
 
 #include <initializer_list>
 
-#include <iostream>
-
 namespace KhSTL {
 
 
-template <typename _Value,unsigned _Max> class tArray 
+template <typename _Value
+	,unsigned _Max> 
+	class tArray 
 {
 public:
 	using ValueType = _Value;
@@ -20,18 +20,16 @@ public:
 	* @brief : Construct empty
 	*/
 	tArray() noexcept
-		: _max(_Max)
-		, _elems(new _Value[_Max])
+		: _elems(new _Value[_Max])
 	{}
 	/**
 	* @brief :
 	*/
 	tArray(std::initializer_list<_Value> list)
 		: tArray()
-		, _max(_Max)
 		, _elems(new _Value[_Max])
 	{
-		assert(list.size() <= _max);
+		assert(list.size() <= _Max);
 		unsigned i = 0;
 		for (auto it = list.begin(); it != list.end(); it++)
 		{
@@ -43,7 +41,6 @@ public:
 	*/
 	~tArray()
 	{
-		destructElements();
 		delete[] _elems;
 	}
 	/**
@@ -156,22 +153,9 @@ public:
 	*/
 	void Swap(tArray& rhs)
 	{
-		KhSTL::Swap(_max, rhs._max);
 		KhSTL::Swap(*_elems, *rhs._elems);
 	}
 private:
-	/**
-	* @brief : Call the elements' destructors
-	*/
-	void destructElements()
-	{
-		while (_max--)
-		{
-			delete _elems[_max];
-		}
-	}
-	/// Size of vector.
-	unsigned _max;
 	/// Value array
 	_Value* _elems;
 };

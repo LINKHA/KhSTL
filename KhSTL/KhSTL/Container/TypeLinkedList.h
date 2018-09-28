@@ -18,7 +18,8 @@ struct tLinkedListNode
 	tLinkedListNode* next;
 };
 
-template <typename _Value> class tLinkedList
+template <typename _Value> 
+	class tLinkedList
 {
 public:
 	tLinkedList()

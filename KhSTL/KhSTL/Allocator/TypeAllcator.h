@@ -10,15 +10,15 @@ struct tAllocatorNode;
 */
 struct tAllocatorBlock
 {
-	/// Size of a node.
+	/// Size of a node
 	unsigned nodeSize;
-	/// Number of nodes in this block.
+	/// Number of nodes in this block
 	unsigned capacity;
-	/// First free node.
+	/// First free node
 	tAllocatorNode* free;
-	/// Next allocator block.
+	/// Next allocator block
 	tAllocatorBlock* next;
-	/// Nodes follow.
+	/// Nodes follow
 };
 
 
@@ -27,9 +27,9 @@ struct tAllocatorBlock
 */
 struct tAllocatorNode
 {
-	/// Next free node.
+	/// Next free node
 	tAllocatorNode* next;
-	/// Data follows.
+	/// Data follows
 };
 
 
@@ -54,7 +54,8 @@ void AllocatorFree(tAllocatorBlock* allocator, void* ptr);
 /**
 * Allocator template class. Allocates objects of a specific class
 */
-template <class _Value> class tAllocator
+template <class _Value> 
+	class tAllocator
 {
 public:
 

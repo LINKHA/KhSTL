@@ -10,7 +10,9 @@
 
 namespace KhSTL {
 
-template <typename _Key, typename _Value> class tHashMap : public tHashBase 
+template <typename _Key
+	, typename _Value> 
+	class tHashMap : public tHashBase 
 {
 	using KeyType = _Key;
 	using ValueType = _Value;
@@ -670,7 +672,7 @@ private:
 	/**
 	* @brief : Return the head node
 	*/
-	Node * Head() const { return static_cast<Node*>(_head); }
+	Node* Head() const { return static_cast<Node*>(_head); }
 	/**
 	* @brief : Return the tail node
 	*/

@@ -20,7 +20,8 @@ namespace KhSTL {
 /**
 * Vector class
 */
-template <typename _Value> class tVector : public tVectorBase
+template <typename _Value> 
+	class tVector : public tVectorBase
 {
 public:
 	struct CopyTag {};
@@ -74,12 +75,12 @@ public:
 	/**
 	* @brief : Aggregate initialization constructor
 	*/
-	tVector(const std::initializer_list<_Value>& list) 
+	tVector(const std::initializer_list<_Value>& list)
 		: tVector()
 	{
 		for (auto it = list.begin(); it != list.end(); it++)
 		{
-			Push(*it);
+			PushBack(*it);
 		}
 	}
 	/**
@@ -229,16 +230,16 @@ public:
 		else
 		{
 			_Value value(std::forward<Args>(args)...);
-			Push(std::move(value));
+			PushBack(std::move(value));
 		}
 		return Back();
 	}
-	
+
 #ifndef COVERITY_SCAN_MODEL
 	/**
 	* @brief : Add an element at the end
 	*/
-	void Push(const _Value& value)
+	void PushBack(const _Value& value)
 	{
 		if (_size < _capacity)
 		{
@@ -250,10 +251,10 @@ public:
 			doInsertElements(_size, &value, &value + 1, CopyTag{});
 	}
 	/**
-	* @brief :
+	* @brief : Add another vector at the end
 	*/
 
-	void Push(_Value && value)
+	void PushBack(_Value && value)
 	{
 		if (_size < _capacity)
 		{
@@ -269,7 +270,7 @@ public:
 	* @brief :FIXME: Attempt had been made to use this model in the Coverity-Scan model file without any success
 	*			Probably because the model had generated a different mangled name than the one used by static analyzer
 	*/
-	void Push(const _Value& value)
+	void PushBack(const _Value& value)
 	{
 		T array[] = { value };
 		doInsertElements(_size, array, array + 1, CopyTag{});
@@ -278,14 +279,14 @@ public:
 	/**
 	* @brief : Add another vector at the end
 	*/
-	void Push(const tVector<_Value>& vector) 
-	{ 
-		doInsertElements(_size, vector.Begin(), vector.End(), CopyTag{}); 
+	void PushBack(const tVector<_Value>& vector)
+	{
+		doInsertElements(_size, vector.Begin(), vector.End(), CopyTag{});
 	}
 	/**
 	* @brief : Remove the last element
 	*/
-	void Pop()
+	void PopBack()
 	{
 		if (_size)
 			Resize(_size - 1);
@@ -427,7 +428,7 @@ public:
 			return false;
 	}
 	/**
-	* @brief : Erase an element by value by swapping with the last element. 
+	* @brief : Erase an element by value by swapping with the last element.
 				Return true if was found and erased
 	*/
 	bool RemoveSwap(const _Value& value)
@@ -735,8 +736,6 @@ private:
 		}
 	}
 };
-
-
 
 
 }

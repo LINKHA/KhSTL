@@ -9,7 +9,8 @@ namespace KhSTL {
 /**
 * Doubly-linked list template class
 */
-template <typename _Value> class tList : public tListBase
+template <typename _Value> 
+	class tList : public tListBase
 {
 public:
 	/**
@@ -298,7 +299,7 @@ public:
 	/**
 	* @brief : Insert an element to the end
 	*/
-	void Push(const _Value& value) { InsertNode(Tail(), value); }
+	void PushBack(const _Value& value) { InsertNode(Tail(), value); }
 	/**
 	* @brief : Insert an element to the beginning
 	*/
@@ -341,7 +342,7 @@ public:
 	/**
 	* @brief : Erase the last element
 	*/
-	void Pop()
+	void PopBack()
 	{
 		if (_size)
 			Erase(--End());
@@ -395,7 +396,7 @@ public:
 	void Resize(unsigned newSize)
 	{
 		while (_size > newSize)
-			Pop();
+			PopBack();
 
 		while (_size < newSize)
 			InsertNode(Tail(), _Value());
@@ -523,24 +524,27 @@ private:
 
 		return next;
 	}
-
-	/// Reserve a node.
+	/**
+	* @brief : Reserve a node
+	*/
 	Node* ReserveNode()
 	{
 		auto* newNode = static_cast<Node*>(AllocatorReserve(_allocator));
 		new(newNode) Node();
 		return newNode;
 	}
-
-	/// Reserve a node with initial value.
+	/**
+	* @brief : Reserve a node with initial value
+	*/
 	Node* ReserveNode(const _Value& value)
 	{
 		auto* newNode = static_cast<Node*>(AllocatorReserve(_allocator));
 		new(newNode) Node(value);
 		return newNode;
 	}
-
-	/// Free a node.
+	/**
+	* @brief : Free a node
+	*/
 	void FreeNode(Node* node)
 	{
 		(node)->~Node();
