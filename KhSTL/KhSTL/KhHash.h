@@ -14,11 +14,11 @@ namespace KhSTL {
 ///
 ///
 ///
-template<typename _Value> using HashSet = KhSTL::tHashSet<_Value>;
+template<typename _Ty> using HashSet = KhSTL::tHashSet<_Ty>;
 ///
 ///
 ///
-template<typename _Key, typename _Value> using HashMap = KhSTL::tHashMap<_Key, _Value>;
+template<typename _Key, typename _Ty> using HashMap = KhSTL::tHashMap<_Key, _Ty>;
 }
 
 #endif //!KH_STL_HASH_H_

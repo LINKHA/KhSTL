@@ -9,7 +9,7 @@ namespace KhSTL {
 ///
 ///
 ///
-template<typename _Value> using Deque = KhSTL::tDeque<_Value>;
+template<typename _Ty> using Deque = KhSTL::tDeque<_Ty>;
 
 }
 

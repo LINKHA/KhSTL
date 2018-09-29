@@ -9,7 +9,7 @@ namespace KhSTL {
 ///
 ///
 ///
-template<typename _Value,unsigned _Max = 0> using Array = KhSTL::tArray<_Value, _Max>;
+template<typename _Ty,unsigned _Max = 0> using Array = KhSTL::tArray<_Ty, _Max>;
 
 }
 #endif //!KH_STL_ARRAY_H_

@@ -8,19 +8,19 @@
 
 namespace KhSTL {
 
-template<class _Value
+template<class _Ty
 	, unsigned _Size>
 	struct tDequeIterator
 {
-	using ValueType	= _Value;
+	using ValueType	= _Ty;
 	using DifferenceType = ptrdiff_t;
 	using This = tDequeIterator;
-	using Iterator = tDequeIterator<_Value, _Size>;
+	using Iterator = tDequeIterator<_Ty, _Size>;
 
 	/**
 	* @brief : Transfer buffer position
 	*/
-	void SetNode(_Value** newNode)
+	void SetNode(_Ty** newNode)
 	{
 		node = newNode; 
 		first = *newNode; 
@@ -29,11 +29,11 @@ template<class _Value
 
 	size_t BufferSize()
 	{
-		return _Size != 0 ? _Size : (sizeof(_Value) < 512 ? size_t(512 / sizeof(_Size)) : size_t(1));
+		return _Size != 0 ? _Size : (sizeof(_Ty) < 512 ? size_t(512 / sizeof(_Size)) : size_t(1));
 	}
 
-	_Value& operator *() const { return *cur; }
-	_Value* operator ->() const { return &(operator *()); }
+	_Ty& operator *() const { return *cur; }
+	_Ty* operator ->() const { return &(operator *()); }
 
 	This& operator ++()
 	{
@@ -110,7 +110,7 @@ template<class _Value
 		return DifferenceType(BufferSize())*(node - x.node - 1) + (cur - first) + (x.last - x.cur);
 	}
 
-	_Value& operator [](DifferenceType n)const { return *(*this + n); }
+	_Ty& operator [](DifferenceType n)const { return *(*this + n); }
 
 	bool operator ==(const This& x) const 
 	{ 
@@ -128,26 +128,26 @@ template<class _Value
 	}
 
 
-	_Value* cur; 
-	_Value* first; 
-	_Value* last; 
-	_Value** node; 
+	_Ty* cur; 
+	_Ty* first; 
+	_Ty* last; 
+	_Ty** node; 
 };
 
 
-template<class _Value
+template<class _Ty
 	, unsigned _Size>
 	struct tDequeConstIterator
 {
-	using ValueType = _Value;
+	using ValueType = _Ty;
 	using DifferenceType = ptrdiff_t;
 	using This = tConstDequeIterator;
-	using Iterator = tConstDequeIterator<_Value, _Size>;
+	using Iterator = tConstDequeIterator<_Ty, _Size>;
 
 	/**
 	* @brief : Transfer buffer position
 	*/
-	void SetNode(_Value** newNode)
+	void SetNode(_Ty** newNode)
 	{
 		node = newNode;
 		first = *newNode;
@@ -156,11 +156,11 @@ template<class _Value
 
 	size_t BufferSize()
 	{
-		return _Size != 0 ? _Size : (sizeof(_Value) < 512 ? size_t(512 / sizeof(_Size)) : size_t(1));
+		return _Size != 0 ? _Size : (sizeof(_Ty) < 512 ? size_t(512 / sizeof(_Size)) : size_t(1));
 	}
 
-	const _Value& operator *() const { return *cur; }
-	const _Value* operator ->()const { return &(operator *()); }
+	const _Ty& operator *() const { return *cur; }
+	const _Ty* operator ->()const { return &(operator *()); }
 
 	This& operator ++()
 	{
@@ -237,7 +237,7 @@ template<class _Value
 		return DifferenceType(BufferSize())*(node - x.node - 1) + (cur - first) + (x.last - x.cur);
 	}
 
-	_Value& operator [](DifferenceType n)const { return *(*this + n); }
+	_Ty& operator [](DifferenceType n)const { return *(*this + n); }
 
 	bool operator ==(const This& x) const
 	{
@@ -255,10 +255,10 @@ template<class _Value
 	}
 
 
-	_Value* cur;
-	_Value* first;
-	_Value* last;
-	_Value** node;
+	_Ty* cur;
+	_Ty* first;
+	_Ty* last;
+	_Ty** node;
 };
 
 

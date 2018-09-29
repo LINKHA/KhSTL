@@ -10,7 +10,7 @@ namespace KhSTL {
 ///
 ///
 ///
-template<typename _Value> using Vector = KhSTL::tVector<_Value>;
+template<typename _Ty> using Vector = KhSTL::tVector<_Ty>;
 
 }
 

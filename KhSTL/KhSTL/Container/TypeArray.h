@@ -7,27 +7,27 @@
 namespace KhSTL {
 
 
-template <typename _Value
+template <typename _Ty
 	,unsigned _Max> 
 	class tArray 
 {
 public:
-	using ValueType = _Value;
-	using Iterator = tIterator<_Value>;
-	using ConstIterator = tConstIterator<_Value>;
+	using ValueType = _Ty;
+	using Iterator = tIterator<_Ty>;
+	using ConstIterator = tConstIterator<_Ty>;
 public:
 	/**
 	* @brief : Construct empty
 	*/
 	tArray() noexcept
-		: _elems(new _Value[_Max])
+		: _elems(new _Ty[_Max])
 	{}
 	/**
 	* @brief :
 	*/
-	tArray(std::initializer_list<_Value> list)
+	tArray(std::initializer_list<_Ty> list)
 		: tArray()
-		, _elems(new _Value[_Max])
+		, _elems(new _Ty[_Max])
 	{
 		assert(list.size() <= _Max);
 		unsigned i = 0;
@@ -46,7 +46,7 @@ public:
 	/**
 	* @brief : Return element at index
 	*/
-	_Value& operator [](unsigned index)
+	_Ty& operator [](unsigned index)
 	{
 		assert(index >= 0 && index <= _Max - 1);
 
@@ -55,7 +55,7 @@ public:
 	/**
 	* @brief : Return const element at index
 	*/
-	const _Value& operator [](unsigned index) const
+	const _Ty& operator [](unsigned index) const
 	{
 		assert(index >= 0 && index <= _Max - 1);
 		return _elems[index];
@@ -77,7 +77,7 @@ public:
 	/**
 	* @brief : Return element at index
 	*/
-	_Value& At(unsigned index)
+	_Ty& At(unsigned index)
 	{
 		assert(index < _Max);
 		return _elems[index];
@@ -85,7 +85,7 @@ public:
 	/**
 	* @brief : Return const element at index
 	*/
-	const _Value& At(unsigned index) const
+	const _Ty& At(unsigned index) const
 	{
 		assert(index < _Max);
 		return _elems[index];
@@ -93,61 +93,73 @@ public:
 	/**
 	* @brief : Return first element of mutable sequence
 	*/
-	_Value& front() noexcept 
+	_Ty& front() noexcept 
 	{	// 
 		return (_elems[0]);
 	}
 	/**
 	* @brief : Return first const element of mutable sequence
 	*/
-	constexpr const _Value& Front() const noexcept 
+	constexpr const _Ty& Front() const noexcept 
 	{
 		return (_elems[0]);
 	}
 	/**
 	* @brief : Return last element of mutable sequence
 	*/
-	_Value& Back() noexcept
+	_Ty& Back() noexcept
 	{
 		return (_elems[_Max - 1]);
 	}
 	/**
 	* @brief : Return const last element of mutable sequence
 	*/
-	constexpr const _Value& Back() const noexcept 
+	constexpr const _Ty& Back() const noexcept 
 	{
 		return (_elems[_Max - 1]);
 	}
 	/**
 	* @brief : Return pointer to mutable data array
 	*/
-	_Value* Data() noexcept
+	_Ty* Data() noexcept
 	{	
 		return (_elems);
 	}
 	/**
 	* @brief : return const pointer to nonmutable data array
 	*/
-	const _Value* Data() const noexcept
+	const _Ty* Data() const noexcept
 	{	// 
 		return (_elems);
 	}
 	/**
 	* @brief : Return iterator to the beginning
 	*/
-	Iterator Begin() { return Iterator(_elems); }
+	Iterator Begin() 
+	{ 
+		return Iterator(_elems); 
+	}
 	/**
 	* @brief : Return const iterator to the beginning
 	*/
-	ConstIterator Begin() const { return ConstIterator(_elems); }
+	ConstIterator Begin() const 
+	{ 
+		return ConstIterator(_elems);
+	}
 	/**
 	* @brief : Return iterator to the end
 	*/
-	Iterator End() { return Iterator(_elems + _Max); }
+	Iterator End() 
+	{ 
+		return Iterator(_elems + _Max);
+	}
 	/**
 	* @brief : Return const iterator to the end
 	*/
-	ConstIterator End() const { return ConstIterator(_elems + _Max); }
+	ConstIterator End() const 
+	{ 
+		return ConstIterator(_elems + _Max);
+	}
 	/**
 	* @brief : Swap with another vector
 	*/
@@ -157,7 +169,7 @@ public:
 	}
 private:
 	/// Value array
-	_Value* _elems;
+	_Ty* _elems;
 };
 
 

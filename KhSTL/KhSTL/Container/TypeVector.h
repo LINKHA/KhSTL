@@ -20,16 +20,16 @@ namespace KhSTL {
 /**
 * Vector class
 */
-template <typename _Value> 
+template <typename _Ty> 
 	class tVector : public tVectorBase
 {
 public:
 	struct CopyTag {};
 	struct MoveTag {};
 
-	using ValueType = _Value;
-	using Iterator = tIterator<_Value>;
-	using ConstIterator = tConstIterator<_Value>;
+	using ValueType = _Ty;
+	using Iterator = tIterator<_Ty>;
+	using ConstIterator = tConstIterator<_Ty>;
 public:
 	/**
 	* @brief : Construct empty
@@ -45,7 +45,7 @@ public:
 	/**
 	* @brief : Construct with initial size and default value
 	*/
-	tVector(unsigned size, const _Value& value)
+	tVector(unsigned size, const _Ty& value)
 	{
 		Resize(size);
 		for (unsigned i = 0; i < size; ++i)
@@ -54,28 +54,28 @@ public:
 	/**
 	* @brief : Construct with initial data
 	*/
-	tVector(const _Value* data, unsigned size)
+	tVector(const _Ty* data, unsigned size)
 	{
 		doInsertElements(0, data, data + size, CopyTag{});
 	}
 	/**
 	* @brief : Copy-construct from another vector
 	*/
-	tVector(const tVector<_Value>& vector)
+	tVector(const tVector<_Ty>& vector)
 	{
 		doInsertElements(0, vector.Begin(), vector.End(), CopyTag{});
 	}
 	/**
 	* @brief : Move-construct from another vector
 	*/
-	tVector(tVector<_Value> && vector)
+	tVector(tVector<_Ty> && vector)
 	{
 		Swap(vector);
 	}
 	/**
 	* @brief : Aggregate initialization constructor
 	*/
-	tVector(const std::initializer_list<_Value>& list)
+	tVector(const std::initializer_list<_Ty>& list)
 		: tVector()
 	{
 		for (auto it = list.begin(); it != list.end(); it++)
@@ -95,12 +95,12 @@ public:
 	/**
 	* @brief : Assign from another vector
 	*/
-	tVector<_Value>& operator =(const tVector<_Value>& rhs)
+	tVector<_Ty>& operator =(const tVector<_Ty>& rhs)
 	{
 		// In case of self-assignment do nothing
 		if (&rhs != this)
 		{
-			tVector<_Value> copy(rhs);
+			tVector<_Ty> copy(rhs);
 			Swap(copy);
 		}
 		return *this;
@@ -108,7 +108,7 @@ public:
 	/**
 	* @brief : Move-assign from another vector
 	*/
-	tVector<_Value>& operator =(tVector<_Value> && rhs)
+	tVector<_Ty>& operator =(tVector<_Ty> && rhs)
 	{
 		assert(&rhs != this);
 		Swap(rhs);
@@ -117,7 +117,7 @@ public:
 	/**
 	* @brief : Add-assign an element
 	*/
-	tVector<_Value>& operator +=(const _Value& rhs)
+	tVector<_Ty>& operator +=(const _Ty& rhs)
 	{
 		Push(rhs);
 		return *this;
@@ -125,7 +125,7 @@ public:
 	/**
 	* @brief : Add-assign another vector
 	*/
-	tVector<_Value>& operator +=(const tVector<_Value>& rhs)
+	tVector<_Ty>& operator +=(const tVector<_Ty>& rhs)
 	{
 		Push(rhs);
 		return *this;
@@ -133,31 +133,31 @@ public:
 	/**
 	* @brief : Add an element
 	*/
-	tVector<_Value> operator +(const _Value& rhs) const
+	tVector<_Ty> operator +(const _Ty& rhs) const
 	{
-		tVector<_Value> ret(*this);
+		tVector<_Ty> ret(*this);
 		ret.Push(rhs);
 		return ret;
 	}
 	/**
 	* @brief : Add another vector
 	*/
-	tVector<_Value> operator +(const tVector<_Value>& rhs) const
+	tVector<_Ty> operator +(const tVector<_Ty>& rhs) const
 	{
-		tVector<_Value> ret(*this);
+		tVector<_Ty> ret(*this);
 		ret.Push(rhs);
 		return ret;
 	}
 	/**
 	* @brief : Test for equality with another vector
 	*/
-	bool operator ==(const tVector<_Value>& rhs) const
+	bool operator ==(const tVector<_Ty>& rhs) const
 	{
 		if (rhs._size != _size)
 			return false;
 
-		_Value* buffer = Buffer();
-		_Value* rhsBuffer = rhs.Buffer();
+		_Ty* buffer = Buffer();
+		_Ty* rhsBuffer = rhs.Buffer();
 		for (unsigned i = 0; i < _size; ++i)
 		{
 			if (buffer[i] != rhsBuffer[i])
@@ -169,13 +169,13 @@ public:
 	/**
 	* @brief : Test for inequality with another vector
 	*/
-	bool operator !=(const tVector<_Value>& rhs) const
+	bool operator !=(const tVector<_Ty>& rhs) const
 	{
 		if (rhs._size != _size)
 			return true;
 
-		_Value* buffer = Buffer();
-		_Value* rhsBuffer = rhs.Buffer();
+		_Ty* buffer = Buffer();
+		_Ty* rhsBuffer = rhs.Buffer();
 		for (unsigned i = 0; i < _size; ++i)
 		{
 			if (buffer[i] != rhsBuffer[i])
@@ -187,7 +187,7 @@ public:
 	/**
 	* @brief : Return element at index
 	*/
-	_Value& operator [](unsigned index)
+	_Ty& operator [](unsigned index)
 	{
 		assert(index < _size);
 		return Buffer()[index];
@@ -195,7 +195,7 @@ public:
 	/**
 	* @brief : Return const element at index
 	*/
-	const _Value& operator [](unsigned index) const
+	const _Ty& operator [](unsigned index) const
 	{
 		assert(index < _size);
 		return Buffer()[index];
@@ -203,7 +203,7 @@ public:
 	/**
 	* @brief : Return element at index
 	*/
-	_Value& At(unsigned index)
+	_Ty& At(unsigned index)
 	{
 		assert(index < _size);
 		return Buffer()[index];
@@ -211,7 +211,7 @@ public:
 	/**
 	* @brief : Return const element at index
 	*/
-	const _Value& At(unsigned index) const
+	const _Ty& At(unsigned index) const
 	{
 		assert(index < _size);
 		return Buffer()[index];
@@ -219,17 +219,17 @@ public:
 	/**
 	* @brief : Create an element at the end
 	*/
-	template <typename... Args> _Value& EmplaceBack(Args&&... args)
+	template <typename... Args> _Ty& EmplaceBack(Args&&... args)
 	{
 		if (_size < _capacity)
 		{
 			// Optimize common case
 			++_size;
-			new (&Back()) _Value(std::forward<Args>(args)...);
+			new (&Back()) _Ty(std::forward<Args>(args)...);
 		}
 		else
 		{
-			_Value value(std::forward<Args>(args)...);
+			_Ty value(std::forward<Args>(args)...);
 			PushBack(std::move(value));
 		}
 		return Back();
@@ -239,13 +239,13 @@ public:
 	/**
 	* @brief : Add an element at the end
 	*/
-	void PushBack(const _Value& value)
+	void PushBack(const _Ty& value)
 	{
 		if (_size < _capacity)
 		{
 			// Optimize common case
 			++_size;
-			new (&Back()) _Value(value);
+			new (&Back()) _Ty(value);
 		}
 		else
 			doInsertElements(_size, &value, &value + 1, CopyTag{});
@@ -254,13 +254,13 @@ public:
 	* @brief : Add another vector at the end
 	*/
 
-	void PushBack(_Value && value)
+	void PushBack(_Ty && value)
 	{
 		if (_size < _capacity)
 		{
 			// Optimize common case
 			++_size;
-			new (&Back()) _Value(std::move(value));
+			new (&Back()) _Ty(std::move(value));
 		}
 		else
 			doInsertElements(_size, &value, &value + 1, MoveTag{});
@@ -270,7 +270,7 @@ public:
 	* @brief :FIXME: Attempt had been made to use this model in the Coverity-Scan model file without any success
 	*			Probably because the model had generated a different mangled name than the one used by static analyzer
 	*/
-	void PushBack(const _Value& value)
+	void PushBack(const _Ty& value)
 	{
 		T array[] = { value };
 		doInsertElements(_size, array, array + 1, CopyTag{});
@@ -279,7 +279,7 @@ public:
 	/**
 	* @brief : Add another vector at the end
 	*/
-	void PushBack(const tVector<_Value>& vector)
+	void PushBack(const tVector<_Ty>& vector)
 	{
 		doInsertElements(_size, vector.Begin(), vector.End(), CopyTag{});
 	}
@@ -294,28 +294,28 @@ public:
 	/**
 	* @brief : Insert an element at position
 	*/
-	void Insert(unsigned pos, const _Value& value)
+	void Insert(unsigned pos, const _Ty& value)
 	{
 		doInsertElements(pos, &value, &value + 1, CopyTag{});
 	}
 	/**
 	* @brief : Insert an element at position
 	*/
-	void Insert(unsigned pos, _Value && value)
+	void Insert(unsigned pos, _Ty && value)
 	{
 		doInsertElements(pos, &value, &value + 1, MoveTag{});
 	}
 	/**
 	* @brief : Insert another vector at position
 	*/
-	void Insert(unsigned pos, const tVector<_Value>& vector)
+	void Insert(unsigned pos, const tVector<_Ty>& vector)
 	{
 		doInsertElements(pos, vector.Begin(), vector.End(), CopyTag{});
 	}
 	/**
 	* @brief : Insert an element by iterator
 	*/
-	Iterator Insert(const Iterator& dest, const _Value& value)
+	Iterator Insert(const Iterator& dest, const _Ty& value)
 	{
 		auto pos = (unsigned)(dest - Begin());
 		return doInsertElements(pos, &value, &value + 1, CopyTag{});
@@ -323,7 +323,7 @@ public:
 	/**
 	* @brief : Move-insert an element by iterator
 	*/
-	Iterator Insert(const Iterator& dest, _Value && value)
+	Iterator Insert(const Iterator& dest, _Ty && value)
 	{
 		auto pos = (unsigned)(dest - Begin());
 		return doInsertElements(pos, &value, &value + 1, MoveTag{});
@@ -331,7 +331,7 @@ public:
 	/**
 	* @brief : Insert a vector by iterator
 	*/
-	Iterator Insert(const Iterator& dest, const tVector<_Value>& vector)
+	Iterator Insert(const Iterator& dest, const tVector<_Ty>& vector)
 	{
 		auto pos = (unsigned)(dest - Begin());
 		return doInsertElements(pos, vector.Begin(), vector.End(), CopyTag{});
@@ -347,7 +347,7 @@ public:
 	/**
 	* @brief : Insert elements
 	*/
-	Iterator Insert(const Iterator& dest, const _Value* start, const _Value* end)
+	Iterator Insert(const Iterator& dest, const _Ty* start, const _Ty* end)
 	{
 		auto pos = (unsigned)(dest - Begin());
 		return doInsertElements(pos, start, end, CopyTag{});
@@ -383,7 +383,7 @@ public:
 		else
 		{
 			// Swap elements from the end of the array into the empty space
-			_Value* buffer = Buffer();
+			_Ty* buffer = Buffer();
 			std::move(buffer + newSize, buffer + _size, buffer + pos);
 			Resize(newSize);
 		}
@@ -416,7 +416,7 @@ public:
 	/**
 	* @brief : Erase an element by value.Return true if was found and erased
 	*/
-	bool Remove(const _Value& value)
+	bool Remove(const _Ty& value)
 	{
 		Iterator i = Find(value);
 		if (i != End())
@@ -431,7 +431,7 @@ public:
 	* @brief : Erase an element by value by swapping with the last element.
 				Return true if was found and erased
 	*/
-	bool RemoveSwap(const _Value& value)
+	bool RemoveSwap(const _Ty& value)
 	{
 		Iterator i = Find(value);
 		if (i != End())
@@ -453,7 +453,7 @@ public:
 	/**
 	* @brief : Resize the vector and fill new elements with default value
 	*/
-	void Resize(unsigned newSize, const _Value& value)
+	void Resize(unsigned newSize, const _Ty& value)
 	{
 		unsigned oldSize = Size();
 		doResize(newSize);
@@ -470,12 +470,12 @@ public:
 
 		if (newCapacity != _capacity)
 		{
-			_Value* newBuffer = nullptr;
+			_Ty* newBuffer = nullptr;
 			_capacity = newCapacity;
 
 			if (_capacity)
 			{
-				newBuffer = reinterpret_cast<_Value*>(allocateBuffer((unsigned)(_capacity * sizeof(_Value))));
+				newBuffer = reinterpret_cast<_Ty*>(allocateBuffer((unsigned)(_capacity * sizeof(_Ty))));
 				// Move the data into the new buffer
 				constructElements(newBuffer, Begin(), End(), MoveTag{});
 			}
@@ -493,7 +493,7 @@ public:
 	/**
 	* @brief : Return iterator to value, or to the end if not found
 	*/
-	Iterator Find(const _Value& value)
+	Iterator Find(const _Ty& value)
 	{
 		Iterator it = Begin();
 		while (it != End() && *it != value)
@@ -503,7 +503,7 @@ public:
 	/**
 	* @brief : Return const iterator to value, or to the end if not found
 	*/
-	ConstIterator Find(const _Value& value) const
+	ConstIterator Find(const _Ty& value) const
 	{
 		ConstIterator it = Begin();
 		while (it != End() && *it != value)
@@ -513,14 +513,14 @@ public:
 	/**
 	* @brief : Return index of value in vector, or size if not found
 	*/
-	unsigned IndexOf(const _Value& value) const
+	unsigned IndexOf(const _Ty& value) const
 	{
 		return Find(value) - Begin();
 	}
 	/**
 	* @brief : Return whether contains a specific value
 	*/
-	bool Contains(const _Value& value) const { return Find(value) != End(); }
+	bool Contains(const _Ty& value) const { return Find(value) != End(); }
 	/**
 	* @brief : Return iterator to the beginning
 	*/
@@ -540,7 +540,7 @@ public:
 	/**
 	* @brief : Return first element
 	*/
-	_Value& Front()
+	_Ty& Front()
 	{
 		assert(_size);
 		return Buffer()[0];
@@ -548,7 +548,7 @@ public:
 	/**
 	* @brief : Return const first element
 	*/
-	const _Value& Front() const
+	const _Ty& Front() const
 	{
 		assert(_size);
 		return Buffer()[0];
@@ -556,7 +556,7 @@ public:
 	/**
 	* @brief : Return last element
 	*/
-	_Value& Back()
+	_Ty& Back()
 	{
 		assert(_size);
 		return Buffer()[_size - 1];
@@ -564,7 +564,7 @@ public:
 	/**
 	* @brief : Return const last element
 	*/
-	const _Value& Back() const
+	const _Ty& Back() const
 	{
 		assert(_size);
 		return Buffer()[_size - 1];
@@ -584,36 +584,36 @@ public:
 	/**
 	* @brief : Return the buffer with right type
 	*/
-	_Value* Buffer() const { return reinterpret_cast<_Value*>(_buffer); }
+	_Ty* Buffer() const { return reinterpret_cast<_Ty*>(_buffer); }
 
 private:
 	/**
 	* @brief : Construct elements using default ctor
 	*/
-	static void constructElements(_Value* dest, unsigned count)
+	static void constructElements(_Ty* dest, unsigned count)
 	{
 		for (unsigned i = 0; i < count; ++i)
-			new(dest + i) _Value();
+			new(dest + i) _Ty();
 	}
 	/**
 	* @brief : Copy-construct elements
 	*/
 	template <typename _RandomIterator>
-	static void constructElements(_Value* dest, _RandomIterator start, _RandomIterator end, CopyTag)
+	static void constructElements(_Ty* dest, _RandomIterator start, _RandomIterator end, CopyTag)
 	{
 		const unsigned count = end - start;
 		for (unsigned i = 0; i < count; ++i)
-			new(dest + i) _Value(*(start + i));
+			new(dest + i) _Ty(*(start + i));
 	}
 	/**
 	* @brief : Move-construct elements
 	*/
 	template <typename _RandomIterator>
-	static void constructElements(_Value* dest, _RandomIterator start, _RandomIterator end, MoveTag)
+	static void constructElements(_Ty* dest, _RandomIterator start, _RandomIterator end, MoveTag)
 	{
 		const unsigned count = end - start;
 		for (unsigned i = 0; i < count; ++i)
-			new(dest + i) _Value(std::move(*(start + i)));
+			new(dest + i) _Ty(std::move(*(start + i)));
 	}
 	/**
 	* @brief : Calculate new vector capacity
@@ -642,13 +642,13 @@ private:
 			// Allocate new buffer if necessary and copy the current elements
 			if (newSize > _capacity)
 			{
-				_Value* src = Buffer();
+				_Ty* src = Buffer();
 
 				// Reallocate vector
-				tVector<_Value> newVector;
+				tVector<_Ty> newVector;
 				newVector.Reserve(calculateCapacity(newSize, _capacity));
 				newVector._size = _size;
-				_Value* dest = newVector.Buffer();
+				_Ty* dest = newVector.Buffer();
 
 				// Move old elements
 				constructElements(dest, src, src + _size, MoveTag{});
@@ -674,13 +674,13 @@ private:
 		const unsigned numElements = end - start;
 		if (_size + numElements > _capacity)
 		{
-			_Value* src = Buffer();
+			_Ty* src = Buffer();
 
 			// Reallocate vector
-			tVector<_Value> newVector;
+			tVector<_Ty> newVector;
 			newVector.Reserve(calculateCapacity(_size + numElements, _capacity));
 			newVector._size = _size + numElements;
-			_Value* dest = newVector.Buffer();
+			_Ty* dest = newVector.Buffer();
 
 			// Copy or move new elements
 			constructElements(dest + pos, start, end, _Tag{});
@@ -695,7 +695,7 @@ private:
 		}
 		else if (numElements > 0)
 		{
-			_Value* buffer = Buffer();
+			_Ty* buffer = Buffer();
 
 			// Copy or move new elements
 			constructElements(buffer + _size, start, end, _Tag{});
@@ -719,7 +719,7 @@ private:
 	{
 		assert(count > 0);
 		assert(pos + count <= _size);
-		_Value* buffer = Buffer();
+		_Ty* buffer = Buffer();
 		std::move(buffer + pos + count, buffer + _size, buffer + pos);
 		Resize(_size - count);
 		return Begin() + pos;
@@ -727,11 +727,11 @@ private:
 	/**
 	* @brief : Call the elements' destructors
 	*/
-	static void destructElements(_Value* dest, unsigned count)
+	static void destructElements(_Ty* dest, unsigned count)
 	{
 		while (count--)
 		{
-			dest->~_Value();
+			dest->~_Ty();
 			++dest;
 		}
 	}

@@ -18,7 +18,7 @@ struct tLinkedListNode
 	tLinkedListNode* next;
 };
 
-template <typename _Value> 
+template <typename _Ty> 
 	class tLinkedList
 {
 public:
@@ -28,11 +28,11 @@ public:
 	/**
 	* @brief : Non-copyable
 	*/
-	tLinkedList(const tLinkedList<_Value>& list) = delete;
+	tLinkedList(const tLinkedList<_Ty>& list) = delete;
 	/**
 	* @brief : Aggregate initialization constructor
 	*/
-	tLinkedList(const std::initializer_list<_Value>& list)
+	tLinkedList(const std::initializer_list<_Ty>& list)
 		: tLinkedList()
 	{
 		for (auto it = list.begin(); it != list.end(); it++)
@@ -43,7 +43,7 @@ public:
 	/**
 	* @brief : Non-assignable
 	*/
-	tLinkedList<_Value>& operator =(const tLinkedList<_Value>& list) = delete;
+	tLinkedList<_Ty>& operator =(const tLinkedList<_Ty>& list) = delete;
 	/**
 	*@brief : Destruc
 	*/
@@ -56,10 +56,10 @@ public:
 	*/
 	void Clear()
 	{
-		_Value* element = _head;
+		_Ty* element = _head;
 		while (element)
 		{
-			_Value* next = Next(element);
+			_Ty* next = Next(element);
 			delete element;
 			element = next;
 		}
@@ -68,7 +68,7 @@ public:
 	/**
 	* @brief : Insert an element at the beginning
 	*/
-	void InsertFront(_Value* element)
+	void InsertFront(_Ty* element)
 	{
 		if (element)
 		{
@@ -79,11 +79,11 @@ public:
 	/**
 	* @brief : Insert an element at the end
 	*/
-	void Insert(_Value* element)
+	void Insert(_Ty* element)
 	{
 		if (_head)
 		{
-			_Value* tail = Last();
+			_Ty* tail = Last();
 			element->next = tail->next;
 			tail->next = element;
 		}
@@ -96,7 +96,7 @@ public:
 	/**
 	* @brief : Erase an element. Return true if successful
 	*/
-	bool Erase(_Value* element)
+	bool Erase(_Ty* element)
 	{
 		if (element && _head)
 		{
@@ -108,7 +108,7 @@ public:
 			}
 			else
 			{
-				_Value* tail = _head;
+				_Ty* tail = _head;
 				while (tail && tail->next != element)
 					tail = Next(tail);
 				if (tail)
@@ -126,7 +126,7 @@ public:
 	* @brief : Erase an element when the previous element is known (optimization.)
 	*			Return true if successful
 	*/
-	bool Erase(_Value* element, _Value* previous)
+	bool Erase(_Ty* element, _Ty* previous)
 	{
 		if (previous && previous->next == element)
 		{
@@ -149,13 +149,13 @@ public:
 	/**
 	* @brief : Return first element, or null if empty
 	*/
-	_Value* First() const { return _head; }
+	_Ty* First() const { return _head; }
 	/**
 	* @brief : Return last element, or null if empty
 	*/
-	_Value* Last() const
+	_Ty* Last() const
 	{
-		_Value* element = _head;
+		_Ty* element = _head;
 		if (element)
 		{
 			while (element->next)
@@ -166,7 +166,7 @@ public:
 	/**
 	* @brief : Return next element, or null if no more elements
 	*/
-	_Value* Next(_Value* element) const { return element ? static_cast<_Value*>(element->next) : nullptr; }
+	_Ty* Next(_Ty* element) const { return element ? static_cast<_Ty*>(element->next) : nullptr; }
 	/**
 	* @brief : Return whether is empty
 	*/
@@ -174,7 +174,7 @@ public:
 
 private:
 	/// First element
-	_Value* _head;
+	_Ty* _head;
 };
 
 

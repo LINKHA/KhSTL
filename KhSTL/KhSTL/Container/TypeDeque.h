@@ -8,20 +8,20 @@
 namespace KhSTL {
 
 
-template <typename _Value
-	,typename _Alloc = tmAllocator<_Value>
+template <typename _Ty
+	,typename _Alloc = tmAllocator<_Ty>
 	,unsigned _Size = 0> 
 	class tDeque 
 {
 public:
-	using ValueType = _Value;
-	using Iterator = tDequeIterator<_Value, _Size>;
-	using ConstIterator = tDequeConstIterator<_Value, _Size>;
-	using MapPoint = _Value**;
+	using ValueType = _Ty;
+	using Iterator = tDequeIterator<_Ty, _Size>;
+	using ConstIterator = tDequeConstIterator<_Ty, _Size>;
+	using MapPoint = _Ty**;
 	typedef ptrdiff_t	difference_type;
 
-	typedef simple_alloc<_Value, _Alloc>		data_allocator; 
-	typedef simple_alloc<_Value*, _Alloc>		map_allocator; 
+	typedef simple_alloc<_Ty, _Alloc>		data_allocator; 
+	typedef simple_alloc<_Ty*, _Alloc>		map_allocator; 
 public:
 	/**
 	* @brief : Construct
@@ -38,7 +38,7 @@ public:
 	/**
 	* @brief : Construct from another list
 	*/
-	explicit tDeque(const tList<_Value>& list)
+	explicit tDeque(const tList<_Ty>& list)
 	{
 		// Reserve the tail node + initial capacity according to the list's size
 		_allocator = AllocatorInitialize((unsigned)sizeof(Node), list.Size() + 1);
@@ -48,14 +48,14 @@ public:
 	/**
 	* @brief : Move-construct from another list
 	*/
-	explicit tDeque(tDeque<_Value> && deque) noexcept
+	explicit tDeque(tDeque<_Ty> && deque) noexcept
 	{
 		Swap(deque);
 	}
 	/**
 	* @brief : Aggregate initialization constructor
 	*/
-	tDeque(const std::initializer_list<_Value>& deque)
+	tDeque(const std::initializer_list<_Ty>& deque)
 		: tDeque()
 	{
 		for (auto it = deque.begin(); it != deque.end(); it++)
@@ -66,7 +66,7 @@ public:
 	/**
 	* @brief : Construct
 	*/
-	tDeque(int index, const _Value& value)
+	tDeque(int index, const _Ty& value)
 		: _start()
 		, _finish()
 		, _map(0)
@@ -82,7 +82,7 @@ public:
 	/**
 	* @brief : Get the nth element of cghDeque
 	*/
-	_Value& operator [](unsigned index)
+	_Ty& operator [](unsigned index)
 	{
 		return _start[difference_type(index)];
 	}
@@ -91,7 +91,7 @@ public:
 	/**
 	* @brief : Subscript mutable sequence with checking
 	*/
-	_Value& At(unsigned index)
+	_Ty& At(unsigned index)
 	{
 		assert(_size >= index);
 		return (*(Begin() + static_cast<difference_type>(index)));
@@ -99,7 +99,7 @@ public:
 	/**
 	* @brief : Subscript nonmutable sequence with checking
 	*/
-	const _Value& At(unsigned index) const
+	const _Ty& At(unsigned index) const
 	{
 		assert(_size >= index);
 		return (*(Begin() + static_cast<difference_type>(index)));
@@ -107,14 +107,14 @@ public:
 	/**
 	* @brief : Gets the value of the header of the cghDeque
 	*/
-	_Value& Front()
+	_Ty& Front()
 	{
 		return *_start;
 	}
 	/**
 	* @brief : Gets const the value of the header of the cghDeque
 	*/
-	const _Value& Front() const 
+	const _Ty& Front() const 
 	{
 		return *_start;
 	}
@@ -122,7 +122,7 @@ public:
 	* @brief : Because the buffer is a closed and open interval, you need a step back
 	*			from the finish to get the tail of the cghDeque
 	*/
-	_Value& Back()
+	_Ty& Back()
 	{
 		Iterator tmp = _finish;
 		--tmp;
@@ -132,7 +132,7 @@ public:
 	* @brief : Because the buffer is a closed and open interval, you need a step back
 	*			from the finish to get the tail of the cghDeque
 	*/
-	const _Value& Back() const
+	const _Ty& Back() const
 	{
 		Iterator tmp = _finish;
 		--tmp;
@@ -192,7 +192,7 @@ public:
 	/**
 	* @brief : Determine new length, padding as needed
 	*/
-	void Resize(unsigned newSize,const _Value& value)
+	void Resize(unsigned newSize,const _Ty& value)
 	{
 		while (_size < newSize)
 		{
@@ -221,7 +221,7 @@ public:
 	/**
 	* @brief : Add an element at the end
 	*/
-	void PushBack(const _Value& value)
+	void PushBack(const _Ty& value)
 	{
 		if (_finish.cur != _finish.last - 1)
 		{
@@ -236,7 +236,7 @@ public:
 	/**
 	* @brief : Add an element at the front
 	*/
-	void PushFront(const _Value& value)
+	void PushFront(const _Ty& value)
 	{
 		if (_start.cur != _start.first)
 		{
@@ -281,25 +281,25 @@ public:
 	/**
 	* @brief : Insert an element to a specified location
 	*/
-	Iterator Insert(Iterator position, const _Value& value)
+	Iterator Insert(Iterator position, const _Ty& value)
 	{
 		return (emplace(position, std::move(value));
 	}
 	/**
 	* @brief : Create an element at the beginning
 	*/
-	template<typename... _ValueArg> 
-		_Value& EmplaceFront(_ValueArg&&... args)
+	template<typename... _TyArg> 
+		_Ty& EmplaceFront(_TyArg&&... args)
 	{	
 		if (_start.cur != _start.first)
 		{
 			// Optimize common case
 			--_start->cur;
-			new (&Front()) _Value(std::forward<_ValueArg>(args)...);
+			new (&Front()) _Ty(std::forward<_TyArg>(args)...);
 		}
 		else
 		{
-			_Value value(std::forward<_ValueArg>(args)...);
+			_Ty value(std::forward<_TyArg>(args)...);
 			PushFront(std::move(value));
 	}
 		return Front();
@@ -307,18 +307,18 @@ public:
 	/**
 	* @brief : Create an element at the end
 	*/
-	template <typename... _ValueArg> 
-		_Value& EmplaceBack(_ValueArg&&... args)
+	template <typename... _TyArg> 
+		_Ty& EmplaceBack(_TyArg&&... args)
 	{
 		if (_finish.cur != _finish.last - 1)
 		{
 			// Optimize common case
 			++_finish->cur;
-			new (&Back()) _Value(std::forward<_ValueArg>(args)...);
+			new (&Back()) _Ty(std::forward<_TyArg>(args)...);
 		}
 		else
 		{
-			_Value value(std::forward<_ValueArg>(args)...);
+			_Ty value(std::forward<_TyArg>(args)...);
 			PushBack(std::move(value));
 		}
 		return Back();
@@ -326,20 +326,20 @@ public:
 	/**
 	* @brief :
 	*/
-	template<class... _ValueArg>
-		Iterator Emplace(ConstIterator pos, _ValueArg&&... args)
+	template<class... _TyArg>
+		Iterator Emplace(ConstIterator pos, _TyArg&&... args)
 	{
 		difference_type index = pos - _start;
-		_Value x_copy = x;
+		_Ty x_copy = x;
 
 		if (index <= Size() / 2) 
 		{
-			EmplaceFront(std::forward<_ValueArg>(args)...);
+			EmplaceFront(std::forward<_TyArg>(args)...);
 			std::rotate(Begin(), Begin() + 1, Begin() + static_cast<difference_type>(1 + index));
 		}
 		else 
 		{
-			EmplaceBack(std::forward<_ValueArg>(args)...);
+			EmplaceBack(std::forward<_TyArg>(args)...);
 			std::rotate(Begin() + static_cast<difference_type>(index), End() - 1, End());
 		}
 		return (Begin() + static_cast<difference_type>(index));
@@ -374,9 +374,9 @@ protected:
 	/**
 	* @brief : Back-up when a buffer overflows
 	*/
-	void pushBackAux(const _Value& value)
+	void pushBackAux(const _Ty& value)
 	{
-		_Value val = value;
+		_Ty val = value;
 		*(_finish.node + 1) = allocateNode(); 
 		construct(_finish.cur, val); 
 		_finish.SetNode(_finish.node + 1); 
@@ -385,9 +385,9 @@ protected:
 	/**
 	* @brief : Forward interpolation when a buffer overflows
 	*/
-	void pushFrontAux(const _Value& value)
+	void pushFrontAux(const _Ty& value)
 	{
-		_Value val = value;
+		_Ty val = value;
 		*(_start.node - 1) = allocateNode(); 
 		_start.SetNode(_start.node - 1); 
 		_start.cur = _start.last - 1; 
@@ -448,12 +448,12 @@ protected:
 	}
 	size_t bufferSize()
 	{
-		return _Size != 0 ? _Size : (sizeof(_Value) < 512 ? size_t(512 / sizeof(_Value)) : size_t(1));
+		return _Size != 0 ? _Size : (sizeof(_Ty) < 512 ? size_t(512 / sizeof(_Ty)) : size_t(1));
 	}
 	/**
 	* @brief : Various initialization
 	*/
-	void fillInitialize(unsigned num, const _Value& value)
+	void fillInitialize(unsigned num, const _Ty& value)
 	{
 		createMapAndNodes(num);
 		MapPoint cur;
@@ -490,9 +490,9 @@ protected:
 	/**
 	* @brief : Configure the buffer size of each node in the control center (map)
 	*/
-	_Value* allocateNode()
+	_Ty* allocateNode()
 	{
-		return data_allocator::allocate(bufferSize() / sizeof(_Value));
+		return data_allocator::allocate(bufferSize() / sizeof(_Ty));
 	}
 	/**
 	* @brief : Release the buffer for the control center ( map ) node

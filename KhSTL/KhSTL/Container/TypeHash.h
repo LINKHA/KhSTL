@@ -7,21 +7,21 @@ namespace KhSTL
 /**
 * @brief : Pointer hash function
 */
-template <typename _Value> unsigned MakeHash(_Value* value)
+template <typename _Ty> unsigned MakeHash(_Ty* value)
 {
-	return (unsigned)((size_t)value / sizeof(_Value));
+	return (unsigned)((size_t)value / sizeof(_Ty));
 }
 /**
 * @brief : Const pointer hash function
 */
-template <typename _Value> unsigned MakeHash(const _Value* value)
+template <typename _Ty> unsigned MakeHash(const _Ty* value)
 {
-	return (unsigned)((size_t)value / sizeof(_Value));
+	return (unsigned)((size_t)value / sizeof(_Ty));
 }
 /**
 * @brief : Generic hash function
 */
-template <typename _Value> unsigned MakeHash(const _Value& value)
+template <typename _Ty> unsigned MakeHash(const _Ty& value)
 {
 	return value.ToHash();
 }

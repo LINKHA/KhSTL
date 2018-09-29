@@ -34,7 +34,6 @@ inline void _construct(T1* p, const T2& value)
 	new(p)T1(value);
 }
 
-// ÔªËØÎö¹¹
 template<class T>
 inline void _destroy(T* ptr)
 {

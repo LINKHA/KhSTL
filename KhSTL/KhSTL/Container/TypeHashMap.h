@@ -11,11 +11,11 @@
 namespace KhSTL {
 
 template <typename _Key
-	, typename _Value> 
+	, typename _Ty> 
 	class tHashMap : public tHashBase 
 {
 	using KeyType = _Key;
-	using ValueType = _Value;
+	using ValueType = _Ty;
 public:
 	/**
 	* Hash map key-value pair with const key
@@ -32,7 +32,7 @@ public:
 		/**
 		* @brief : Construct with key and value
 		*/
-		KeyValue(const _Key& sfirst, const _Value& ssecond)
+		KeyValue(const _Key& sfirst, const _Ty& ssecond)
 			: first(sfirst)
 			, second(ssecond)
 		{}
@@ -59,7 +59,7 @@ public:
 		/// Map key
 		const _Key first;
 		/// Map value
-		_Value second;
+		_Ty second;
 	};
 	/// Hash map node.
 	struct Node : public tHashNodeBase
@@ -71,7 +71,7 @@ public:
 		/**
 		* @brief : Construct with key and value
 		*/
-		Node(const _Key& key, const _Value& value) 
+		Node(const _Key& key, const _Ty& value) 
 			: pair(key, value)
 		{
 		}
@@ -233,7 +233,7 @@ public:
 	/**
 	* @brief : Construct from another hash map
 	*/
-	tHashMap(const tHashMap<_Key, _Value>& map)
+	tHashMap(const tHashMap<_Key, _Ty>& map)
 	{
 		// Reserve the tail node + initial capacity according to the map's size
 		_allocator = AllocatorInitialize((unsigned)sizeof(Node), map.Size() + 1);
@@ -243,14 +243,14 @@ public:
 	/**
 	* @brief : Move-construct from another hash map
 	*/
-	tHashMap(tHashMap<_Key, _Value> && map) noexcept
+	tHashMap(tHashMap<_Key, _Ty> && map) noexcept
 	{
 		Swap(map);
 	}
 	/**
 	* @brief : Aggregate initialization constructor
 	*/
-	tHashMap(const std::initializer_list<tPair<_Key, _Value>>& list) : tHashMap()
+	tHashMap(const std::initializer_list<tPair<_Key, _Ty>>& list) : tHashMap()
 	{
 		for (auto it = list.begin(); it != list.end(); it++)
 		{
@@ -273,7 +273,7 @@ public:
 	/**
 	* @brief : Assign a hash map
 	*/
-	tHashMap& operator =(const tHashMap<_Key, _Value>& rhs)
+	tHashMap& operator =(const tHashMap<_Key, _Ty>& rhs)
 	{
 		// In case of self-assignment do nothing
 		if (&rhs != this)
@@ -286,7 +286,7 @@ public:
 	/**
 	* @brief : Move-assign a hash map
 	*/
-	tHashMap& operator =(tHashMap<_Key, _Value> && rhs) noexcept
+	tHashMap& operator =(tHashMap<_Key, _Ty> && rhs) noexcept
 	{
 		assert(&rhs != this);
 		Swap(rhs);
@@ -295,7 +295,7 @@ public:
 	/**
 	* @brief : Add-assign a pair
 	*/
-	tHashMap& operator +=(const tPair<_Key, _Value>& rhs)
+	tHashMap& operator +=(const tPair<_Key, _Ty>& rhs)
 	{
 		Insert(rhs);
 		return *this;
@@ -303,7 +303,7 @@ public:
 	/**
 	* @brief : Add-assign a hash map
 	*/
-	tHashMap& operator +=(const tHashMap<_Key, _Value>& rhs)
+	tHashMap& operator +=(const tHashMap<_Key, _Ty>& rhs)
 	{
 		Insert(rhs);
 		return *this;
@@ -311,7 +311,7 @@ public:
 	/**
 	* @brief : _Keyest for equality with another hash map
 	*/
-	bool operator ==(const tHashMap<_Key, _Value>& rhs) const
+	bool operator ==(const tHashMap<_Key, _Ty>& rhs) const
 	{
 		if (rhs.Size() != Size())
 			return false;
@@ -330,7 +330,7 @@ public:
 	/**
 	* @brief : _Keyest for inequality with another hash map
 	*/
-	bool operator !=(const tHashMap<_Key, _Value>& rhs) const
+	bool operator !=(const tHashMap<_Key, _Ty>& rhs) const
 	{
 		if (rhs.Size() != Size())
 			return true;
@@ -349,20 +349,20 @@ public:
 	/**
 	* @brief : Index the map. Create a new pair if key not found
 	*/
-	_Value& operator [](const _Key& key)
+	_Ty& operator [](const _Key& key)
 	{
 		if (!_ptrs)
-			return InsertNode(key, _Value(), false)->pair.second;
+			return InsertNode(key, _Ty(), false)->pair.second;
 
 		unsigned hashKey = Hash(key);
 
 		Node* node = FindNode(key, hashKey);
-		return node ? node->pair.second : InsertNode(key, _Value(), false)->pair.second;
+		return node ? node->pair.second : InsertNode(key, _Ty(), false)->pair.second;
 	}
 	/**
 	* @brief : Index the map. Return null if key is not found, does not create a new pair
 	*/
-	_Value* operator [](const _Key& key) const
+	_Ty* operator [](const _Key& key) const
 	{
 		if (!_ptrs)
 			return 0;
@@ -375,7 +375,7 @@ public:
 	/**
 	* @brief : Populate the map using variadic template. _Keyhis handles the base case
 	*/
-	tHashMap& Populate(const _Key& key, const _Value& value)
+	tHashMap& Populate(const _Key& key, const _Ty& value)
 	{
 		this->operator [](key) = value;
 		return *this;
@@ -383,7 +383,7 @@ public:
 	/**
 	* @brief : Populate the map using variadic template
 	*/
-	template <typename... Args> tHashMap& Populate(const _Key& key, const _Value& value, const Args&... args)
+	template <typename... Args> tHashMap& Populate(const _Key& key, const _Ty& value, const Args&... args)
 	{
 		this->operator [](key) = value;
 		return Populate(args...);
@@ -391,7 +391,7 @@ public:
 	/**
 	* @brief : Insert a pair. Return an iterator to it
 	*/
-	Iterator Insert(const tPair<_Key, _Value>& pair)
+	Iterator Insert(const tPair<_Key, _Ty>& pair)
 	{
 		return Iterator(InsertNode(pair.first, pair.second));
 	}
@@ -399,7 +399,7 @@ public:
 	* @brief : Insert a pair. Return iterator and set exists flag according to 
 	*			whether the key already existed.
 	*/
-	Iterator Insert(const tPair<_Key, _Value>& pair, bool& exists)
+	Iterator Insert(const tPair<_Key, _Ty>& pair, bool& exists)
 	{
 		unsigned oldSize = Size();
 		Iterator ret(InsertNode(pair.first, pair.second));
@@ -409,7 +409,7 @@ public:
 	/**
 	* @brief : Insert a map
 	*/
-	void Insert(const tHashMap<_Key, _Value>& map)
+	void Insert(const tHashMap<_Key, _Ty>& map)
 	{
 		ConstIterator it = map.Begin();
 		ConstIterator end = map.End();
@@ -607,7 +607,7 @@ public:
 	/**
 	* @brief : try to copy value to output. Return true if was found
 	*/
-	bool TryGetValue(const _Key& key, _Value& out) const
+	bool TryGetValue(const _Key& key, _Ty& out) const
 	{
 		if (!_ptrs)
 			return false;
@@ -635,9 +635,9 @@ public:
 	/**
 	* @brief : Return all the values
 	*/
-	tVector<_Value> Values() const
+	tVector<_Ty> Values() const
 	{
-		tVector<_Value> result;
+		tVector<_Ty> result;
 		result.Reserve(Size());
 		for (ConstIterator i = Begin(); i != End(); ++i)
 			result.Push(i->second);
@@ -713,7 +713,7 @@ private:
 	/**
 	* @brief : Insert a key and value and return either the new or existing node
 	*/
-	Node* InsertNode(const _Key& key, const _Value& value, bool findExisting = true)
+	Node* InsertNode(const _Key& key, const _Ty& value, bool findExisting = true)
 	{
 		// If no pointers yet, allocate with minimum bucket count
 		if (!_ptrs)
@@ -751,7 +751,7 @@ private:
 	/**
 	* @brief : Insert a node into the list. Return the new node
 	*/
-	Node* InsertNode(Node* dest, const _Key& key, const _Value& value)
+	Node* InsertNode(Node* dest, const _Key& key, const _Ty& value)
 	{
 		if (!dest)
 			return 0;
@@ -809,7 +809,7 @@ private:
 	/**
 	* @brief : Reserve a node with specified key and value
 	*/
-	Node* ReserveNode(const _Key& key, const _Value& value)
+	Node* ReserveNode(const _Key& key, const _Ty& value)
 	{
 		auto* newNode = static_cast<Node*>(AllocatorReserve(_allocator));
 		new(newNode) Node(key, value);
@@ -847,13 +847,13 @@ private:
 	unsigned Hash(const _Key& key) const { return MakeHash(key) & (NumBuckets() - 1); }
 };
 
-template <typename _Key, typename _Value> typename tHashMap<_Key, _Value>::ConstIterator begin(const tHashMap<_Key, _Value>& v) { return v.Begin(); }
+template <typename _Key, typename _Ty> typename tHashMap<_Key, _Ty>::ConstIterator begin(const tHashMap<_Key, _Ty>& v) { return v.Begin(); }
 
-template <typename _Key, typename _Value> typename tHashMap<_Key, _Value>::ConstIterator end(const tHashMap<_Key, _Value>& v) { return v.End(); }
+template <typename _Key, typename _Ty> typename tHashMap<_Key, _Ty>::ConstIterator end(const tHashMap<_Key, _Ty>& v) { return v.End(); }
 
-template <typename _Key, typename _Value> typename tHashMap<_Key, _Value>::Iterator begin(tHashMap<_Key, _Value>& v) { return v.Begin(); }
+template <typename _Key, typename _Ty> typename tHashMap<_Key, _Ty>::Iterator begin(tHashMap<_Key, _Ty>& v) { return v.Begin(); }
 
-template <typename _Key, typename _Value> typename tHashMap<_Key, _Value>::Iterator end(tHashMap<_Key, _Value>& v) { return v.End(); }
+template <typename _Key, typename _Ty> typename tHashMap<_Key, _Ty>::Iterator end(tHashMap<_Key, _Ty>& v) { return v.End(); }
 
 
 }
