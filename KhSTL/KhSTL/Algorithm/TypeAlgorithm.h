@@ -1,6 +1,9 @@
-#ifndef KH_STL_TYPE_SORT_H_
-#define KH_STL_TYPE_SORT_H_
-namespace KhSTL{
+#ifndef KH_STL_TYPE_ALGORITHM_H_
+#define KH_STL_TYPE_ALGORITHM_H_
+
+
+namespace KhSTL {
+
 
 static const int QUICKSORT_THRESHOLD = 16;
 
@@ -71,7 +74,7 @@ template <class T> void InitialQuickSort(tIterator<T> begin, tIterator<T> end)
 	}
 }
 /**
-* @brief : Perform quick sort initial pass on an array using a 
+* @brief : Perform quick sort initial pass on an array using a
 *			compare function. Does not sort fully
 */
 template <class T, class U> void InitialQuickSort(tIterator<T> begin, tIterator<T> end, U compare)
@@ -104,7 +107,7 @@ template <class T, class U> void InitialQuickSort(tIterator<T> begin, tIterator<
 	}
 }
 /**
-* @brief : Sort in ascending order using quicksort for initial passes, 
+* @brief : Sort in ascending order using quicksort for initial passes,
 *			then an insertion sort to finalize
 */
 template <class T> void Sort(tIterator<T> begin, tIterator<T> end)
@@ -121,7 +124,40 @@ template <class T, class U> void Sort(tIterator<T> begin, tIterator<T> end, U co
 	InitialQuickSort(begin, end, compare);
 	InsertionSort(begin, end, compare);
 }
+/**
+* Swap two values.
+*/
+template <typename _Ty> inline void Swap(_Ty& rhs, _Ty& lfs)
+{
+	_Ty temp(rhs);
+	rhs = lfs;
+	lfs = temp;
+}
+
+
+//template <> void Swap<tString>(tString& rhs, tString& lfs);
+//template <> void Swap<tVectorBase>(tVectorBase& rhs, tVectorBase& lfs);
+//template <> void Swap<tHashBase>(tHashBase& rhs, tHashBase& lfs);
+
+//template <typename _Ty, typename _Alloc> 
+//	void Swap<tListBase<_Ty, _Alloc>>(
+//		tListBase<_Ty, _Alloc>& rhs,
+//		tListBase<_Ty, _Alloc>& lfs);
+
+//
+//template<> void Swap(tString& rhs, tString& lfs)
+//{
+//	rhs.Swap(lfs);
+//}
+//template<> void Swap(tVectorBase& rhs, tVectorBase& lfs)
+//{
+//	rhs.Swap(lfs);
+//}
+//template <> void Swap(tHashBase& rhs, tHashBase& lfs)
+//{
+//	rhs.Swap(lfs);
+//}
 
 
 }
-#endif //!KH_STL_TYPE_SORT_H_
+#endif //!KH_STL_TYPE_ALGORITHM_H_s

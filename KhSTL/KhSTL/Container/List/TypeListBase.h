@@ -1,20 +1,15 @@
 #ifndef KH_STL_TYPE_LIST_BASE_H_
 #define KH_STL_TYPE_LIST_BASE_H_
 
-#include "../../Algorithms/TypeSwap.h"
-
-
 #include "TypeListNode.h"
-
 #include "TypeListAlloctor.h"
-
 #include "TypeListIterator.h"
 
 namespace KhSTL {
 
 
 template <typename _Ty,
-	typename _Alloc = tAllocator<_Ty>>
+	typename _Alloc = tAllocator<tListNode<_Ty>>>
 	class tListBase : public tListAlloc<_Alloc>
 {
 public:
@@ -128,8 +123,6 @@ protected:
 	*/
 	void freeNode(tListNode<_Ty>* node)
 	{
-		//Base::Reserve(_alloc)
-		//(node)->~tListNode();
 		Base::free(node);
 	}
 protected:
@@ -142,7 +135,11 @@ protected:
 
 };
 
-
+template <typename _Ty, typename _Alloc> inline 
+	void Swap(tListBase<_Ty, _Alloc>& rhs,tListBase<_Ty, _Alloc>& lfs)
+{
+	rhs.Swap(lfs);
+}
 
 }
 #endif //!KH_STL_TYPE_LIST_BASE_H_

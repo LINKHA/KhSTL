@@ -11,154 +11,31 @@ namespace KhSTL {
 * Doubly-linked list template class
 */
 template <typename _Ty,
-	typename _Alloc = tAllocator<_Ty>> 
+	typename _Alloc = tAllocator<tListNode<_Ty>>>
 	class tList : public tListBase <_Ty, _Alloc>
 {
 public:
+	/// Value type
+	using ValueType = _Ty;
+	/// This class
+	using This = tList<_Ty, _Alloc>;
+	/// Base class
 	using Base = tListBase <_Ty, _Alloc>;
+	/// Allocator
+	using Allocator = _Alloc;
+	/// Allocator type
+	using AllocatorType = typename _Alloc::ValueType;
+	/// List iterator
+	using Iterator = tListIterator<_Ty>;
+	/// List const iterator
+	using ConstIterator = tConstListIterator<_Ty>;
 public:
-	
-
-	/**
-	* List iterator
-	*/
-	struct Iterator : public tListIteratorBase
-	{
-		/**
-		* @brief : Construct
-		*/
-		Iterator() = default;
-		/**
-		* @brief : Construct with a node pointer
-		*/
-		explicit Iterator(tListNode<_Ty>* ptr) 
-			: tListIteratorBase(ptr)
-		{}
-		/**
-		* @brief : Preincrement the pointer
-		*/
-		Iterator& operator ++()
-		{
-			GotoNext();
-			return *this;
-		}
-		/**
-		* @brief : Postincrement the pointer
-		*/
-		Iterator operator ++(int)
-		{
-			Iterator it = *this;
-			GotoNext();
-			return it;
-		}
-		/**
-		* @brief : Predecrement the pointer
-		*/
-		Iterator& operator --()
-		{
-			GotoPrev();
-			return *this;
-		}
-		/**
-		* @brief : Postdecrement the pointer
-		*/
-		Iterator operator --(int)
-		{
-			Iterator it = *this;
-			GotoPrev();
-			return it;
-		}
-		/**
-		* @brief : Point to the node value
-		*/
-		_Ty* operator ->() const { return &(static_cast<tListNode<_Ty>*>(ptr))->value; }
-		/**
-		* @brief : Dereference the node value
-		*/
-		_Ty& operator *() const { return (static_cast<tListNode<_Ty>*>(ptr))->value; }
-	};
-
-	/**
-	* List const iterator
-	*/
-	struct ConstIterator : public tListIteratorBase
-	{
-		/**
-		* @brief : Construct
-		*/
-		ConstIterator() = default;
-		/**
-		* @brief : Construct with a node pointer
-		*/
-		explicit ConstIterator(tListNode<_Ty>* ptr)
-			: tListIteratorBase(ptr)
-		{}
-		/**
-		* @brief : Construct from a non-const iterator
-		*/
-		ConstIterator(const Iterator& rhs)         // NOLINT(google-explicit-constructor)
-			: tListIteratorBase(rhs.ptr)
-		{}
-		/**
-		* @brief : Assign from a non-const iterator
-		*/
-		ConstIterator& operator =(const Iterator& rhs)
-		{
-			ptr = rhs.ptr;
-			return *this;
-		}
-		/**
-		* @brief : Preincrement the pointer
-		*/
-		ConstIterator& operator ++()
-		{
-			GotoNext();
-			return *this;
-		}
-		/**
-		* @brief : Postincrement the pointer
-		*/
-		ConstIterator operator ++(int)
-		{
-			ConstIterator it = *this;
-			GotoNext();
-			return it;
-		}
-		/**
-		* @brief : Predecrement the pointer
-		*/
-		ConstIterator& operator --()
-		{
-			GotoPrev();
-			return *this;
-		}
-		/**
-		* @brief : Postdecrement the pointer
-		*/
-		ConstIterator operator --(int)
-		{
-			ConstIterator it = *this;
-			GotoPrev();
-			return it;
-		}
-		/**
-		* @brief : Point to the node value
-		*/
-		const _Ty* operator ->() const { return &(static_cast<tListNode<_Ty>*>(ptr))->value; }
-		/**
-		* @brief : Dereference the node value
-		*/
-		const _Ty& operator *() const { return (static_cast<tListNode<_Ty>*>(ptr))->value; }
-	};
-
 	/**
 	* @brief : Construct empty
 	*/
 	tList()
 		: Base()
 	{
-		//_allocator = AllocatorInitialize((unsigned)sizeof(Node));
-		//_head = _tail = reserveNode();
 	}
 	/**
 	* @brief : Construct from another list
@@ -166,9 +43,6 @@ public:
 	tList(const tList<_Ty>& list)
 		: Base(list.Size() + 1)
 	{
-		
-		//_allocator = AllocatorInitialize((unsigned)sizeof(Node), list.Size() + 1);
-		//_head = _tail = reserveNode();
 		*this = list;
 	}
 	/**
@@ -195,8 +69,6 @@ public:
 	~tList()
 	{
 		Clear();
-		//freeNode(tail());
-		//AllocatorUninitialize(_allocator);
 	}
 	/**
 	* @brief : Assign from another list
@@ -241,7 +113,7 @@ public:
 	*/
 	bool operator ==(const tList<_Ty>& rhs) const
 	{
-		if (rhs.Base::_size != Base::_size)
+		if (rhs._size != Base::_size)
 			return false;
 
 		ConstIterator i = Begin();
@@ -261,7 +133,7 @@ public:
 	*/
 	bool operator !=(const tList<_Ty>& rhs) const
 	{
-		if (rhs.Base::_size != Base::_size)
+		if (rhs._size != Base::_size)
 			return true;
 
 		ConstIterator i = Begin();

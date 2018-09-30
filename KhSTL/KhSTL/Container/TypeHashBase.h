@@ -1,7 +1,7 @@
 #ifndef KH_STL_TYPE_HASH_BASE_H_
 #define KH_STL_TYPE_HASH_BASE_H_
 #include "../Allocator/TypeAllcator.h"
-#include "../Algorithms/TypeSwap.h"
+#include "../Algorithm/TypeAlgorithm.h"
 
 namespace KhSTL {
 

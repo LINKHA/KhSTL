@@ -17,7 +17,6 @@
 
 
 #include "TypeIterator.h"
-#include "../Algorithms/TypeSwap.h"
 #include "TypeVector.h"
 
 namespace KhSTL {
@@ -615,6 +614,10 @@ private:
 	static char endZero;
 };
 
+template <> void Swap<tString>(tString& rhs, tString& lfs)
+{
+	rhs.Swap(lfs);
+}
 
 
 }

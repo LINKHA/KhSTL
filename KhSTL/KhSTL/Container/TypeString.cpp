@@ -1133,14 +1133,14 @@ tVector<tString> tString::Split(const char* str, char separator, bool keepEmptyS
 		{
 			const ptrdiff_t splitLen = splitEnd - str;
 			if (splitLen > 0 || keepEmptyStrings)
-				ret.Push(tString(str, splitLen));
+				ret.PushBack(tString(str, splitLen));
 			str = splitEnd + 1;
 		}
 	}
 
 	const ptrdiff_t splitLen = strEnd - str;
 	if (splitLen > 0 || keepEmptyStrings)
-		ret.Push(tString(str, splitLen));
+		ret.PushBack(tString(str, splitLen));
 
 	return ret;
 }

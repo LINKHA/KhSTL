@@ -44,10 +44,10 @@ protected:
 		_allocator->Free(object);
 	}
 
-	template<typename _Other> void free(_Other* other)
-	{
-		_allocator->Free(other);
-	}
+	//template<typename _Other> void free(_Other* other)
+	//{
+	//	_allocator->Free(other);
+	//}
 	/**
 	* @brief : Allocate allocator
 	*/
