@@ -1,4 +1,4 @@
-#include "TypeAllcator.h"
+#include "TypeAllocator.h"
 
 namespace KhSTL {
 

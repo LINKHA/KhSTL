@@ -4,11 +4,11 @@
 
 
 #ifndef KH_STL_TYPE_STRING_H_
-#	include "Container/TypeString.h"
+#	include "Container/String/TypeString.h"
 #endif //!KH_STL_TYPE_STRING_H_
 
 #ifndef KH_STL_TYPE_WSTRING_H_
-#	include "Container/TypeWString.h"
+#	include "Container/String/TypeWString.h"
 #endif //!KH_STL_TYPE_WSTRING_H_
 
 namespace KhSTL {

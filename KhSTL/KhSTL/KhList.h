@@ -5,7 +5,7 @@
 #	include "Container/List/TypeList.h"
 #endif //!KH_STL_TYPE_PAIR_H_
 #ifndef KH_STL_TYPE_LINKED_LIST_H_
-#	include "Container/TypeLinkedList.h"
+#	include "Container/List/TypeLinkedList.h"
 #endif //!KH_STL_TYPE_LINKED_LIST_H_
 
 namespace KhSTL {

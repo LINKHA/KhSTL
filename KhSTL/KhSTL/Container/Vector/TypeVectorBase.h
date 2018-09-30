@@ -1,7 +1,7 @@
 #ifndef KH_STL_TYPE_VECTOR_BASE_H_
 #define KH_STL_TYPE_VECTOR_BASE_H_
 
-#include "../Algorithm/TypeAlgorithm.h"
+#include "../../Algorithm/TypeAlgorithm.h"
 
 #ifdef _MSC_VER
 #pragma warning(push)

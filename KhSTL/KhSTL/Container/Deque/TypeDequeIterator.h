@@ -1,8 +1,9 @@
-#ifndef KH_STL_DEQUE_BASE_H_
-#define KH_STL_DEQUE_BASE_H_
+#ifndef KH_STL_TYPE_DEQUE_ITERATOR_H_
+#define KH_STL_TYPE_DEQUE_ITERATOR_H_
 
-#include "../Algorithms/TypeSwap.h"
-#include "../Allocator/TypeAllcator.h"
+#include "../../Algorithm/TypeAlgorithm.h"
+
+#include "TypeDequeAllocator.h"
 
 #include <memory>
 
@@ -12,7 +13,7 @@ template<class _Ty
 	, unsigned _Size>
 	struct tDequeIterator
 {
-	using ValueType	= _Ty;
+	using ValueType = _Ty;
 	using DifferenceType = ptrdiff_t;
 	using This = tDequeIterator;
 	using Iterator = tDequeIterator<_Ty, _Size>;
@@ -22,9 +23,9 @@ template<class _Ty
 	*/
 	void SetNode(_Ty** newNode)
 	{
-		node = newNode; 
-		first = *newNode; 
-		last = first + DifferenceType(BufferSize()); 
+		node = newNode;
+		first = *newNode;
+		last = first + DifferenceType(BufferSize());
 	}
 
 	size_t BufferSize()
@@ -37,11 +38,11 @@ template<class _Ty
 
 	This& operator ++()
 	{
-		++cur; 
-	
+		++cur;
+
 		if (cur == last)
 		{
-			SetNode(node + 1); 
+			SetNode(node + 1);
 			cur = first;
 		}
 		return *this;
@@ -56,10 +57,10 @@ template<class _Ty
 
 	This& operator --()
 	{
-		if (cur == first) 
+		if (cur == first)
 		{
-			SetNode(node - 1); 
-			cur = last; 
+			SetNode(node - 1);
+			cur = last;
 		}
 		--cur;
 		return *this;
@@ -74,7 +75,7 @@ template<class _Ty
 
 	This& operator +=(DifferenceType n)
 	{
-		DifferenceType offset = n + (cur - first); 
+		DifferenceType offset = n + (cur - first);
 
 		if (offset >= 0 && offset < DifferenceType(BufferSize()))
 		{
@@ -83,9 +84,9 @@ template<class _Ty
 		else
 		{
 			DifferenceType nodeOffset = offset > 0
-				? offset / DifferenceType(BufferSize()) 
-				: - DifferenceType((- offset - 1) / BufferSize()) - 1; 
-			SetNode(node + nodeOffset); 
+				? offset / DifferenceType(BufferSize())
+				: -DifferenceType((-offset - 1) / BufferSize()) - 1;
+			SetNode(node + nodeOffset);
 			cur = first + (offset - nodeOffset * DifferenceType(BufferSize()));
 		}
 		return *this;
@@ -112,14 +113,14 @@ template<class _Ty
 
 	_Ty& operator [](DifferenceType n)const { return *(*this + n); }
 
-	bool operator ==(const This& x) const 
-	{ 
-		return cur == x.cur; 
+	bool operator ==(const This& x) const
+	{
+		return cur == x.cur;
 	}
 
-	bool operator !=(const This& x) const 
-	{ 
-		return cur != x.cur; 
+	bool operator !=(const This& x) const
+	{
+		return cur != x.cur;
 	}
 
 	bool operator <(const This& x) const
@@ -128,10 +129,10 @@ template<class _Ty
 	}
 
 
-	_Ty* cur; 
-	_Ty* first; 
-	_Ty* last; 
-	_Ty** node; 
+	_Ty* cur;
+	_Ty* first;
+	_Ty* last;
+	_Ty** node;
 };
 
 
@@ -141,8 +142,8 @@ template<class _Ty
 {
 	using ValueType = _Ty;
 	using DifferenceType = ptrdiff_t;
-	using This = tConstDequeIterator;
-	using Iterator = tConstDequeIterator<_Ty, _Size>;
+	using This = tDequeConstIterator;
+	using Iterator = tDequeConstIterator<_Ty, _Size>;
 
 	/**
 	* @brief : Transfer buffer position
@@ -261,6 +262,6 @@ template<class _Ty
 	_Ty** node;
 };
 
-
 }
-#endif //!KH_STL_DEQUE_BASE_H_
+
+#endif // KH_STL_TYPE_DEQUE_ITERATOR_H_

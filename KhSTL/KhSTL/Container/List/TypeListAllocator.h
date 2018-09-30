@@ -1,6 +1,6 @@
 #ifndef KH_STL_LIST_ALLOCTOR_H_
 #define KH_STL_LIST_ALLOCTOR_H_
-#include "../../Allocator/TypeAllcator.h"
+#include "../../Allocator/TypeAllocator.h"
 namespace KhSTL {
 
 template <typename _Alloc>
@@ -44,13 +44,6 @@ protected:
 		_allocator->Free(object);
 	}
 
-	//template<typename _Other> void free(_Other* other)
-	//{
-	//	_allocator->Free(other);
-	//}
-	/**
-	* @brief : Allocate allocator
-	*/
 	void* allocation()
 	{
 		return _allocator->Allocation();

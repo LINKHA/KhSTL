@@ -1,8 +1,8 @@
 #ifndef KH_STL_TYPE_HASH_SET_H_
 #define KH_STL_TYPE_HASH_SET_H_
-#include "TypeHashBase.h"
-#include "TypeIterator.h"
-#include "TypeHash.h"
+#include "../../Utility/TypeHashBase.h"
+#include "../../Utility/TypeIterator.h"
+#include "../../Utility/TypeHash.h"
 
 namespace KhSTL {
 template <typename _Key> 

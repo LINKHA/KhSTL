@@ -1,6 +1,6 @@
 #ifndef KH_STL_TYPE_ARRAY_H_
 #define KH_STL_TYPE_ARRAY_H_
-#include "TypeIterator.h"
+#include "../../Utility/TypeIterator.h"
 
 #include <initializer_list>
 

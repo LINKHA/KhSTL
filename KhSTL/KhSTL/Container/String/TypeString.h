@@ -16,8 +16,8 @@
 #include <iostream>
 
 
-#include "TypeIterator.h"
-#include "TypeVector.h"
+#include "../../Utility/TypeIterator.h"
+#include "../Vector/TypeVector.h"
 
 namespace KhSTL {
 
@@ -613,11 +613,12 @@ private:
 	/// end zero for empty strings
 	static char endZero;
 };
-
-template <> void Swap<tString>(tString& rhs, tString& lfs)
+/*
+ template <> void Swap<tString>(tString& rhs, tString& lfs)
 {
 	rhs.Swap(lfs);
 }
+*/
 
 
 }

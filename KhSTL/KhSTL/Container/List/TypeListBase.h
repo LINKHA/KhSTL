@@ -2,7 +2,7 @@
 #define KH_STL_TYPE_LIST_BASE_H_
 
 #include "TypeListNode.h"
-#include "TypeListAlloctor.h"
+#include "TypeListAllocator.h"
 #include "TypeListIterator.h"
 
 namespace KhSTL {
@@ -36,7 +36,9 @@ public:
 		freeNode(tail());
 	}
 
-	/// Swap with another linked list.
+	/**
+	* @brief : Swap with another list
+	*/
 	void Swap(tListBase& rhs)
 	{
 		KhSTL::Swap(_head, rhs._head);

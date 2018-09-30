@@ -2,7 +2,7 @@
 #define KH_STL_DEQUE_H_
 
 #ifndef KH_STL_TYPE_DEQUE_H_
-#	include "Container/TypeDeque.h"
+#	include "Container/Deque/TypeDeque.h"
 #endif //!KH_STL_TYPE_DEQUE_H_
 
 namespace KhSTL {

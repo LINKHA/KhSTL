@@ -1,17 +1,23 @@
 #ifndef KH_STL_TYPE_DEQUE_H_
 #define KH_STL_TYPE_DEQUE_H_
 
-#include "../Allocator/TypeMemory.h"
+#include <cassert>
+
 #include "TypeDequeBase.h"
-#include "../Allocator/TypeConstruct.h"
+
+#include "../../Allocator/TypeMemory.h"
+
+#include "../../Allocator/TypeConstruct.h"
+
 
 namespace KhSTL {
 
 
 template <typename _Ty
-	,typename _Alloc = tmAllocator<_Ty>
-	,unsigned _Size = 0> 
-	class tDeque 
+	, unsigned _Size = 0
+	//, typename _Alloc = tAllocator<_Ty>>
+	, typename _Alloc = tmAllocator<_Ty>>
+	class tDeque : public tDequeBase<_Ty, _Size,_Alloc>
 {
 public:
 	using ValueType = _Ty;
@@ -35,16 +41,16 @@ public:
 		fillInitialize(0, 0);
 	}
 	
-	/**
-	* @brief : Construct from another list
-	*/
-	explicit tDeque(const tList<_Ty>& list)
-	{
-		// Reserve the tail node + initial capacity according to the list's size
-		_allocator = AllocatorInitialize((unsigned)sizeof(Node), list.Size() + 1);
-		_head = _tail = ReserveNode();
-		*this = list;
-	}
+	///**
+	//* @brief : Construct from another list
+	//*/
+	//explicit tDeque(const tList<_Ty>& list)
+	//{
+	//	// Reserve the tail node + initial capacity according to the list's size
+	//	_allocator = AllocatorInitialize((unsigned)sizeof(Node), list.Size() + 1);
+	//	_head = _tail = ReserveNode();
+	//	*this = list;
+	//}
 	/**
 	* @brief : Move-construct from another list
 	*/
@@ -93,7 +99,7 @@ public:
 	*/
 	_Ty& At(unsigned index)
 	{
-		assert(_size >= index);
+		assert(_mapSize >= index);
 		return (*(Begin() + static_cast<difference_type>(index)));
 	}
 	/**
@@ -101,7 +107,7 @@ public:
 	*/
 	const _Ty& At(unsigned index) const
 	{
-		assert(_size >= index);
+		assert(_mapSize >= index);
 		return (*(Begin() + static_cast<difference_type>(index)));
 	}
 	/**
@@ -179,12 +185,12 @@ public:
 	*/
 	void Resize(unsigned newSize)
 	{	
-		while (_size < newSize)
+		while (_mapSize < newSize)
 		{
 			EmplaceBack();
 		}
 
-		while (newSize < _size)
+		while (newSize < _mapSize)
 		{
 			PopBack();
 		}
@@ -194,12 +200,12 @@ public:
 	*/
 	void Resize(unsigned newSize,const _Ty& value)
 	{
-		while (_size < newSize)
+		while (_mapSize < newSize)
 		{
 			PushBack(value);
 		}
 
-		while (newSize < _size)
+		while (newSize < _mapSize)
 		{
 			PopBack();
 		}
@@ -283,7 +289,7 @@ public:
 	*/
 	Iterator Insert(Iterator position, const _Ty& value)
 	{
-		return (emplace(position, std::move(value));
+		return (Emplace(position, std::move(value)));
 	}
 	/**
 	* @brief : Create an element at the beginning
@@ -327,17 +333,17 @@ public:
 	* @brief :
 	*/
 	template<class... _TyArg>
-		Iterator Emplace(ConstIterator pos, _TyArg&&... args)
+	Iterator Emplace(ConstIterator pos, _TyArg&&... args)
 	{
 		difference_type index = pos - _start;
-		_Ty x_copy = x;
 
-		if (index <= Size() / 2) 
+
+		if (index <= Size() / 2)
 		{
 			EmplaceFront(std::forward<_TyArg>(args)...);
 			std::rotate(Begin(), Begin() + 1, Begin() + static_cast<difference_type>(1 + index));
 		}
-		else 
+		else
 		{
 			EmplaceBack(std::forward<_TyArg>(args)...);
 			std::rotate(Begin() + static_cast<difference_type>(index), End() - 1, End());
@@ -469,9 +475,9 @@ protected:
 	void createMapAndNodes(unsigned numElements)
 	{
 		unsigned numNodes = numElements / bufferSize() + 1;
-		_size = std::max(initialMapSize(), numNodes + 2); 
-		_map = map_allocator::allocate(_size);
-		MapPoint nstart = _map + (_size - numNodes) / 2;
+		_mapSize = std::max(initialMapSize(), numNodes + 2);
+		_map = map_allocator::allocate(_mapSize);
+		MapPoint nstart = _map + (_mapSize - numNodes) / 2;
 		MapPoint nfinish = nstart + numNodes - 1;
 		MapPoint cur;
 		for (cur = nstart; cur <= nfinish; ++cur)
@@ -502,31 +508,7 @@ protected:
 		data_allocator::deallocate(node);
 	}
 
-	void tidy()
-	{	// free all storage
-		_Alpty _Almap(this->_Getal());
-		while (!Empty())
-		{
-			PopBack();
-		}
-
-		for (size_type _Block = this->_Mapsize(); 0 < _Block; )
-		{	// free storage for a block and destroy pointer
-			if (this->_Map()[--_Block] != pointer())
-			{	// free block and destroy its pointer
-				this->_Getal().deallocate(this->_Map()[_Block], _DEQUESIZ);
-				_Alpty_traits::destroy(_Almap, _STD addressof(this->_Map()[_Block]));
-			}
-		}
-
-		if (this->_Map() != _Mapptr())
-		{
-			_Almap.deallocate(this->_Map(), this->_Mapsize());	// free storage for map
-		}
-
-		this->_Mapsize() = 0;
-		this->_Map() = _Mapptr();
-	}
+	
 
 	
 private:

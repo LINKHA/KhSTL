@@ -2,7 +2,7 @@
 #define KH_STL_ARRAY_H_
 
 #ifndef KH_STL_TYPE_ARRAY_H_
-#	include "Container/TypeArray.h"
+#	include "Container/Array/TypeArray.h"
 #endif //!KH_STL_TYPE_ARRAY_H_
 
 namespace KhSTL {

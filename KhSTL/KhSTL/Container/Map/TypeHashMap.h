@@ -1,10 +1,10 @@
 #ifndef KH_STL_TYPE_HASH_MAP_H_
 #define KH_STL_TYPE_HASH_MAP_H_
-#include "TypeHashBase.h"
-#include "TypePair.h"
-#include "TypeVector.h"
-#include "TypeIterator.h"
-#include "../Algorithms/TypeSort.h"
+#include "../../Utility/TypeHashBase.h"
+#include "../../Utility/TypePair.h"
+#include "../Vector/TypeVector.h"
+#include "../../Utility/TypeIterator.h"
+#include "../../Algorithm/TypeAlgorithm.h"
 
 #include <initializer_list>
 

@@ -3,7 +3,7 @@
 
 
 #include "TypeVectorBase.h"
-#include "TypeIterator.h"
+#include "../../Utility/TypeIterator.h"
 
 #include <initializer_list>
 #include <utility>

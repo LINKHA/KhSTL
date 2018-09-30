@@ -1,6 +1,6 @@
 #ifndef KH_STL_TYPE_ALGORITHM_H_
 #define KH_STL_TYPE_ALGORITHM_H_
-
+#include "../Utility/TypeIterator.h"
 
 namespace KhSTL {
 
