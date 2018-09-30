@@ -1,35 +1,34 @@
 #ifndef KH_STL_TYPE_VECTOR_BASE_H_
 #define KH_STL_TYPE_VECTOR_BASE_H_
 
-#include "../../Algorithm/TypeAlgorithm.h"
-
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable:6293)
-#endif
-
-namespace KhSTL {
-/**
-* tpye vector base class
-*/
-
-class tVectorBase
+namespace KhSTL{
+template <typename _Ty>
+	class tVectorBase
 {
 public:
-	tVectorBase() noexcept 
+	tVectorBase() noexcept = default;
+
+	/*tVectorBase() noexcept
 		: _size(0)
 		, _capacity(0)
 		, _buffer(nullptr)
-	{}
+	{}*/
 	~tVectorBase() = default;
 	/**
 	* @brief : Swap with another vector
 	*/
-	void Swap(tVectorBase& rhs)
+	void Swap(tVectorBase<_Ty>& rhs)
 	{
 		KhSTL::Swap(_size, rhs._size);
 		KhSTL::Swap(_capacity, rhs._capacity);
 		KhSTL::Swap(_buffer, rhs._buffer);
+	}
+	/**
+	* @brief : Return the buffer with right type
+	*/
+	_Ty* Buffer() const
+	{
+		return reinterpret_cast<_Ty*>(_buffer);
 	}
 
 protected:
@@ -40,15 +39,8 @@ protected:
 	unsigned _capacity;
 	/// Buffer.
 	unsigned char* _buffer;
+
 };
 
-
 }
-
-
-
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
-
 #endif //!KH_STL_TYPE_VECTOR_BASE_H_
