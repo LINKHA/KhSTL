@@ -1,10 +1,11 @@
-#ifndef KH_STL_LIST_ALLOCTOR_H_
-#define KH_STL_LIST_ALLOCTOR_H_
-#include "../../Allocator/TypeAllocator.h"
-namespace KhSTL {
+#ifndef KH_STL_TYPE_VECTOR_ALLOCATOR_H_
+#define KH_STL_TYPE_VECTOR_ALLOCATOR_H_
 
+#include "../../Allocator/TypeAllocator.h"
+
+namespace KhSTL{
 template <typename _Alloc>
-	class tListAlloc
+	class tVectorAlloc
 {
 public:
 	using Alloc = _Alloc;
@@ -53,4 +54,4 @@ protected:
 };
 
 }
-#endif //!KH_STL_LIST_ALLOCTOR_H_s
+#endif //!KH_STL_TYPE_VECTOR_ALLOCATOR_H_

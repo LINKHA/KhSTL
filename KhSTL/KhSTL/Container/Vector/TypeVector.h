@@ -20,7 +20,7 @@ namespace KhSTL {
 /**
 * Vector class
 */
-template <typename _Ty> 
+template <typename _Ty>
 	class tVector : public tVectorBase
 {
 public:

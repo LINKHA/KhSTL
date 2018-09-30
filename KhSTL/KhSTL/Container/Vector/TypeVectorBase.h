@@ -12,6 +12,7 @@ namespace KhSTL {
 /**
 * tpye vector base class
 */
+
 class tVectorBase
 {
 public:
