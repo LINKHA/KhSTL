@@ -1,0 +1,8 @@
+#ifndef KH_STL_TYPE_MAP_ALLOCATOR_H_
+#define KH_STL_TYPE_MAP_ALLOCATOR_H_
+
+namespace KhSTL {
+
+}
+
+#endif // KH_STL_TYPE_MAP_ALLOCATOR_H_

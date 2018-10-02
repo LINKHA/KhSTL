@@ -100,7 +100,7 @@ namespace KhSTL {
 
 	};
 
-
+	
 	template<class T, class _Alloc = tmAllocator<T>>
 	class simple_alloc
 	{
