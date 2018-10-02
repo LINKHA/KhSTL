@@ -13,10 +13,13 @@ template<class _Ty
 	, unsigned _Size>
 	struct tDequeIterator
 {
+public:
 	using ValueType = _Ty;
-	using DifferenceType = ptrdiff_t;
+	//using DifferenceType = ptrdiff_t;
 	using This = tDequeIterator;
 	using Iterator = tDequeIterator<_Ty, _Size>;
+public:
+	
 
 	/**
 	* @brief : Transfer buffer position
@@ -25,16 +28,16 @@ template<class _Ty
 	{
 		node = newNode;
 		first = *newNode;
-		last = first + DifferenceType(BufferSize());
+		last = first + BufferSize();
 	}
 
-	size_t BufferSize()
+	unsigned BufferSize()
 	{
-		return _Size != 0 ? _Size : (sizeof(_Ty) < 512 ? size_t(512 / sizeof(_Size)) : size_t(1));
+		return _Size != 0 ? _Size : (sizeof(_Ty) < 512 ? unsigned(512 / sizeof(_Size)) : unsigned(1));
 	}
 
 	_Ty& operator *() const { return *cur; }
-	_Ty* operator ->() const { return &(operator *()); }
+	_Ty* operator ->()const { return &(operator *()); }
 
 	This& operator ++()
 	{
@@ -73,45 +76,45 @@ template<class _Ty
 		return it;
 	}
 
-	This& operator +=(DifferenceType n)
+	This& operator +=(int n)
 	{
-		DifferenceType offset = n + (cur - first);
+		int offset = n + (cur - first);
 
-		if (offset >= 0 && offset < DifferenceType(BufferSize()))
+		if (offset >= 0 && offset < BufferSize())
 		{
 			cur += n;
 		}
 		else
 		{
-			DifferenceType nodeOffset = offset > 0
-				? offset / DifferenceType(BufferSize())
-				: -DifferenceType((-offset - 1) / BufferSize()) - 1;
+			int nodeOffset = offset > 0
+				? offset / BufferSize()
+				: -int((-offset - 1) / BufferSize()) - 1;
 			SetNode(node + nodeOffset);
-			cur = first + (offset - nodeOffset * DifferenceType(BufferSize()));
+			cur = first + (offset - nodeOffset * BufferSize());
 		}
 		return *this;
 	}
 
-	This operator +(DifferenceType n) const
+	This operator +(unsigned n) const
 	{
 		This it = *this;
 		return it += n;
 	}
 
-	This& operator -=(DifferenceType n)const { return *this += -n; }
+	This& operator -=(unsigned n)const { return *this += -n; }
 
-	This operator -(DifferenceType n)const
+	This operator -(unsigned n)const
 	{
 		This it = *this;
 		return it -= n;
 	}
 
-	DifferenceType operator -(const This& x)
+	unsigned operator -(const This& x)
 	{
-		return DifferenceType(BufferSize())*(node - x.node - 1) + (cur - first) + (x.last - x.cur);
+		return unsigned(BufferSize())*(node - x.node - 1) + (cur - first) + (x.last - x.cur);
 	}
 
-	_Ty& operator [](DifferenceType n)const { return *(*this + n); }
+	_Ty& operator [](unsigned n)const { return *(*this + n); }
 
 	bool operator ==(const This& x) const
 	{
@@ -141,7 +144,7 @@ template<class _Ty
 	struct tDequeConstIterator
 {
 	using ValueType = _Ty;
-	using DifferenceType = ptrdiff_t;
+	//using DifferenceType = ptrdiff_t;
 	using This = tDequeConstIterator;
 	using Iterator = tDequeConstIterator<_Ty, _Size>;
 
@@ -155,9 +158,9 @@ template<class _Ty
 		last = first + DifferenceType(BufferSize());
 	}
 
-	size_t BufferSize()
+	unsigned BufferSize()
 	{
-		return _Size != 0 ? _Size : (sizeof(_Ty) < 512 ? size_t(512 / sizeof(_Size)) : size_t(1));
+		return _Size != 0 ? _Size : (sizeof(_Ty) < 512 ? unsigned(512 / sizeof(_Size)) : unsigned(1));
 	}
 
 	const _Ty& operator *() const { return *cur; }
@@ -200,45 +203,45 @@ template<class _Ty
 		return it;
 	}
 
-	This& operator +=(DifferenceType n)
+	This& operator +=(unsigned n)
 	{
-		DifferenceType offset = n + (cur - first);
+		unsigned offset = n + (cur - first);
 
-		if (offset >= 0 && offset < DifferenceType(BufferSize()))
+		if (offset >= 0 && offset < unsigned(BufferSize()))
 		{
 			cur += n;
 		}
 		else
 		{
-			DifferenceType nodeOffset = offset > 0
-				? offset / DifferenceType(BufferSize())
-				: -DifferenceType((-offset - 1) / BufferSize()) - 1;
+			unsigned nodeOffset = offset > 0
+				? offset / unsigned(BufferSize())
+				: -unsigned((-offset - 1) / BufferSize()) - 1;
 			SetNode(node + nodeOffset);
-			cur = first + (offset - nodeOffset * DifferenceType(BufferSize()));
+			cur = first + (offset - nodeOffset * unsigned(BufferSize()));
 		}
 		return *this;
 	}
 
-	This operator +(DifferenceType n) const
+	This operator +(unsigned n) const
 	{
 		This it = *this;
 		return it += n;
 	}
 
-	This& operator -=(DifferenceType n)const { return *this += -n; }
+	This& operator -=(unsigned n)const { return *this += -n; }
 
-	This operator -(DifferenceType n)const
+	This operator -(unsigned n)const
 	{
 		This it = *this;
 		return it -= n;
 	}
 
-	DifferenceType operator -(const This& x)
+	unsigned operator -(const This& x)
 	{
-		return DifferenceType(BufferSize())*(node - x.node - 1) + (cur - first) + (x.last - x.cur);
+		return unsigned(BufferSize())*(node - x.node - 1) + (cur - first) + (x.last - x.cur);
 	}
 
-	_Ty& operator [](DifferenceType n)const { return *(*this + n); }
+	_Ty& operator [](unsigned n)const { return *(*this + n); }
 
 	bool operator ==(const This& x) const
 	{

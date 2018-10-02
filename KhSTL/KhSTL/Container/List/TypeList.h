@@ -1,7 +1,10 @@
 #ifndef KH_STL_TYPE_LIST_H_
 #define KH_STL_TYPE_LIST_H_
 
-#include "TypeListBase.h"
+#include "TypeListAllocator.h"
+
+#include "TypeListIterator.h"
+
 #include <initializer_list>
 
 namespace KhSTL {
@@ -12,7 +15,7 @@ namespace KhSTL {
 */
 template <typename _Ty,
 	typename _Alloc = tAllocator<tListNode<_Ty>>>
-	class tList : public tListBase <_Ty, _Alloc>
+	class tList : public tListAlloc <_Ty, _Alloc>
 {
 public:
 	/// Value type
@@ -20,9 +23,11 @@ public:
 	/// This class
 	using This = tList<_Ty, _Alloc>;
 	/// Base class
-	using Base = tListBase <_Ty, _Alloc>;
+	using Base = tListAlloc <_Ty, _Alloc>;
 	/// Allocator
-	using Allocator = _Alloc;
+	using Alloc = tListAlloc <_Ty, _Alloc>;
+	/// Value info
+	using Value = typename Alloc::Value;
 	/// Allocator type
 	using AllocatorType = typename _Alloc::ValueType;
 	/// List iterator
