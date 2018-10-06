@@ -5,7 +5,7 @@ namespace KhSTL {
 
 
 template<typename _Kty,typename _Ty>
-class tTypeUnorderedMultiMap
+class tUnorderedMultiMap
 {
 
 

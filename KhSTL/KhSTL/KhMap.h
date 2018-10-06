@@ -32,7 +32,7 @@ template<typename _Kty, typename _Ty>
 ///
 ///
 template<typename _Kty, typename _Ty>
-	using UnorderedMap = KhSTL::tTypeUnorderedMap<_Kty, _Ty>;
+	using UnorderedMap = KhSTL::tUnorderedMap<_Kty, _Ty>;
 ///
 ///
 ///

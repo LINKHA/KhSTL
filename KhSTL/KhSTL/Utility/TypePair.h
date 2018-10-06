@@ -28,7 +28,10 @@ public:
 	/**
 	* @brief : Test for inequality with another pair
 	*/
-	bool operator !=(const tPair<_First, _Second>& rhs) const { return first != rhs.first || second != rhs.second; }
+	bool operator !=(const tPair<_First, _Second>& rhs) const 
+	{ 
+		return first != rhs.first || second != rhs.second; 
+	}
 	/**
 	* @brief : Test for less than with another pair
 	*/
@@ -41,6 +44,15 @@ public:
 		return second < rhs.second;
 	}
 	/**
+	* @brief : Test for less equal than with another pair
+	*/
+	bool operator <=(const tPair<_First, _Second>& rhs) const
+	{
+		if (first <= rhs.first)
+			return true;
+		return second <= rhs.second;
+	}
+	/**
 	* @brief : Test for greater than with another pair
 	*/
 	bool operator >(const tPair<_First, _Second>& rhs) const
@@ -50,6 +62,15 @@ public:
 		if (first != rhs.first)
 			return false;
 		return second > rhs.second;
+	}
+	/**
+	* @brief : Test for greater equal than with another pair
+	*/
+	bool operator >=(const tPair<_First, _Second>& rhs) const
+	{
+		if (first >= rhs.first)
+			return true;
+		return second >= rhs.second;
 	}
 	/**
 	* @brief : Return hash value for tHashSet & tHashMap

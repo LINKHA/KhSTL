@@ -7,7 +7,7 @@ template<typename _Ty = void> struct tGreater
 {	
 	const bool operator()(const _Ty& lfs, const _Ty& rhs) const
 	{	
-		return (lfs > rhs);
+		return lfs > rhs;
 	}
 };
 
@@ -15,7 +15,7 @@ template<typename _Ty = void> struct tGreaterEqual
 {
 	const bool operator()(const _Ty& lfs, const _Ty& rhs) const
 	{	
-		return (lfs >= rhs);
+		return lfs >= rhs;
 	}
 };
 

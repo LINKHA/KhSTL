@@ -2,92 +2,89 @@
 #define KH_STL_TYPE_MAP_H_
 
 #include "../../Allocator/TypeAllocator.h"
-#include "../../Utility/TypePair.h"
 #include "../../Utility/TypeDef.h"
+#include "../../Utility/TypeRBTree.h"
+#include "TypeMapAlloc.h"
 
 namespace KhSTL {
 
-template <typename _Kty
+template<typename _Kty
 	, typename _Ty
-	, typename _Sort = tLess<_Ty>
-	, typename _Alloc = tAllocator<tPair<const _Kty,_Ty>>>
-	class tMap
+	, typename _Comp = tLess<tPair<_Kty,_Ty>>
+	, typename _Alloc = mapTempAllocator<_Kty>>
+	class tMap : public RBTree<tPair<_Kty, _Ty>, _Comp, _Alloc>
 {
-public:
+	using Base = RBTree<tPair<_Kty, _Ty>, _Comp, _Alloc>;
+	using RBTreeType = RBTree<tPair<_Kty, _Ty>, _Comp, _Alloc>;
 	using KeyType = _Kty;
-	using DataType = _Ty;
-	using ValueType = tPair<const _Kty, _Ty>;
-	using Compare = _Sort;
-	using RBTree = tTree<_Kty, _Ty, std::identity<_Ty>, _Arr, _Alloc>;
-
-	using pointer = typename RBTree::pointer;
-	using reference = typename RBTree::reference;
-	using iterator = typename RBTree::iterator;
-	using size_type = typename RBTree::size_type;
-	using difference_type = typename RBTree::difference_type;
-
+	using ValueType = typename Base::ValueType;
+	using KeyCompare = _Comp;
+	
 public:
+	using pointer = typename RBTreeType::pointer;
+
+	using reference = typename RBTreeType::reference;
+
+	using Iterator = typename RBTreeType::Iterator;
+
+	using size_type = typename RBTreeType::size_type;
+
+	using difference_type = typename RBTreeType::difference_type;
 
 	tMap() 
-		:_tree(_Sort())
+		//:_reTree(_Comp()) 
 	{}
 
-	tMap(const tMap<_Kty, _Ty, _Sort, _Alloc>& x)
-		:_tree(x._tree)
-	{}
+//	tMap(const tMap<_Kty, _Comp, _Alloc>& rhs) 
+//		:_reTree(rhs._reTree)
+//	{}
 
-	tMap<_Kty, _Ty, _Sort, _Alloc>& operator =(const tMap<_Kty, _Ty, _Sort, _Alloc>& x)
+	//tMap<_Kty, _Ty, _Comp, _Alloc>& operator =(const tMap<_Kty, _Ty, _Comp, _Alloc>& x)
+	//{
+	//	//_reTree = x._reTree;
+	//	return *this;
+	//}
+	~tMap()
+		//:_reTree(_Comp()) 
 	{
-		_tree = x._tree;
-		return *this;
+		
 	}
+	_Comp key_comp() const { return Base::key_comp(); }
 
-	_Sort KeyComp() const
-	{ 
-		return _tree.KeyComp();
-	}
 	Iterator Begin() 
 	{
-		return _tree.Begin(); 
+		return Base::Begin();
 	}
-
 	Iterator End() 
-	{
-		return _tree.End(); 
-	}
-
-	bool Empty() 
 	{ 
-		return _tree.Empty(); 
+		return Base::End();
 	}
-
-	unsigned Size() 
+	bool empty() 
 	{ 
-		return _tree.Size(); 
+		return Base::empty();
 	}
-
-	unsigned MaxSize() 
-	{
-		return _tree.MaxSize(); 
+	size_type size() 
+	{ 
+		return Base::GetSize();
 	}
-
+	size_type max_size() 
+	{ 
+		return Base::max_size();
+	}
 	void operator[](const KeyType& k)
 	{
+
 		Insert(ValueType(k, _Ty()));
 	}
-
 	tPair<Iterator, bool> Insert(const ValueType& x)
 	{
-		return _tree.insert_unique(x);
+		return Base::insert_unique(x);
 	}
-
-	Iterator Find(const KeyType& x) { return _tree.Find(x); }
-
-private:
-	RBTree _tree;
+	Iterator Find(const KeyType& x) 
+	{ 
+		return Base::find(x);
+	}
 };
-
-
 
 }
 

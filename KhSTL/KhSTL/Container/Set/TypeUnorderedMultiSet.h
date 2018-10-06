@@ -5,7 +5,7 @@ namespace KhSTL {
 
 
 	template<typename _Ty>
-	class tUnorderedMultSet
+	class tUnorderedMultiSet
 	{
 
 

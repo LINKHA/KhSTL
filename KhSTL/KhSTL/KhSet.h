@@ -27,7 +27,7 @@ template<typename _Ty> using MultiSet = KhSTL::tMultiSet<_Ty>;
 ///
 ///
 ///
-template<typename _Ty> using UnorderedMultSet = KhSTL::tUnorderedMultSet<_Ty>;
+template<typename _Ty> using UnorderedMultiSet = KhSTL::tUnorderedMultiSet<_Ty>;
 ///
 ///
 ///

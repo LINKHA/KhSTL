@@ -10,7 +10,7 @@
 namespace KhSTL {
 
 template<typename _Ty>
-inline _Ty* _allocate(unsigned size, _Ty*)
+inline _Ty* __allocate(unsigned size, _Ty*)
 {
 	std::set_new_handler(0);
 	_Ty* tmp = (_Ty*)(::operator new((unsigned)(size * sizeof(_Ty))));
@@ -23,19 +23,19 @@ inline _Ty* _allocate(unsigned size, _Ty*)
 }
 
 template<class T>
-inline void _deallocate(T* buffer)
+inline void __deallocate(T* buffer)
 {
 	::operator delete(buffer);
 }
 
 template<class T1, class  T2>
-inline void _construct(T1* p, const T2& value)
+inline void __construct(T1* p, const T2& value)
 {
 	new(p)T1(value);
 }
 
 template<class T>
-inline void _destroy(T* ptr)
+inline void __destroy(T* ptr)
 {
 	ptr->~T();
 }
@@ -198,16 +198,16 @@ protected:
 private:
 	Ptr allocate(unsigned n, const void* hint = 0)
 	{
-		return _allocate((unsigned)n, (Ptr)0);
+		return __allocate((unsigned)n, (Ptr)0);
 	}
 	void dealloc(Ptr p, unsigned n)
 	{
-		_deallocate(p);
+		__deallocate(p);
 	}
 
 	void dealloc(void* p)
 	{
-		_deallocate(p);
+		__deallocate(p);
 	}
 
 	_Ty* allocateData(unsigned n)
@@ -233,18 +233,18 @@ private:
 	void deallocData(_Ty* p, unsigned n)
 	{
 		if (0 != n)
-			_deallocate(p);
+			__deallocate(p);
 	}
 
 	void deallocMap(_Ty** p, unsigned n)
 	{
 		if (0 != n)
-			_deallocate(p);
+			__deallocate(p);
 	}
 
 	void deallocate(void* p)
 	{
-		_deallocate(p);
+		__deallocate(p);
 	}
 
 
