@@ -136,7 +136,7 @@ template <typename _Ty> inline void Swap(_Ty& rhs, _Ty& lfs)
 
 
 //template <> void Swap<tString>(tString& rhs, tString& lfs);
-//template <> void Swap<tVectorBase>(tVectorBase& rhs, tVectorBase& lfs);
+//template <> void Swap<tVectorValue>(tVectorValue& rhs, tVectorValue& lfs);
 //template <> void Swap<tHashBase>(tHashBase& rhs, tHashBase& lfs);
 
 //template <typename _Ty, typename _Alloc> 
@@ -149,7 +149,7 @@ template <typename _Ty> inline void Swap(_Ty& rhs, _Ty& lfs)
 //{
 //	rhs.Swap(lfs);
 //}
-//template<> void Swap(tVectorBase& rhs, tVectorBase& lfs)
+//template<> void Swap(tVectorValue& rhs, tVectorValue& lfs)
 //{
 //	rhs.Swap(lfs);
 //}

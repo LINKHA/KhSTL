@@ -19,13 +19,21 @@ template <typename _Ty
 	class tDeque : public tDequeAlloc<_Ty, _Size, _Alloc>
 {
 public:
+	///Value type
 	using ValueType = _Ty;
+	///Map poiint is valueType**
 	using MapPoint = _Ty**;
+	///Base class
 	using Base = tDequeAlloc<_Ty, _Size, _Alloc>;
+	///This class
 	using This = tDeque<_Ty, _Size, _Alloc>;
+	///Alloc class
 	using Alloc = tDequeAlloc<_Ty, _Size, _Alloc>;
+	///Data value
 	using Value = typename Alloc::Value;
+	///Value iterator
 	using Iterator = typename Value::Iterator;
+	///Const value iterator
 	using ConstIterator = typename Value::ConstIterator;
 
 public:

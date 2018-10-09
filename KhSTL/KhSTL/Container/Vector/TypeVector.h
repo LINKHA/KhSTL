@@ -232,7 +232,8 @@ public:
 	/**
 	* @brief : Create an element at the end
 	*/
-	template <typename... Args> _Ty& EmplaceBack(Args&&... args)
+	template <typename... Args> 
+	_Ty& EmplaceBack(Args&&... args)
 	{
 		if (Value::_size < Value::_capacity)
 		{

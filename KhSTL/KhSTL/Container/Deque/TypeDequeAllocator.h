@@ -1,8 +1,8 @@
 #ifndef KH_STL_TYPE_DEQUE_ALLOCATOR_H_
 #define KH_STL_TYPE_DEQUE_ALLOCATOR_H_
 
-#include "TypeDequeBase.h"
-
+#include "TypeDequeValue.h"
+#include <algorithm>
 #include "../../Allocator/TypeAllocator.h"
 
 
@@ -44,15 +44,15 @@ inline void __destroy(T* ptr)
 template <typename _Ty
 	, unsigned _Size
 	, typename _Alloc>
-class tDequeAlloc : public tDequeBase <_Ty, _Size>
+class tDequeAlloc : public tDequeValue <_Ty, _Size>
 {
 public:
 	using ValueType = _Ty;
 	using Ptr = _Ty*;
 	using MapPoint = _Ty**;
-	using Value = tDequeBase <_Ty, _Size>;
+	using Value = tDequeValue <_Ty, _Size>;
 	using This = tDequeAlloc<_Ty, _Size, _Alloc>;
-	using Base = tDequeBase <_Ty, _Size>;
+	using Base = tDequeValue <_Ty, _Size>;
 	using Iterator = typename Value::Iterator;
 	using ConstIterator = typename Value::ConstIterator;
 public:

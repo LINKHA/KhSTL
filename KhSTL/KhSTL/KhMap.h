@@ -21,13 +21,19 @@ namespace KhSTL {
 ///
 ///
 ///
-template<typename _Kty, typename _Ty>
-	using Map = KhSTL::tMap<_Kty, _Ty>;
+	template<typename _Kty
+		, typename _Ty
+		, typename _Comp = tLess<tPair<_Kty, _Ty>>
+		, typename _Alloc = mapTempAllocator<_Kty>>
+	using Map = KhSTL::tMap<_Kty, _Ty, _Comp, _Alloc>;
 ///
 ///
 ///
-template<typename _Kty, typename _Ty>
-	using MultiMap = KhSTL::tMultiMap<_Kty, _Ty>;
+template<typename _Kty
+	, typename _Ty
+	, typename _Comp = tLess<tPair<_Kty, _Ty>>
+	, typename _Alloc = mapTempAllocator<_Kty>>
+	using MultiMap = KhSTL::tMultiMap<_Kty, _Ty, _Comp, _Alloc>;
 ///
 ///
 ///

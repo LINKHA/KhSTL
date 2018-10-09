@@ -19,11 +19,17 @@ namespace KhSTL {
 ///
 ///
 ///
-template<typename _Ty> using Set = KhSTL::tSet<_Ty>;
+template<typename _Kty
+	, typename _Comp = tLess<_Kty>
+	, typename _Alloc = mapTempAllocator<_Kty>> 
+	using Set = KhSTL::tSet<_Kty, _Comp, _Alloc>;
 ///
 ///
 ///
-template<typename _Ty> using MultiSet = KhSTL::tMultiSet<_Ty>;
+template<typename _Kty
+	, typename _Comp = tLess<_Kty>
+	, typename _Alloc = mapTempAllocator<_Kty>> 
+	using MultiSet = KhSTL::tMultiSet<_Kty, _Comp, _Alloc>;
 ///
 ///
 ///

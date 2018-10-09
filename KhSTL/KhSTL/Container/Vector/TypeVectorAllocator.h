@@ -3,7 +3,7 @@
 
 #include "../../Algorithm/TypeAlgorithm.h"
 
-#include "TypeVectorBase.h"
+#include "TypeVectorValue.h"
 
 #include"../../Allocator/TypeAllocator.h"
 
@@ -20,12 +20,12 @@ namespace KhSTL {
 */
 template <typename _Ty,
 	typename _Alloc = tAllocator<_Ty>>
-	class tVectorAlloc : public tVectorBase<_Ty>
+	class tVectorAlloc : public tVectorValue<_Ty>
 {
 public:
 	using Iterator = tIterator<_Ty>;
 	using ConstIterator = tConstIterator<_Ty>;
-	using Value = tVectorBase<_Ty>;
+	using Value = tVectorValue<_Ty>;
 	struct CopyTag {};
 	struct MoveTag {};
 

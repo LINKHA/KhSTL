@@ -1,23 +1,23 @@
-#ifndef KH_STL_TYPE_VECTOR_BASE_H_
-#define KH_STL_TYPE_VECTOR_BASE_H_
+#ifndef KH_STL_TYPE_VECTOR_VALUE_H_
+#define KH_STL_TYPE_VECTOR_VALUE_H_
 
 namespace KhSTL{
 template <typename _Ty>
-	class tVectorBase
+	class tVectorValue
 {
 public:
-	tVectorBase() noexcept = default;
+	tVectorValue() noexcept = default;
 
-	/*tVectorBase() noexcept
+	/*tVectorValue() noexcept
 		: _size(0)
 		, _capacity(0)
 		, _buffer(nullptr)
 	{}*/
-	~tVectorBase() = default;
+	~tVectorValue() = default;
 	/**
 	* @brief : Swap with another vector
 	*/
-	void Swap(tVectorBase<_Ty>& rhs)
+	void Swap(tVectorValue<_Ty>& rhs)
 	{
 		KhSTL::Swap(_size, rhs._size);
 		KhSTL::Swap(_capacity, rhs._capacity);
@@ -43,4 +43,4 @@ protected:
 };
 
 }
-#endif //!KH_STL_TYPE_VECTOR_BASE_H_
+#endif //!KH_STL_TYPE_VECTOR_VALUE_H_

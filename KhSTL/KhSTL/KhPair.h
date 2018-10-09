@@ -15,11 +15,19 @@ template<typename _First, typename _Second> using Pair = KhSTL::tPair<_First, _S
 ///
 ///
 ///
-template<typename _First, typename _Second> constexpr KhSTL::tPair<_First, _Second>
-	MakePair(_First&& _Val1, _Second&& _Val2)
+template<typename _First, typename _Second> 
+const KhSTL::tPair<_First, _Second>
+MakePair(_First&& _Val1, _Second&& _Val2)
 {	
 	using Mypair = KhSTL::tPair<_First, _Second>;
-	return (Mypair(_Val1, _Val2));
+	return (Mypair(std::forward<_First>(_Val1), std::forward<_Second>(_Val2)));
+}
+template<typename _First, typename _Second>
+const KhSTL::tPair<_First, _Second>
+MakePair(_First& _Val1, _Second& _Val2)
+{
+	using Mypair = KhSTL::tPair<_First, _Second>;
+	return (Mypair(std::forward<_First>(_Val1), std::forward<_Second>(_Val2)));
 }
 
 

@@ -11,62 +11,95 @@ template<typename _Ty
 class tQueue
 {
 public:
-	void Push(value_type&& _Val)
-	{	// insert element at beginning
+	/**
+	* @brief :  Construct empty
+	*/
+	tQueue()
+		:_container()
+	{}
+	/**
+	* @brief : Insert element at beginning
+	*/
+	void Push(_Ty && _Val)
+	{	// 
 		_container.PushBack(_Val);
 	}
-
-	template<class... _Valty>
-	decltype(auto) emplace(_Valty&&... _Val)
-	{	// insert element at beginning
-		_container.emplace_back(std::forward<_Valty>(_Val)...);
-	}
-
-	bool Empty() const
-	{	// test if queue is empty
-		return _container.Empty();
-	}
-
-	unsigned Size() const
-	{	// return length of queue
-		return _container.Size();
-	}
-
-	_Ty& Front()
-	{	// return first element of mutable queue
-		return _container.Front();
-	}
-
-	const _Ty& Front() const
-	{	// return first element of nonmutable queue
-		return _container.Front();
-	}
-
-	_Ty& Back()
-	{	// return last element of mutable queue
-		return _container.Back();
-	}
-
-	const _Ty& Back() const
-	{	// return last element of nonmutable queue
-		return _container.Back();
-	}
-
+	/**
+	* @brief : Insert element at beginning
+	*/
 	void Push(const _Ty& value)
-	{	// insert element at beginning
+	{	//
 		_container.PushBack(value);
 	}
-
+	/**
+	* @brief :
+	*/
 	void Pop()
 	{	// erase element at end
 		_container.PopFront();
 	}
-
+	/**
+	* @brief :
+	*/
 	const _Container& GetContainer() const
 	{	// get reference to container
 		return _container;
 	}
 
+	/**
+	* @brief :
+	*/
+	template<typename... _TyArg>
+	_Ty Emplace(_TyArg&&... value)
+	{	// insert element at beginning
+		_container.EmplaceBack(std::forward<_TyArg>(value)...);
+	}
+	/**
+	* @brief :
+	*/
+	bool Empty() const
+	{	// test if queue is empty
+		return _container.Empty();
+	}
+	/**
+	* @brief :
+	*/
+	unsigned Size() const
+	{	// return length of queue
+		return _container.Size();
+	}
+	/**
+	* @brief :
+	*/
+	_Ty& Front()
+	{	// return first element of mutable queue
+		return _container.Front();
+	}
+	/**
+	* @brief :
+	*/
+	const _Ty& Front() const
+	{	// return first element of nonmutable queue
+		return _container.Front();
+	}
+	/**
+	* @brief :
+	*/
+	_Ty& Back()
+	{	// return last element of mutable queue
+		return _container.Back();
+	}
+	/**
+	* @brief :
+	*/
+	const _Ty& Back() const
+	{	// return last element of nonmutable queue
+		return _container.Back();
+	}
+	/**
+	* @brief :
+	*/
+	
 	void swap(tQueue& rhs)
 	{	// exchange contents with _Right
 		//_Swap_adl(_container, _Right.c);

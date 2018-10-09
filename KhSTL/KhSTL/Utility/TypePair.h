@@ -21,6 +21,16 @@ public:
 		: first(sfirst)
 		, second(ssecond)
 	{}
+
+	/**
+	* @brief : Construct with values
+	*/
+	tPair(_First&& sfirst, _Second&& ssecond)
+		: first(sfirst)
+		, second(ssecond)
+	{}
+
+
 	/**
 	* @brief : Test for equality with another pair
 	*/

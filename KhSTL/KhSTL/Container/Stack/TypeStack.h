@@ -11,6 +11,9 @@ template<typename _Ty
 class tStack
 {
 public:
+	tStack()
+		:_container()
+	{}
 
 	/**
 	* @brief : Insert element at beginning
@@ -22,7 +25,7 @@ public:
 	/**
 	* @brief : Insert element at end
 	*/
-	void Push(const value_type& value)
+	void Push(const _Ty& value)
 	{
 		_container.PushBack(value);
 	}
@@ -33,6 +36,15 @@ public:
 	{
 		_container.PopBack();
 	}
+
+	/**
+	* @brief : Insert element at beginning
+	*/
+	template<typename... _TyArg>
+		_Ty Emplace(_TyArg&&... value)
+	{	// insert element at beginning
+		_container.EmplaceBack(std::forward<_TyArg>(value)...);
+	}
 	/**
 	* @brief : Get reference to container
 	*/
@@ -41,14 +53,6 @@ public:
 		return _container;
 	}
 
-	/**
-	* @brief : Insert element at beginning
-	*/
-	template<class... _Valty>
-	decltype(auto) Emplace(_Valty&&... _Val)
-	{	
-		_container.EmplaceBack(_STD forward<_Valty>(_Val)...);
-	}
 	/**
 	* @brief : Test if stack is empty
 	*/

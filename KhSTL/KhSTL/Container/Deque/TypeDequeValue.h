@@ -1,5 +1,5 @@
-#ifndef KH_STL_TYPE_DEQUE_BASE_H_
-#define KH_STL_TYPE_DEQUE_BASE_H_
+#ifndef KH_STL_TYPE_DEQUE_VALUE_H_
+#define KH_STL_TYPE_DEQUE_VALUE_H_
 
 #include "TypeDequeIterator.h"
 #include "TypeDequeAllocator.h"
@@ -8,7 +8,7 @@ namespace KhSTL {
 
 template <typename _Ty
 	, unsigned _Size>
-	class tDequeBase
+	class tDequeValue
 {
 public:
 	using MapPoint = _Ty**;
@@ -18,7 +18,7 @@ public:
 
 public:
 
-	tDequeBase()
+	tDequeValue()
 		: _start()
 		, _finish()
 		, _map(0)
@@ -27,7 +27,7 @@ public:
 		
 	}
 
-	virtual ~tDequeBase()
+	virtual ~tDequeValue()
 	{
 		
 	}
@@ -46,4 +46,4 @@ protected:
 
 
 }
-#endif //!KH_STL_TYPE_DEQUE_BASE_H_
+#endif //!KH_STL_TYPE_DEQUE_VALUE_H_
