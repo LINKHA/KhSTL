@@ -35,5 +35,13 @@ template<typename _Ty = void> struct tLessEqual
 	}
 };
 
+template<typename _Ty> using Greater = KhSTL::tGreater<_Ty>;
+
+template<typename _Ty> using GreaterEqual = KhSTL::tGreaterEqual<_Ty>;
+
+template<typename _Ty> using Less = KhSTL::tLess<_Ty>;
+
+template<typename _Ty> using LessEqual = KhSTL::tLessEqual<_Ty>;
+
 }
 #endif // KH_STL_TYPE_DEFINE_H_

@@ -1,10 +1,8 @@
 #ifndef KH_STL_TYPE_MAP_H_
 #define KH_STL_TYPE_MAP_H_
 
-#include "../../Allocator/TypeAllocator.h"
 #include "../../Utility/TypeDef.h"
 #include "../../Utility/TypeRBTree.h"
-#include "TypeMapAlloc.h"
 
 namespace KhSTL {
 
@@ -14,11 +12,20 @@ template<typename _Kty
 	, typename _Alloc = mapTempAllocator<_Kty>>
 	class tMap : public RBTree<tPair<_Kty, _Ty>, _Comp, _Alloc>
 {
+	using This = tMap<_Kty, _Ty, _Comp, _Alloc>;
+
 	using Base = RBTree<tPair<_Kty, _Ty>, _Comp, _Alloc>;
+
 	using RBTreeType = RBTree<tPair<_Kty, _Ty>, _Comp, _Alloc>;
+
 	using KeyType = _Kty;
-	using ValueType = typename Base::ValueType;
+
+	using ValueType = _Ty;
+
+	using PairType = typename Base::ValueType;
+
 	using KeyCompare = _Comp;
+
 	
 public:
 	using pointer = typename RBTreeType::pointer;
@@ -74,9 +81,9 @@ public:
 	void operator[](const KeyType& k)
 	{
 
-		Insert(ValueType(k, _Ty()));
+		Insert(PairType(k, _Ty()));
 	}
-	tPair<Iterator, bool> Insert(const ValueType& x)
+	tPair<Iterator, bool> Insert(const PairType& x)
 	{
 		return Base::insert_unique(x);
 	}

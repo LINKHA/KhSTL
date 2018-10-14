@@ -1,18 +1,18 @@
 #ifndef KH_STL_LIST_ALLOCTOR_H_
 #define KH_STL_LIST_ALLOCTOR_H_
 
-#include "TypeListBase.h"
+#include "TypeListValue.h"
 
 namespace KhSTL {
 
 template <typename _Ty
 	, typename _Alloc>
-class tListAlloc : public tListBase<_Ty>
+class tListAlloc : public tListValue<_Ty>
 {
 public:
-	using Base = tListBase<_Ty>;
+	using Base = tListValue<_Ty>;
 	using AllocType = typename _Alloc::ValueType;
-	using Value = tListBase<_Ty>;
+	using Value = tListValue<_Ty>;
 public:
 	tListAlloc()
 		: _allocator(nullptr)

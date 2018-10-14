@@ -7,6 +7,7 @@
 #include "../Utility/TypeRBTreeIterator.h"
 #include "../Allocator/TypeConstruct.h"
 #include "../Utility/TypePair.h"
+#include "TypeRBTreeAlloc.h"
 
 #include <new>
 #include <cstddef>
@@ -16,139 +17,20 @@
 
 namespace KhSTL{
 
-	template<class T>
-	inline T* _allocate(ptrdiff_t size, T*)
-	{
-		std::set_new_handler(0);
-		T* tmp = (T*)(::operator new((size_t)(size * sizeof(T))));
-		if (tmp == 0)
-		{
-			std::cerr << "out of memory" << std::endl;
-			exit(1);
-		}
-		return tmp;
-	}
-
-	// 内存释放
-	template<class T>
-	inline void _deallocate(T* buffer)
-	{
-		::operator delete(buffer);
-	}
-
-	// 元素构造
-	template<class T1, class  T2>
-	inline void _construct(T1* p, const T2& value)
-	{
-		new(p)T1(value);
-	}
-
-	// 元素析构
-	template<class T>
-	inline void _destroy(T* ptr)
-	{
-		ptr->~T();
-	}
-
-
-	template<class T>
-	class mapTempAllocator
-	{
-	public:
-		typedef T			value_type;
-		typedef T*			pointer;
-		typedef const T*	const_pointer;
-		typedef T&			reference;
-		typedef const T&	const_reference;
-		typedef size_t		size_type;
-		typedef ptrdiff_t	difference_type;
-
-		template<class U>
-		struct rebind
-		{
-			typedef mapTempAllocator<U> other;
-		};
-
-		static pointer allocate(size_type n, const void* hint = 0)
-		{
-			return _allocate((difference_type)n, (pointer)0);
-		}
-
-		static void deallocate(pointer p, size_type n)
-		{
-			_deallocate(p);
-		}
-
-		static void deallocate(void* p)
-		{
-			_deallocate(p);
-		}
-
-		void construct(pointer p, const T& value)
-		{
-			_construct(p, value);
-		}
-
-		void destroy(pointer p)
-		{
-			_destroy(p);
-		}
-
-		pointer address(reference x)
-		{
-			return (pointer)&x;
-		}
-
-		const_pointer const_address(const_reference x)
-		{
-			return (const_pointer)&x;
-		}
-
-		size_type max_size() const
-		{
-			return size_type(UINT_MAX / sizeof(T));
-		}
-	};
-
-	template<class T, class Alloc = mapTempAllocator<T>>
-	class simple_alloc
-	{
-	public:
-		static T* allocate(size_t n)
-		{
-			return 0 == n ? 0 : (T*)Alloc::allocate(n * sizeof(T));
-		}
-
-		static T* allocate(void)
-		{
-			return (T*)Alloc::allocate(sizeof(T));
-		}
-
-		static void deallocate(T* p, size_t n)
-		{
-			if (0 != n)Alloc::deallocate(p, n * sizeof(T));
-		}
-
-		static void deallocate(void* p)
-		{
-			Alloc::deallocate(p);
-		}
-	};
-
-
-
-
-
 template<typename _Kty
 	, typename _Comp
-	, typename _Alloc = mapTempAllocator<_Kty>>
-class RBTree {
+	, typename _Alloc = mapTempAllocator<tRBTreeNode<_Kty>>>
+	class RBTree : public tRBTreeAlloc<tRBTreeNode<_Kty>, _Kty, _Comp, _Alloc>
+{
 
 protected:
 	using ValueType = _Kty;
 
 	using color_type			= rbTreeColorType; // 节点颜色
 
+	using Base = tRBTreeAlloc<tRBTreeNode<_Kty>, _Kty, _Comp, _Alloc>;
+
+	using Alloc = tRBTreeAlloc<tRBTreeNode<_Kty>, _Kty, _Comp, _Alloc>;
 public:
 	//using key_type				= _Kty; // 键
 	//using value_type			= _Ty; //值
@@ -159,6 +41,7 @@ public:
 
 	using size_type				= size_t;
 	using difference_type		= ptrdiff_t;
+
 
 protected:
 
@@ -171,43 +54,12 @@ public:
 	typedef tRBTreeIterator<ValueType, ValueType&, ValueType*> Iterator; // 定义红黑树的迭代器
 	typedef const tRBTreeIterator<ValueType, ValueType&, ValueType*> const_iterator; // 定义红黑树的const迭代器
 
-protected:
-	/* 调用空间配置器申请一个节点 */
-	tRBTreeNode<ValueType>* get_node() { return simple_alloc<tRBTreeNode<ValueType>, _Alloc>::allocate(); }
-
-	/* 调用空间配置器释还一个节点 */
-	void put_node(tRBTreeNode<ValueType>* p) { simple_alloc<tRBTreeNode<ValueType>, _Alloc>::deallocate(p); }
-
-	/* 申请并初始化节点 */
-	tRBTreeNode<ValueType>* create_node(const ValueType& x)
-	{
-		// x是节点的值
-		tRBTreeNode<ValueType>* tmp = get_node(); // 申请一个节点
-		construct(&tmp->value, x); // 调用全局构造函数初始化节点
-		return tmp;
-	}
-
-	/* 克隆节点 */
-	tRBTreeNode<ValueType>* clone_node(tRBTreeNode<ValueType>* x)
-	{
-		tRBTreeNode<ValueType>* tmp = create_node(x->value); // 申请并初始化节点
-		tmp->color = x->color;
-		tmp->left = 0;
-		tmp->right = 0;
-		return tmp;
-	}
-
-	/* 释还节点 */
-	void destroy_node(tRBTreeNode<ValueType>* p)
-	{
-		destroy(&p->value); // 调用全局析构函数销毁节点值
-		put_node(p); // 释还内存
-	}
 private:
+
 	/* 初始化红黑树 */
 	void init()
 	{
-		header = get_node(); // 初始化header节点，header节点作为整颗红黑树的哨兵，header的parent指针指向根节点，header的类型是__rb_tree_node*
+		header = Alloc::getNode(); // 初始化header节点，header节点作为整颗红黑树的哨兵，header的parent指针指向根节点，header的类型是__rb_tree_node*
 		GetColor(header) = __rb_tree_red; // 设置header节点为红色
 		root() = 0; // root()获得红黑树的根节点，header的parent指针指向根节点，初始化红黑树的根节点指针为null
 		leftmost() = header; // 设置header节点的左子树指向自己
@@ -226,7 +78,7 @@ public:
 	/* 析构函数 */
 	~RBTree()
 	{
-		put_node(header);
+		Alloc::putNode(header);
 	}
 
 protected:
@@ -418,7 +270,7 @@ private:
 		// 3.key_compare(keyOfValue()(v), key(y))：带插入节点的值要比父节点的值小（意味着我们要插入到父节点的左子树上）
 		if (y == header || x != 0 || key_compare(v, GetValue(y)))
 		{
-			z = create_node(v); // 创建新节点，令新节点的值（value_field）为v
+			z = Alloc::createNode(v); // 创建新节点，令新节点的值（value_field）为v
 			left(y) = z; // 令父节点的左子树为z，我们成功的把新节点加入到树中了
 			if (y == header) // y == header：插入点的父节点为header，说明根节点还没有被初始化，进入if就是要初始化根节点
 			{
@@ -432,7 +284,7 @@ private:
 		}
 		else
 		{
-			z = create_node(v); // 创建新节点
+			z = Alloc::createNode(v); // 创建新节点
 			right(y) = z; // 插入节点到父节点的右边
 			if (y == rightmost()) // 如果父节点是整颗树最右边的节点
 			{

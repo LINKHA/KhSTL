@@ -48,7 +48,7 @@ public:
 	/**
 	* @brief : Get reference to container
 	*/
-	const _Container& GetContainer() const
+	const _Ty& GetContainer() const
 	{
 		return _container;
 	}

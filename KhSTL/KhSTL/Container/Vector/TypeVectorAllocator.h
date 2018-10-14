@@ -16,7 +16,7 @@
 
 namespace KhSTL {
 /**
-* tpye vector base class
+* tpye vector Base class
 */
 template <typename _Ty,
 	typename _Alloc = tAllocator<_Ty>>

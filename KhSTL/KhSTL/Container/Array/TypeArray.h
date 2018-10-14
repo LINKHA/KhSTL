@@ -1,6 +1,7 @@
 #ifndef KH_STL_TYPE_ARRAY_H_
 #define KH_STL_TYPE_ARRAY_H_
 #include "TypeArrayIterator.h"
+#include "../../Utility/TypeReverseIterator.h"
 #include <initializer_list>
 
 namespace KhSTL {
@@ -12,8 +13,14 @@ template <typename _Ty
 {
 public:
 	using ValueType = _Ty;
+
 	using Iterator = tArrayIterator<_Ty, _Size>;
+
 	using ConstIterator = tArrayConstIterator<_Ty, _Size>;
+
+	using ReverseIterator = tReverseIterator<Iterator>;
+
+	using ConstReverseIterator = tReverseIterator<ConstIterator>;
 public:
 	/**
 	* @brief : Return element at index

@@ -2,10 +2,11 @@
 #define KH_STL_TYPE_ITERATOR_H_
 
 namespace KhSTL {
-template <typename _Container>
+template <typename _Ty>
 	class tIterator
 {
-	using This = tIterator<_Container> ;
+	using This = tIterator<_Ty>;
+	using ValueType = _Ty;
 public:
 	/**
 	* @brief : Construct
@@ -16,21 +17,21 @@ public:
 	/**
 	* @brief : Construct with an object pointer
 	*/
-	explicit tIterator(_Container* sptr)
+	explicit tIterator(_Ty* sptr)
 		: ptr(sptr)
 	{}
 	/**
 	* @brief : Point to the object
 	*/
-	_Container* operator ->() const { return ptr; }
+	_Ty* operator ->() const { return ptr; }
 	/**
 	* @brief : Dereference the object
 	*/
-	_Container& operator *() const { return *ptr; }
+	_Ty& operator *() const { return *ptr; }
 	/**
 	* @brief : Preincrement the pointer
 	*/
-	tIterator<_Container>& operator ++()
+	tIterator<_Ty>& operator ++()
 	{
 		++ptr;
 		return *this;
@@ -38,16 +39,16 @@ public:
 	/**
 	* @brief : Postincrement the pointer
 	*/
-	tIterator<_Container> operator ++(int)
+	tIterator<_Ty> operator ++(int)
 	{
-		tIterator<_Container> it = *this;
+		tIterator<_Ty> it = *this;
 		++ptr;
 		return it;
 	}
 	/**
 	* @brief : Predecrement the pointer
 	*/
-	tIterator<_Container>& operator --()
+	tIterator<_Ty>& operator --()
 	{
 		--ptr;
 		return *this;
@@ -55,28 +56,28 @@ public:
 	/**
 	* @brief : Postdecrement the pointer
 	*/
-	tIterator<_Container> operator --(int)
+	tIterator<_Ty> operator --(int)
 	{
-		tIterator<_Container> it = *this;
+		tIterator<_Ty> it = *this;
 		--ptr;
 		return it;
 	}
 	/**
 	* @brief : Add an offset to the pointer
 	*/
-	tIterator<_Container>& operator +=(int value){ ptr += value;return *this;}
+	tIterator<_Ty>& operator +=(int value){ ptr += value;return *this;}
 	/**
 	* @brief : Subtract an offset from the pointer
 	*/
-	tIterator<_Container>& operator -=(int value){ ptr -= value; return *this;}
+	tIterator<_Ty>& operator -=(int value){ ptr -= value; return *this;}
 	/**
 	* @brief : Add an offset to the pointer
 	*/
-	tIterator<_Container> operator +(int value) const { return tIterator<_Container>(ptr + value); }
+	tIterator<_Ty> operator +(int value) const { return tIterator<_Ty>(ptr + value); }
 	/**
 	* @brief : Subtract an offset from the pointer
 	*/
-	tIterator<_Container> operator -(int value) const { return tIterator<_Container>(ptr - value); }
+	tIterator<_Ty> operator -(int value) const { return tIterator<_Ty>(ptr - value); }
 	/**
 	* @brief : Calculate offset to another iterator
 	*/
@@ -107,12 +108,12 @@ public:
 	bool operator >=(const tIterator& rhs) const { return ptr >= rhs.ptr; }
 
 	/// Pointer.
-	_Container* ptr;
+	_Ty* ptr;
 };
 
-template <typename _Container> class tConstIterator
+template <typename _Ty> class tConstIterator
 {
-	using This = tConstIterator<_Container>;
+	using This = tConstIterator<_Ty>;
 public:
 	/**
 	* @brief : Construct
@@ -123,19 +124,19 @@ public:
 	/**
 	* @brief : Construct with an object pointer
 	*/
-	explicit tConstIterator(const _Container* sptr)
+	explicit tConstIterator(const _Ty* sptr)
 		: ptr(sptr)
 	{}
 	/**
 	* @brief : Construct from a non-const iterator
 	*/
-	tConstIterator(const tConstIterator<_Container>& rhs) 
+	tConstIterator(const tConstIterator<_Ty>& rhs) 
 		: ptr(rhs.ptr)
 	{}
 	/**
 	* @brief : Assign from a non-const iterator
 	*/
-	tConstIterator<_Container>& operator =(const tConstIterator<_Container>& rhs)
+	tConstIterator<_Ty>& operator =(const tConstIterator<_Ty>& rhs)
 	{
 		ptr = rhs.ptr;
 		return *this;
@@ -143,15 +144,15 @@ public:
 	/**
 	* @brief : Point to the object
 	*/
-	const _Container* operator ->() const { return ptr; }
+	const _Ty* operator ->() const { return ptr; }
 	/**
 	* @brief : Dereference the object
 	*/
-	const _Container& operator *() const { return *ptr; }
+	const _Ty& operator *() const { return *ptr; }
 	/**
 	* @brief : Preincrement the pointer
 	*/
-	tConstIterator<_Container>& operator ++()
+	tConstIterator<_Ty>& operator ++()
 	{
 		++ptr;
 		return *this;
@@ -159,16 +160,16 @@ public:
 	/**
 	* @brief : Postincrement the pointer
 	*/
-	tConstIterator<_Container> operator ++(int)
+	tConstIterator<_Ty> operator ++(int)
 	{
-		tConstIterator<_Container> it = *this;
+		tConstIterator<_Ty> it = *this;
 		++ptr;
 		return it;
 	}
 	/**
 	* @brief : Predecrement the pointer
 	*/
-	tConstIterator<_Container>& operator --()
+	tConstIterator<_Ty>& operator --()
 	{
 		--ptr;
 		return *this;
@@ -176,16 +177,16 @@ public:
 	/**
 	* @brief : Postdecrement the pointer
 	*/
-	tConstIterator<_Container> operator --(int)
+	tConstIterator<_Ty> operator --(int)
 	{
-		tConstIterator<_Container> it = *this;
+		tConstIterator<_Ty> it = *this;
 		--ptr;
 		return it;
 	}
 	/**
 	* @brief : Add an offset to the pointer
 	*/
-	tConstIterator<_Container>& operator +=(int value)
+	tConstIterator<_Ty>& operator +=(int value)
 	{
 		ptr += value;
 		return *this;
@@ -193,7 +194,7 @@ public:
 	/**
 	* @brief : Subtract an offset from the pointer
 	*/
-	tConstIterator<_Container>& operator -=(int value)
+	tConstIterator<_Ty>& operator -=(int value)
 	{
 		ptr -= value;
 		return *this;
@@ -201,11 +202,11 @@ public:
 	/**
 	* @brief : Add an offset to the pointer
 	*/
-	tConstIterator<_Container> operator +(int value) const { return tConstIterator<_Container>(ptr + value); }
+	tConstIterator<_Ty> operator +(int value) const { return tConstIterator<_Ty>(ptr + value); }
 	/**
 	* @brief : Subtract an offset from the pointer
 	*/
-	tConstIterator<_Container> operator -(int value) const { return tConstIterator<_Container>(ptr - value); }
+	tConstIterator<_Ty> operator -(int value) const { return tConstIterator<_Ty>(ptr - value); }
 	/**
 	* @brief : Calculate offset to another iterator
 	*/
@@ -236,7 +237,7 @@ public:
 	bool operator >=(const tConstIterator& rhs) const { return ptr >= rhs.ptr; }
 
 	/// Pointer.
-	const _Container* ptr;
+	const _Ty* ptr;
 };
 
 

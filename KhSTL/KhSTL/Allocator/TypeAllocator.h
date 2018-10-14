@@ -33,7 +33,7 @@ struct tAllocatorNode
 };
 
 
-tAllocatorBlock* AllocatorReserveBlock(tAllocatorBlock* allocator, unsigned nodeSize, unsigned capacity)
+static tAllocatorBlock* AllocatorReserveBlock(tAllocatorBlock* allocator, unsigned nodeSize, unsigned capacity)
 {
 	if (!capacity)
 		capacity = 1;
@@ -76,7 +76,7 @@ tAllocatorBlock* AllocatorReserveBlock(tAllocatorBlock* allocator, unsigned node
 /**
 * @brief : Initialize a fixed-size allocator with the node size and initial capacity
 */
-tAllocatorBlock* AllocatorInitialize(unsigned nodeSize, unsigned initialCapacity = 1)
+static tAllocatorBlock* AllocatorInitialize(unsigned nodeSize, unsigned initialCapacity = 1)
 {
 	tAllocatorBlock* block = AllocatorReserveBlock(nullptr, nodeSize, initialCapacity);
 	return block;
@@ -84,7 +84,7 @@ tAllocatorBlock* AllocatorInitialize(unsigned nodeSize, unsigned initialCapacity
 /**
 * @brief : Uninitialize a fixed-size allocator. Frees all blocks in the chain
 */
-void AllocatorUninitialize(tAllocatorBlock* allocator)
+static void AllocatorUninitialize(tAllocatorBlock* allocator)
 {
 	while (allocator)
 	{
@@ -96,7 +96,7 @@ void AllocatorUninitialize(tAllocatorBlock* allocator)
 /**
 * @brief : Reserve a node. Creates a new block if necessary
 */
-void* AllocatorReserve(tAllocatorBlock* allocator)
+static void* AllocatorReserve(tAllocatorBlock* allocator)
 {
 	if (!allocator)
 		return nullptr;
@@ -120,7 +120,7 @@ void* AllocatorReserve(tAllocatorBlock* allocator)
 /**
 * @brief : Free a node. Does not free any blocks
 */
-void AllocatorFree(tAllocatorBlock* allocator, void* ptr)
+static void AllocatorFree(tAllocatorBlock* allocator, void* ptr)
 {
 	if (!allocator || !ptr)
 		return;

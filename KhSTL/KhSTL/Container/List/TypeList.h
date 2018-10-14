@@ -6,7 +6,7 @@
 #include "TypeListIterator.h"
 
 #include <initializer_list>
-
+#include "../../Utility/TypeReverseIterator.h"
 namespace KhSTL {
 
 
@@ -34,6 +34,10 @@ public:
 	using Iterator = tListIterator<_Ty>;
 	/// List const iterator
 	using ConstIterator = tConstListIterator<_Ty>;
+	/// List reverse iterator
+	using ReverseIterator = tReverseIterator<Iterator>;
+	/// List const reverse iterator
+	using ConstReverseIterator = tReverseIterator<ConstIterator>;
 public:
 	/**
 	* @brief : Construct empty
@@ -231,6 +235,26 @@ public:
 		return it;
 	}
 	/**
+	* @brief : Erase each element matching value
+	*/
+	void Remove(const _Ty& value)
+	{
+		Iterator it = End();
+
+		for (Iterator firstIt = Begin(); firstIt != End(); /**/)
+			if (*firstIt == value)
+				if (std::addressof(*firstIt) == std::addressof(value))
+					it = firstIt++;
+				else
+					firstIt = Erase(firstIt);
+			else
+				++firstIt;
+
+		if (it != End())
+			Erase(it);
+	}
+
+	/**
 	* @brief : Clear the list
 	*/
 	void Clear()
@@ -290,6 +314,7 @@ public:
 	* @brief : Return iterator to the first element
 	*/
 	ConstIterator Begin() const { return ConstIterator(Base::head()); }
+
 	/**
 	* @brief : Return iterator to the end
 	*/
@@ -298,6 +323,15 @@ public:
 	* @brief : Return iterator to the end
 	*/
 	ConstIterator End() const { return ConstIterator(Base::tail()); }
+
+	ReverseIterator RBegin() { return ReverseIterator(End()); }
+
+	ConstReverseIterator RBegin() const { return ReverseIterator(End()); }
+
+	ReverseIterator REnd() { return ReverseIterator(Begin()); }
+
+	ConstReverseIterator REnd() const { return ReverseIterator(Begin()); }
+
 	/**
 	* @brief : Return first element
 	*/

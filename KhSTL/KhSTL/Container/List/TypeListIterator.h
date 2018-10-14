@@ -1,12 +1,12 @@
 #ifndef KH_STL_LIST_ITERATOR_H_
 #define KH_STL_LIST_ITERATOR_H_
 
-#include "TypeListNode.h"
+#include "TypeListValue.h"
 
 namespace KhSTL {
 
 /**
-* Doubly-linked list iterator base class
+* Doubly-linked list iterator Base class
 */
 struct tListIteratorBase
 {
@@ -58,6 +58,7 @@ template <typename _Ty>
 	struct tListIterator 
 	: public tListIteratorBase
 {
+	using ValueType = _Ty;
 	/**
 	* @brief : Construct
 	*/
@@ -119,6 +120,7 @@ template <typename _Ty>
 	struct tConstListIterator 
 	: public tListIteratorBase
 {
+	using ValueType = _Ty;
 	/**
 	* @brief : Construct
 	*/

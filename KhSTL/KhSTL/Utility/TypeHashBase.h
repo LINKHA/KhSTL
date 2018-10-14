@@ -6,7 +6,7 @@
 namespace KhSTL {
 
 /**
-* Hash set/map node base class
+* Hash set/map node Base class
 */
 struct tHashNodeBase
 {
@@ -28,7 +28,7 @@ struct tHashNodeBase
 };
 
 /**
-* Hash set/map iterator base class
+* Hash set/map iterator Base class
 */
 struct tHashIteratorBase
 {

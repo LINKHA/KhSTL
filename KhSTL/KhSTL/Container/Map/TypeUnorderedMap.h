@@ -375,7 +375,7 @@ public:
 		return node ? &node->pair.second : 0;
 	}
 	/**
-	* @brief : Populate the map using variadic template. _Keyhis handles the base case
+	* @brief : Populate the map using variadic template. _Keyhis handles the Base case
 	*/
 	tUnorderedMap& Populate(const _Key& key, const _Ty& value)
 	{
