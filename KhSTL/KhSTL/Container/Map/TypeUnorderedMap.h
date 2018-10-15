@@ -277,7 +277,7 @@ public:
 	*/
 	tUnorderedMap& operator =(const tUnorderedMap<_Key, _Ty>& rhs)
 	{
-		// In case of self-assignment do nothing
+		// In case of This-assignment do nothing
 		if (&rhs != this)
 		{
 			Clear();

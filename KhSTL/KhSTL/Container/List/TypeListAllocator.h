@@ -15,16 +15,14 @@ public:
 	using Value = tListValue<_Ty>;
 public:
 	tListAlloc()
-		: _allocator(nullptr)
+		: _allocator(new _Alloc())
 	{
-		_allocator = new _Alloc();
 		Value::_head = Value::_tail = reserveNode();
 	}
 	
 	explicit tListAlloc(unsigned size)
-		: _allocator(nullptr)
+		: _allocator(new _Alloc(size + 1))
 	{
-		_allocator = new _Alloc(size + 1);
 		Value::_head = Value::_tail = reserveNode();
 	}
 	virtual ~tListAlloc()

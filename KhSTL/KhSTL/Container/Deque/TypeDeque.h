@@ -1,17 +1,28 @@
 #ifndef KH_STL_TYPE_DEQUE_H_
 #define KH_STL_TYPE_DEQUE_H_
 
-#include <cassert>
-
 #include "TypeDequeAllocator.h"
-
-#include "../../Allocator/TypeMemory.h"
-
-#include "../../Allocator/TypeConstruct.h"
-
 
 namespace KhSTL {
 
+	template<class T1, class  T2>
+	inline void construct(T1* p, const T2& value)
+	{
+		new (p)T1(value);
+	}
+
+	template<typename T>
+	inline void destroy(T* pointer)
+	{
+		pointer->~T();
+	}
+
+	template<class ForwardIterator>
+	inline void destroy(ForwardIterator first, ForwardIterator last)
+	{
+		for (; first < last; ++first)
+			destroy(&*first);
+	}
 
 template <typename _Ty
 	, unsigned _Size = 0
@@ -30,7 +41,7 @@ public:
 	///Alloc class
 	using Alloc = tDequeAlloc<_Ty, _Size, _Alloc>;
 	///Data value
-	using Value = typename Alloc::Value;
+	using Value = typename Alloc::Value; //tDequeValue <_Ty, _Size>
 	///Value iterator
 	using Iterator = typename Value::Iterator;
 	///Const value iterator
@@ -101,14 +112,14 @@ public:
 		return (*(Begin() + index));
 	}
 	/**
-	* @brief : Gets the value of the header of the cghDeque
+	* @brief : Gets the value of the _header of the cghDeque
 	*/
 	_Ty& Front()
 	{
 		return *Value::_start;
 	}
 	/**
-	* @brief : Gets const the value of the header of the cghDeque
+	* @brief : Gets const the value of the _header of the cghDeque
 	*/
 	const _Ty& Front() const 
 	{
@@ -241,7 +252,7 @@ public:
 		}
 		else
 		{
-			pushFrontAux(value);
+			Alloc::pushFrontAux(value);
 		}
 	}
 	/**
@@ -260,7 +271,7 @@ public:
 		}
 	}
 	/**
-	* @brief : Eject elements from the cghDeque header
+	* @brief : Eject elements from the cghDeque _header
 	*/
 	void PopFront()
 	{
@@ -275,12 +286,13 @@ public:
 		}
 	}
 	/**
-	* @brief : Insert an element to a specified location
+	* @brief : Insert an element to a cosnt specified location
 	*/
-	Iterator Insert(Iterator position, const _Ty& value)
+	Iterator Insert(ConstIterator position, const _Ty& value)
 	{
-		return (Emplace(position, std::move(value)));
+		return Emplace(position, std::move(value));
 	}
+
 	/**
 	* @brief : Create an element at the beginning
 	*/
@@ -290,7 +302,7 @@ public:
 		if (Value::_start.cur != Value::_start.first)
 		{
 			// Optimize common case
-			--Value::_start->cur;
+			--Value::_start.cur;
 			new (&Front()) _Ty(std::forward<_TyArg>(args)...);
 		}
 		else
@@ -309,7 +321,7 @@ public:
 		if (Value::_finish.cur != Value::_finish.last - 1)
 		{
 			// Optimize common case
-			++Value::_finish->cur;
+			++Value::_finish.cur;
 			new (&Back()) _Ty(std::forward<_TyArg>(args)...);
 		}
 		else
@@ -338,24 +350,25 @@ public:
 			EmplaceBack(std::forward<_TyArg>(args)...);
 			std::rotate(Begin() + index, End() - 1, End());
 		}
-		return (Begin() + index);
+		return Begin() + index;
 	}
-	
 	/**
-	* @brief : Clear all elements of cghDeque
+	* @brief : Clear all elements of deque
 	*/
 	void Clear()
 	{
 		for (MapPoint node = Value::_start.node + 1; node < Value::_finish.node; ++node)
 		{
 			destroy(*node, *node + Alloc::bufferSize());
-			deallocData(*node, Alloc::bufferSize());
+			//Alloc::deallocData(*node, Alloc::bufferSize());
+			Alloc::freeNode(*node);
 		}
 		if (Value::_start.node != Value::_finish.node)
 		{
 			destroy(Value::_start.cur, Value::_start.last);
 			destroy(Value::_finish.first, Value::_finish.last);
-			deallocData(Value::_finish.first, Alloc::bufferSize());
+			//Alloc::deallocData(Value::_finish.first, Alloc::bufferSize());
+			Alloc::freeNode(Value::_finish.first);
 		}
 		else 
 		{

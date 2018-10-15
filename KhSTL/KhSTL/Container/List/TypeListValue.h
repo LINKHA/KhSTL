@@ -35,8 +35,8 @@ struct tListNode : public tListNodeBase
 	/**
 	* @brief : Construct with value
 	*/
-	explicit tListNode(const _Ty& tValue)
-		: value(tValue)
+	explicit tListNode(const _Ty& svalue)
+		: value(svalue)
 	{}
 	/**
 	* @brief : Return next node

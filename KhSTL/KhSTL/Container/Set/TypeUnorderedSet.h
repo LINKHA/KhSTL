@@ -230,7 +230,7 @@ public:
 	*/
 	tUnorderedSet& operator =(const tUnorderedSet<_Key>& rhs)
 	{
-		// In case of self-assignment do nothing
+		// In case of This-assignment do nothing
 		if (&rhs != this)
 		{
 			Clear();

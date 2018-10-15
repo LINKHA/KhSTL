@@ -18,6 +18,13 @@ const rbTreeColorType __rb_tree_black = true; // 黑色为1
 /* 正规节点 */
 template<class _Ty>
 struct tRBTreeNode{
+	
+	tRBTreeNode() = default;
+
+	explicit tRBTreeNode(const _Ty& svalue)
+		: value(svalue)
+	{}
+
 	/* 子类继承了父类的成员：color、parent、left、right，value_field用来表示节点的值域 */
 	typedef rbTreeColorType	ColorType; // 节点颜色
 	ColorType color; // 节点颜色

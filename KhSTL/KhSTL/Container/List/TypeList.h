@@ -84,7 +84,7 @@ public:
 	*/
 	tList& operator =(const tList<_Ty>& rhs)
 	{
-		// Clear, then insert the nodes of the other list. In case of self-assignment do nothing
+		// Clear, then insert the nodes of the other list. In case of This-assignment do nothing
 		if (&rhs != this)
 		{
 			Clear();

@@ -9,7 +9,10 @@ namespace KhSTL {
 ///
 ///
 ///
-template<typename _Ty> using Deque = KhSTL::tDeque<_Ty>;
+template <typename _Ty
+	, unsigned _Size = 0
+	, typename _Alloc = tAllocator<_Ty>>
+	using Deque = KhSTL::tDeque<_Ty, _Size, _Alloc>;
 
 }
 

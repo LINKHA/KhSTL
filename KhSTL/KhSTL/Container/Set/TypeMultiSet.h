@@ -8,7 +8,7 @@ namespace KhSTL {
 
 template<typename _Kty
 	, typename _Comp = tLess<_Kty>
-	, typename _Alloc = mapTempAllocator<_Kty>>
+	, typename _Alloc = tAllocator<tRBTreeNode<_Kty>>>
 	class tMultiSet : public RBTree<_Kty, _Comp, _Alloc>
 {
 	using KeyType = _Kty;
@@ -46,7 +46,7 @@ public:
 	{
 
 	}
-	_Comp key_comp() const { return Base::key_comp(); }
+	_Comp KeyComp() const { return Base::KeyComp(); }
 
 	Iterator Begin()
 	{
@@ -75,11 +75,11 @@ public:
 	}
 	Iterator Insert(const ValueType& x)
 	{
-		return Base::insert_equal(x);
+		return Base::InsertEqual(x);
 	}
 	Iterator Find(const KeyType& x)
 	{
-		return Base::find(x);
+		return Base::Find(x);
 	}
 };
 

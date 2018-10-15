@@ -21,14 +21,14 @@ namespace KhSTL {
 ///
 template<typename _Kty
 	, typename _Comp = tLess<_Kty>
-	, typename _Alloc = mapTempAllocator<_Kty>> 
+	, typename _Alloc = tAllocator<tRBTreeNode<_Kty>>>
 	using Set = KhSTL::tSet<_Kty, _Comp, _Alloc>;
 ///
 ///
 ///
 template<typename _Kty
 	, typename _Comp = tLess<_Kty>
-	, typename _Alloc = mapTempAllocator<_Kty>> 
+	, typename _Alloc = tAllocator<tRBTreeNode<_Kty>>>
 	using MultiSet = KhSTL::tMultiSet<_Kty, _Comp, _Alloc>;
 ///
 ///

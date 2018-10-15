@@ -1780,7 +1780,7 @@ public:
 
 		while (true)
 		{
-			// Scan the format string and find %a argument where a is one of d, f, s ...
+			// Scan the format string and Find %a argument where a is one of d, f, s ...
 			while (pos < length && formatString[pos] != '%') pos++;
 			Append(formatString + lastPos, (unsigned)(pos - lastPos));
 			if (pos >= length)

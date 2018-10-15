@@ -14,7 +14,9 @@ namespace KhSTL {
 ///
 ///
 ///
-template<typename _Ty> using List = KhSTL::tList<_Ty>;
+template<typename _Ty
+	, typename _Alloc = tAllocator<tListNode<_Ty>>>
+	using List = KhSTL::tList<_Ty>;
 ///
 ///
 ///

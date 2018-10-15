@@ -5,7 +5,7 @@
 
 #include "TypeDequeAllocator.h"
 
-#include <memory>
+//#include <memory>
 
 namespace KhSTL {
 
@@ -95,26 +95,29 @@ public:
 		return *this;
 	}
 
-	This operator +(unsigned n) const
+	This operator +(int n) const
 	{
 		This it = *this;
 		return it += n;
 	}
 
-	This& operator -=(unsigned n)const { return *this += -n; }
+	This& operator -=(int n)  
+	{ 
+		return *this += -n; 
+	}
 
-	This operator -(unsigned n)const
+	This operator -(int n) const
 	{
 		This it = *this;
 		return it -= n;
 	}
 
-	unsigned operator -(const This& x)
+	int operator -(const This& x)
 	{
-		return unsigned(BufferSize())*(node - x.node - 1) + (cur - first) + (x.last - x.cur);
+		return int(BufferSize())*(node - x.node - 1) + (cur - first) + (x.last - x.cur);
 	}
 
-	_Ty& operator [](unsigned n)const { return *(*this + n); }
+	_Ty& operator [](int n)const { return *(*this + n); }
 
 	bool operator ==(const This& x) const
 	{

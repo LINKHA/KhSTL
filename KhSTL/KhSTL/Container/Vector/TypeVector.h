@@ -110,7 +110,7 @@ public:
 	*/
 	tVector<_Ty>& operator =(const tVector<_Ty>& rhs)
 	{
-		// In case of self-assignment do nothing
+		// In case of This-assignment do nothing
 		if (&rhs != this)
 		{
 			tVector<_Ty> copy(rhs);

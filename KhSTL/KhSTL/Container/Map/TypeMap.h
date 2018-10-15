@@ -9,7 +9,7 @@ namespace KhSTL {
 template<typename _Kty
 	, typename _Ty
 	, typename _Comp = tLess<tPair<_Kty,_Ty>>
-	, typename _Alloc = mapTempAllocator<_Kty>>
+	, typename _Alloc = tAllocator<tRBTreeNode<tPair<_Kty, _Ty>>>>
 	class tMap : public RBTree<tPair<_Kty, _Ty>, _Comp, _Alloc>
 {
 	using This = tMap<_Kty, _Ty, _Comp, _Alloc>;
@@ -56,7 +56,7 @@ public:
 	{
 		
 	}
-	_Comp key_comp() const { return Base::key_comp(); }
+	_Comp KeyComp() const { return Base::KeyComp(); }
 
 	Iterator Begin() 
 	{
@@ -85,11 +85,11 @@ public:
 	}
 	tPair<Iterator, bool> Insert(const PairType& x)
 	{
-		return Base::insert_unique(x);
+		return Base::InsertUnique(x);
 	}
 	Iterator Find(const KeyType& x) 
 	{ 
-		return Base::find(x);
+		return Base::Find(x);
 	}
 };
 

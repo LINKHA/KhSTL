@@ -33,6 +33,7 @@ struct tAllocatorNode
 };
 
 
+
 static tAllocatorBlock* AllocatorReserveBlock(tAllocatorBlock* allocator, unsigned nodeSize, unsigned capacity)
 {
 	if (!capacity)
@@ -222,6 +223,25 @@ public:
 	void* Allocation()
 	{
 		return AllocatorReserve(_allocator);
+	}
+
+	template<typename _Other>
+	_Other* Allocate(unsigned size)
+	{
+		std::set_new_handler(0);
+		_Other* tmp = (_Other*)(::operator new((unsigned)(size * sizeof(_Other))));
+		if (tmp == 0)
+		{
+			std::cerr << "out of memory" << std::endl;
+			exit(1);
+		}
+		return tmp;
+	}
+
+	template<class _Other>
+	void Deallocate(_Other* buffer)
+	{
+		::operator delete(buffer);
 	}
 private:
 	/// Allocator block

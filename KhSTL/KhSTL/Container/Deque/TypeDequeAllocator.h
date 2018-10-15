@@ -6,40 +6,7 @@
 #include "../../Allocator/TypeAllocator.h"
 
 
-
 namespace KhSTL {
-
-template<typename _Ty>
-inline _Ty* __allocate(unsigned size, _Ty*)
-{
-	std::set_new_handler(0);
-	_Ty* tmp = (_Ty*)(::operator new((unsigned)(size * sizeof(_Ty))));
-	if (tmp == 0)
-	{
-		std::cerr << "out of memory" << std::endl;
-		exit(1);
-	}
-	return tmp;
-}
-
-template<class T>
-inline void __deallocate(T* buffer)
-{
-	::operator delete(buffer);
-}
-
-template<class T1, class  T2>
-inline void __construct(T1* p, const T2& value)
-{
-	new(p)T1(value);
-}
-
-template<class T>
-inline void __destroy(T* ptr)
-{
-	ptr->~T();
-}
-
 
 template <typename _Ty
 	, unsigned _Size
@@ -55,15 +22,12 @@ public:
 	using Base = tDequeValue <_Ty, _Size>;
 	using Iterator = typename Value::Iterator;
 	using ConstIterator = typename Value::ConstIterator;
+	using AllocType = typename _Alloc::ValueType;
 public:
-	tDequeAlloc() {}
-	~tDequeAlloc() {}
-
-	template <typename T1, typename T2>
-	inline void construct(T1* p, const T2& value)
-	{
-		new (p)T1(value);
-	}
+	tDequeAlloc()
+	{}
+	virtual ~tDequeAlloc()
+	{}
 protected:
 	/**
 	* @brief : Back-up when a buffer overflows
@@ -72,7 +36,8 @@ protected:
 	{
 		_Ty val = value;
 		*(Value::_finish.node + 1) = allocateNode();
-		construct(Value::_finish.cur, val);
+		//construct(Value::_finish.cur, val);
+		new (Value::_finish.cur)_Ty(val);
 		Value::_finish.SetNode(Value::_finish.node + 1);
 		Value::_finish.cur = Value::_finish.first;
 	}
@@ -85,17 +50,19 @@ protected:
 		*(Value::_start.node - 1) = allocateNode();
 		Value::_start.SetNode(Value::_start.node - 1);
 		Value::_start.cur = Value::_start.last - 1;
-		construct(Value::_start.cur, val);
+		//construct(Value::_start.cur, val);
+		new (Value::_start.cur)_Ty(val);
 	}
 	/**
 	* @brief : Delete after buffer overflow
 	*/
 	void popBackAux()
 	{
-		deallocateNode(Value::_finish.first);
+		freeNode(Value::_finish.first);
 		Value::_finish.SetNode(Value::_finish.node - 1);
 		Value::_finish.cur = Value::_finish.last - 1;
-		destroy(Value::_finish.cur);
+		//destroy(Value::_finish.cur);
+		freeNode(Value::_finish.cur);
 	}
 
 	/**
@@ -103,8 +70,9 @@ protected:
 	*/
 	void popFrontAux()
 	{
-		destroy(Value::_start.cur);
-		deallocateNode(Value::_start.first);
+		//destroy(Value::_start.cur);
+		freeNode(Value::_finish.cur);
+		freeNode(Value::_start.first);
 		Value::_start.SetNode(Value::_start.node + 1);
 		Value::_start.cur = Value::_start.first;
 	}
@@ -140,9 +108,9 @@ protected:
 		}
 		return(ret);
 	}
-	unsigned bufferSize()
+	int bufferSize()
 	{
-		return _Size != 0 ? _Size : (sizeof(_Ty) < 512 ? unsigned(512 / sizeof(_Ty)) : unsigned(1));
+		return _Size != 0 ? _Size : (sizeof(_Ty) < 512 ? int(512 / sizeof(_Ty)) : int(1));
 	}
 	/**
 	* @brief : Various initialization
@@ -164,7 +132,7 @@ protected:
 	{
 		unsigned numNodes = numElements / bufferSize() + 1;
 		Value::_mapSize = std::max(initialMapSize(), numNodes + 2);
-		Value::_map = allocateMap(Value::_mapSize);
+		Value::_map = allocateMap(Value::_mapSize);//allocateMap problem
 		MapPoint nstart = Value::_map + (Value::_mapSize - numNodes) / 2;
 		MapPoint nfinish = nstart + numNodes - 1;
 		MapPoint cur;
@@ -181,74 +149,68 @@ protected:
 	* @brief : Minimum number of (map) nodes in Control and Control Center
 	*/
 	unsigned initialMapSize() { return (unsigned)8; }
+	
+	/**
+	* @brief : Release the buffer for the control center ( map ) node
+	*/
+	void freeNode(_Ty* node)
+	{
+		_allocator.Deallocate(node);
+	}
+
+	_Ty* allocate(unsigned n)
+	{
+		std::set_new_handler(0);
+		_Ty* tmp = (_Ty*)(::operator new((unsigned)(n * sizeof(_Ty))));
+		if (tmp == 0)
+		{
+			std::cerr << "out of memory" << std::endl;
+			exit(1);
+		}
+		return tmp;
+	}
 	/**
 	* @brief : Configure the buffer size of each node in the control center (map)
 	*/
 	_Ty* allocateNode()
 	{
-		return allocateData(bufferSize() / sizeof(_Ty));
+		return (_Ty*)allocate(bufferSize());
 	}
+
 	/**
-	* @brief : Release the buffer for the control center ( map ) node
+	* @brief : Configure the buffer size of each node in the control center (map)
 	*/
-	void deallocateNode(void* node)
-	{
-		deallocate(node);
-	}
-private:
-	Ptr allocate(unsigned n, const void* hint = 0)
-	{
-		return __allocate((unsigned)n, (Ptr)0);
-	}
-	void dealloc(Ptr p, unsigned n)
-	{
-		__deallocate(p);
-	}
-
-	void dealloc(void* p)
-	{
-		__deallocate(p);
-	}
-
-	_Ty* allocateData(unsigned n)
-	{
-		return 0 == n ? 0 : (_Ty*)allocate(n * sizeof(_Ty));
-	}
-
-	_Ty* allocateData(void)
-	{
-		return (_Ty*)allocate(sizeof(_Ty));
-	}
-
 	_Ty** allocateMap(unsigned n)
 	{
-		return 0 == n ? 0 : (_Ty**)allocate(n * sizeof(_Ty*));
+		return (_Ty**)allocate(n * sizeof(_Ty*));
 	}
 
-	_Ty** allocateMap(void)
+private:
+	AllocType* reserve()
 	{
-		return (_Ty**)allocate(sizeof(_Ty*));
+		return _allocator.Reserve();
 	}
-
-	void deallocData(_Ty* p, unsigned n)
+	/**
+	* @brief : Reserve and copy-construct an object
+	*/
+	AllocType* reserve(const AllocType& object)
 	{
-		if (0 != n)
-			__deallocate(p);
+		return _allocator.Reserve(object);
 	}
-
-	void deallocMap(_Ty** p, unsigned n)
+	/**
+	* @brief : Destruct and free an object
+	*/
+	void free(AllocType* object)
 	{
-		if (0 != n)
-			__deallocate(p);
+		_allocator.Free(object);
 	}
 
-	void deallocate(void* p)
+	void* allocation()
 	{
-		__deallocate(p);
+		return _allocator.Allocation();
 	}
-
-
-
+protected:
+	_Alloc _allocator;
 };
 
 }
