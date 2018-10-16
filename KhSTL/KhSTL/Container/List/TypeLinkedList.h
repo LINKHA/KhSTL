@@ -147,11 +147,11 @@ public:
 		return false;
 	}
 	/**
-	* @brief : Return first element, or null if empty
+	* @brief : Return first element, or null if Empty
 	*/
 	_Ty* First() const { return _head; }
 	/**
-	* @brief : Return last element, or null if empty
+	* @brief : Return last element, or null if Empty
 	*/
 	_Ty* Last() const
 	{
@@ -168,7 +168,7 @@ public:
 	*/
 	_Ty* Next(_Ty* element) const { return element ? static_cast<_Ty*>(element->next) : nullptr; }
 	/**
-	* @brief : Return whether is empty
+	* @brief : Return whether is Empty
 	*/
 	bool Empty() const { return _head == nullptr; }
 

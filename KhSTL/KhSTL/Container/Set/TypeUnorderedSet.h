@@ -177,7 +177,7 @@ public:
 		const _Key& operator *() const { return (static_cast<Node*>(ptr))->key; }
 	};
 	/**
-	* @brief : Construct empty
+	* @brief : Construct Empty
 	*/
 	tUnorderedSet()
 	{

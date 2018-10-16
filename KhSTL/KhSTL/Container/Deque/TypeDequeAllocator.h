@@ -158,6 +158,7 @@ protected:
 		_allocator.Deallocate(node);
 	}
 
+
 	_Ty* allocate(unsigned n)
 	{
 		std::set_new_handler(0);

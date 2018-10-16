@@ -12,10 +12,12 @@ template<typename _Kty
 	, typename _Alloc = tAllocator<tRBTreeNode<tPair<_Kty, _Ty>>>>
 	class tMap : public RBTree<tPair<_Kty, _Ty>, _Comp, _Alloc>
 {
+public:
+	///tMap<_Kty, _Ty, _Comp, _Alloc>
 	using This = tMap<_Kty, _Ty, _Comp, _Alloc>;
-
+	///RBTree<tPair<_Kty, _Ty>, _Comp, _Alloc>
 	using Base = RBTree<tPair<_Kty, _Ty>, _Comp, _Alloc>;
-
+	///RBTree<tPair<_Kty, _Ty>, _Comp, _Alloc>
 	using RBTreeType = RBTree<tPair<_Kty, _Ty>, _Comp, _Alloc>;
 
 	using KeyType = _Kty;
@@ -26,55 +28,58 @@ template<typename _Kty
 
 	using KeyCompare = _Comp;
 
-	
-public:
-	using pointer = typename RBTreeType::pointer;
-
-	using reference = typename RBTreeType::reference;
-
 	using Iterator = typename RBTreeType::Iterator;
 
-	using size_type = typename RBTreeType::size_type;
+	using ConstIterator = typename RBTreeType::ConstIterator;
+	/// Map reverse iterator
+	using ReverseIterator = tReverseIterator<Iterator>;
+	/// Map const reverse iterator
+	using ConstReverseIterator = tReverseIterator<ConstIterator>;
+public:
 
-	using difference_type = typename RBTreeType::difference_type;
+	tMap() noexcept = default;
 
-	tMap() 
-		//:_reTree(_Comp()) 
-	{}
-
-//	tMap(const tMap<_Kty, _Comp, _Alloc>& rhs) 
-//		:_reTree(rhs._reTree)
-//	{}
-
-	//tMap<_Kty, _Ty, _Comp, _Alloc>& operator =(const tMap<_Kty, _Ty, _Comp, _Alloc>& x)
-	//{
-	//	//_reTree = x._reTree;
-	//	return *this;
-	//}
-	~tMap()
-		//:_reTree(_Comp()) 
+	tMap(const tMap& rhs)
 	{
-		
+		*this = rhs;
 	}
-	_Comp KeyComp() const { return Base::KeyComp(); }
 
-	Iterator Begin() 
+	~tMap()
+	{
+		Clear();
+	}
+
+
+	_Comp KeyComp() const 
+	{
+		return Base::KeyComp(); 
+	}
+
+	int Iterator Begin() 
 	{
 		return Base::Begin();
 	}
-	Iterator End() 
+	int Iterator End() 
 	{ 
 		return Base::End();
 	}
-	bool empty() 
+	inline ReverseIterator RBegin() { return ReverseIterator(End()); }
+
+	inline ConstReverseIterator RBegin() const { return ReverseIterator(End()); }
+
+	inline ReverseIterator REnd() { return ReverseIterator(Begin()); }
+
+	inline ConstReverseIterator REnd() const { return ReverseIterator(Begin()); }
+
+	bool Empty() 
 	{ 
-		return Base::empty();
+		return Base::Empty();
 	}
-	size_type size() 
+	unsigned Size() 
 	{ 
 		return Base::GetSize();
 	}
-	size_type max_size() 
+	unsigned max_size()
 	{ 
 		return Base::max_size();
 	}
@@ -91,6 +96,13 @@ public:
 	{ 
 		return Base::Find(x);
 	}
+
+	void Clear()
+	{
+
+	}
+
+
 };
 
 }

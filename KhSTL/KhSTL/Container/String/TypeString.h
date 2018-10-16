@@ -28,7 +28,7 @@ class tWString
 {
 public:
 	/**
-	* @brief : Construct empty
+	* @brief : Construct Empty
 	*/
 	tWString()
 		: _length(0)
@@ -108,7 +108,7 @@ public:
 		}
 	}
 	/**
-	* @brief : Return whether the string is empty
+	* @brief : Return whether the string is Empty
 	*/
 	bool Empty() const { return _length == 0; }
 	/**
@@ -1040,14 +1040,14 @@ public:
 		return ConstIterator(_buffer + _length); 
 	}
 	/**
-	* @brief : Return first char, or 0 if empty
+	* @brief : Return first char, or 0 if Empty
 	*/
 	char Front() const 
 	{ 
 		return _buffer[0];
 	}
 	/**
-	* @brief : Return last char, or 0 if empty
+	* @brief : Return last char, or 0 if Empty
 	*/
 	char Back() const 
 	{ 
@@ -1135,7 +1135,7 @@ public:
 		return ret;
 	}
 	/**
-	* @brief : Return substrings split by a separator char. By default don't return empty strings
+	* @brief : Return substrings split by a separator char. By default don't return Empty strings
 	*/
 	tVector<tString> Split(char separator, bool keepEmptyStrings = false) const
 	{
@@ -1330,7 +1330,7 @@ public:
 		return _capacity; 
 	}
 	/**
-	* @brief : Return whether the string is empty
+	* @brief : Return whether the string is Empty
 	*/
 	bool Empty() const 
 	{ 
@@ -1562,7 +1562,7 @@ public:
 		return hash;
 	}
 	/**
-	* @brief : Return substrings split by a separator char. By default don't return empty strings
+	* @brief : Return substrings split by a separator char. By default don't return Empty strings
 	*/
 	static tVector<tString> Split(const char* str, char separator, bool keepEmptyStrings = false)
 	{
@@ -1942,7 +1942,7 @@ private:
 	/// string buffer, point to &endZero if buffer is not allocated
 	char* _buffer;
 
-	/// end zero for empty strings
+	/// end zero for Empty strings
 	static char endZero;
 };
 

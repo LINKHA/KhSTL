@@ -25,7 +25,7 @@ template<typename _Kty
 protected:
 	using ValueType = _Kty;
 
-	using color_type = rbTreeColorType; 
+	using color_type = RBTreeColorType; 
 
 	using Base = tRBTreeAlloc<tRBTreeNode<_Kty>, _Kty, _Comp, _Alloc>;
 
@@ -39,8 +39,8 @@ protected:
 	_Comp _comp;
 
 public:
-	typedef tRBTreeIterator<ValueType, ValueType&, ValueType*> Iterator; 
-	typedef const tRBTreeIterator<ValueType, ValueType&, ValueType*> const_iterator; 
+	typedef tRBTreeIterator<ValueType, ValueType&, ValueType*> Iterator;
+	typedef const tRBTreeIterator<ValueType, ValueType&, ValueType*> ConstIterator;
 
 private:
 	/**
@@ -49,7 +49,7 @@ private:
 	void init()
 	{
 		_header = Alloc::getNode();
-		GetColor(_header) = __rb_tree_red;
+		GetColor(_header) = RBTreeColorType::RED;
 		root() = 0;
 		leftmost() = _header;
 		rightmost() = _header;
@@ -136,41 +136,56 @@ protected:
 	*/
 	static tRBTreeNode<ValueType>* minimum(tRBTreeNode<ValueType>* x)
 	{
-		return (tRBTreeNode<ValueType>*)tRBTreeNode<ValueType>::minimum(x);
+		return (tRBTreeNode<ValueType>*)tRBTreeNode<ValueType>::Minimum(x);
 	}
 	/**
 	* @brief : Return maximum node
 	*/
 	static tRBTreeNode<ValueType>* maximum(tRBTreeNode<ValueType>* x)
 	{
-		return (tRBTreeNode<ValueType>*)tRBTreeNode<ValueType>::maximum(x); 
+		return (tRBTreeNode<ValueType>*)tRBTreeNode<ValueType>::Maximum(x); 
 	}
 
 public:
 	/**
 	* @brief : Get the value of the root node
 	*/
-	ValueType RootValue() { return GetValue((tRBTreeNode<ValueType>*)_header->parent); }
+	ValueType RootValue() 
+	{ 
+		return GetValue((tRBTreeNode<ValueType>*)_header->parent); 
+	}
 	/**
 	* @brief : Return a function that compares the size
 	*/
-	_Comp KeyComp()const { return _comp; }
+	_Comp KeyComp()const 
+	{
+		return _comp;
+	}
 	/**
 	* @brief : Return leftmost iterator
 	*/
-	Iterator Begin() { return leftmost(); }
+	Iterator Begin() 
+	{ 
+		return leftmost(); 
+	}
 	/**
 	* @brief : Return head iterator
 	*/
 	Iterator End() { return _header; }
 	/**
-	* @brief : To determine if the red-black tree is empty
+	* @brief : To determine if the red-black tree is Empty
 	*/
-	bool empty()const { return _count == 0; }
+	bool Empty()const 
+	{ 
+		return _count == 0; 
+	}
 	/**
 	* @brief : Retrurn tree count
 	*/
-	unsigned GetSize() const { return _count; }
+	unsigned GetSize() const 
+	{ 
+		return _count; 
+	}
 
 
 public:
@@ -252,101 +267,101 @@ private:
 	*/
 	Iterator insertNode(tRBTreeNode<ValueType>* insertWith, tRBTreeNode<ValueType>* insertTarget, const ValueType& v)
 	{
-		tRBTreeNode<ValueType>* x = (tRBTreeNode<ValueType>*)insertWith; 
-		tRBTreeNode<ValueType>* y = (tRBTreeNode<ValueType>*)insertTarget; 
-		tRBTreeNode<ValueType>* z;
+		tRBTreeNode<ValueType>* tmpWith = (tRBTreeNode<ValueType>*)insertWith; 
+		tRBTreeNode<ValueType>* tmpTarget = (tRBTreeNode<ValueType>*)insertTarget; 
+		tRBTreeNode<ValueType>* tmp;
 
-		if (y == _header || x != 0 || _comp(v, GetValue(y)))
+		if (tmpTarget == _header || tmpWith != 0 || _comp(v, GetValue(tmpTarget)))
 		{
-			z = Alloc::getNode(v); 
-			left(y) = z; 
-			if (y == _header) 
+			tmp = Alloc::getNode(v); 
+			left(tmpTarget) = tmp; 
+			if (tmpTarget == _header) 
 			{
-				root() = z;
-				rightmost() = z;
+				root() = tmp;
+				rightmost() = tmp;
 			}
-			else if (y == leftmost())
+			else if (tmpTarget == leftmost())
 			{
-				leftmost() = z;
+				leftmost() = tmp;
 			}
 		}
 		else
 		{
-			z = Alloc::getNode(v);
-			right(y) = z;
-			if (y == rightmost())
+			tmp = Alloc::getNode(v);
+			right(tmpTarget) = tmp;
+			if (tmpTarget == rightmost())
 			{
-				rightmost() = z;
+				rightmost() = tmp;
 			}
 		}
-		parent(z) = y;
-		left(z) = 0;
-		right(z) = 0;
+		parent(tmp) = tmpTarget;
+		left(tmp) = 0;
+		right(tmp) = 0;
 
-		__rb_tree_rebalance(z, _header->parent);
+		RBTreeRebalance(tmp, _header->parent);
 		++_count;
-		return Iterator(z);
+		return Iterator(tmp);
 	}
 	/**
 	* @brief : Rebalance the red-black tree
 	*/
-	inline void __rb_tree_rebalance(tRBTreeNode<ValueType>* x, tRBTreeNode<ValueType>*& root)
+	void RBTreeRebalance(tRBTreeNode<ValueType>* value, tRBTreeNode<ValueType>*& root)
 	{
-		x->color = __rb_tree_red;
-		while (x != root && x->parent->color == __rb_tree_red)
+		value->color = RBTreeColorType::RED;
+		while (value != root && value->parent->color == RBTreeColorType::RED)
 		{
-			if (x->parent == x->parent->parent->left)
+			if (value->parent == value->parent->parent->left)
 			{
-				tRBTreeNode<ValueType>* y = x->parent->parent->right;
-				if (y && y->color == __rb_tree_red)
+				tRBTreeNode<ValueType>* y = value->parent->parent->right;
+				if (y && y->color == RBTreeColorType::RED)
 				{
-					x->parent->color = __rb_tree_black;
-					y->color = __rb_tree_black;
-					x->parent->parent->color = __rb_tree_red;
-					x = x->parent->parent;
+					value->parent->color = RBTreeColorType::BLACK;
+					y->color = RBTreeColorType::BLACK;
+					value->parent->parent->color = RBTreeColorType::RED;
+					value = value->parent->parent;
 				}
 				else
 				{
-					if (x == x->parent->right)
+					if (value == value->parent->right)
 					{
-						x = x->parent;
-						__rb_tree_rotate_left(x, root);
+						value = value->parent;
+						RBTreeRotateLeft(value, root);
 					}
-					x->parent->color = __rb_tree_black;
-					x->parent->parent->color = __rb_tree_red;
-					__rb_tree_rotate_right(x->parent->parent, root);
+					value->parent->color = RBTreeColorType::BLACK;
+					value->parent->parent->color = RBTreeColorType::RED;
+					RBTreeRotateRight(value->parent->parent, root);
 				}
 			}
 			else 
 			{
-				tRBTreeNode<ValueType>* y = x->parent->parent->left;
-				if (y && y->color == __rb_tree_red)
+				tRBTreeNode<ValueType>* y = value->parent->parent->left;
+				if (y && y->color == RBTreeColorType::RED)
 				{
-					x->parent->color = __rb_tree_black;
-					y->color = __rb_tree_black;
-					x->parent->parent->color = __rb_tree_red;
-					x = x->parent->parent;
+					value->parent->color = RBTreeColorType::BLACK;
+					y->color = RBTreeColorType::BLACK;
+					value->parent->parent->color = RBTreeColorType::RED;
+					value = value->parent->parent;
 				}
 				else
 				{
 					
-					if (x == x->parent->left)
+					if (value == value->parent->left)
 					{
-						x = x->parent;
-						__rb_tree_rotate_right(x, root);
+						value = value->parent;
+						RBTreeRotateRight(value, root);
 					}
-					x->parent->color = __rb_tree_black; 
-					x->parent->parent->color = __rb_tree_red; 
-					__rb_tree_rotate_left(x->parent->parent, root); 
+					value->parent->color = RBTreeColorType::BLACK;
+					value->parent->parent->color = RBTreeColorType::RED;
+					RBTreeRotateLeft(value->parent->parent, root); 
 				}
 			}
 		}
-		root->color = __rb_tree_black;
+		root->color = RBTreeColorType::BLACK;
 	}
 	/**
 	* @brief : Light handed rotation 
 	*/
-	inline void __rb_tree_rotate_left(tRBTreeNode<ValueType>* x, tRBTreeNode<ValueType>*& root)
+	void RBTreeRotateLeft(tRBTreeNode<ValueType>* x, tRBTreeNode<ValueType>*& root)
 	{
 		tRBTreeNode<ValueType>* y = x->right;
 		x->right = y->left;
@@ -374,29 +389,29 @@ private:
 	/**
 	* @brief : Right handed rotation 
 	*/
-	inline void __rb_tree_rotate_right(tRBTreeNode<ValueType>* x, tRBTreeNode<ValueType>*& root)
+	void RBTreeRotateRight(tRBTreeNode<ValueType>* value, tRBTreeNode<ValueType>*& root)
 	{
-		tRBTreeNode<ValueType>* y = x->left;
-		x->left = y->right;
+		tRBTreeNode<ValueType>* y = value->left;
+		value->left = y->right;
 		if (y->right != 0)
 		{
-			y->right->parent = x;
+			y->right->parent = value;
 		}
-		y->parent = x->parent;
-		if (x == root)
+		y->parent = value->parent;
+		if (value == root)
 		{
 			root = y;
 		}
-		else if (x == x->parent->right)
+		else if (value == value->parent->right)
 		{
-			x->parent->right = y;
+			value->parent->right = y;
 		}
 		else
 		{
-			x->parent->left = y;
+			value->parent->left = y;
 		}
-		y->right = x;
-		x->parent = y;
+		y->right = value;
+		value->parent = y;
 	}
 };
 

@@ -17,7 +17,7 @@ struct tRBTreeBaseIterator
 	/**
 	* @brief : This function is called when subclasses of the iterator implement operator 
 	*/
-	void increment()
+	void Increment()
 	{
 		if (node->right != 0)
 		{
@@ -44,9 +44,9 @@ struct tRBTreeBaseIterator
 	/**
 	* @brief : This function is called when subclasses of the iterator implement operator --
 	*/
-	void decrement()
+	void Decrement()
 	{
-		if (node->color == __rb_tree_red && node->parent->parent == node)
+		if (node->color == RBTreeColorType::RED && node->parent->parent == node)
 		{
 			node = node->right;
 		}
@@ -77,9 +77,8 @@ struct tRBTreeIterator :public tRBTreeBaseIterator<_Ty>
 {
 
 	using Base = tRBTreeBaseIterator<_Ty>;
-	typedef _Ty											value_type;
-	typedef ref												reference;
-	typedef ptr												pointer;
+	typedef _Ty	ValueType;
+
 	typedef tRBTreeIterator<_Ty, _Ty&, _Ty*>		iterator;
 	using This = tRBTreeIterator<_Ty, ref, ptr>;
 	typedef tRBTreeNode<_Ty>*							link_type;
@@ -91,50 +90,58 @@ struct tRBTreeIterator :public tRBTreeBaseIterator<_Ty>
 	/**
 	* @brief : Dereference, return node value
 	*/
-	reference operator *()const { return link_type(Base::node)->value; }
+	_Ty& operator *()const { return link_type(Base::node)->value; }
 	/**
 	* @brief : Dereference, return node value
 	*/
-	pointer operator ->()const { return *(operator *()); }
+	_Ty* operator ->()const { return *(operator *()); }
 	/**
 	* @brief : Returns the color of the node the iterator points to
 	*/
-	rbTreeColorType color() { return Base::node->color == __rb_tree_red ? 0 : 1; }
+	RBTreeColorType color() { return Base::node->color == RBTreeColorType::RED ? 0 : 1; }
 	/**
 	* @brief : Iterator stepIterator step
 	*/
-	This& operator ++() { Base::increment(); return *this; }
+	This& operator ++() { Base::Increment(); return *this; }
 	/**
 	* @brief : Iterator step
 	*/
 	This& operator ++(int)
 	{
 		This tmp = *this;
-		Base::increment();
+		Base::Increment();
 		return tmp;
 	}
 	/**
 	* @brief : Iterator step
 	*/
-	This& operator --()const { Base::decrement(); return *this; }
+	This& operator --() const 
+	{ 
+		Base::Decrement(); return *this; 
+	}
 	/**
 	* @brief : Iterator step
 	*/
 	This& operator --(int)
 	{
 		This tmp = *this;
-		Base::decrement();
+		Base::Decrement();
 		return tmp;
 	}
 	/**
 	* @brief : Comparison of two iterators
 	*/
-	bool operator ==(const This& x)const { return x.node == Base::node; }
-
+	bool operator ==(const This& x) const 
+	{ 
+		return x.node == Base::node; 
+	}
 	/**
 	* @brief : Comparison of two iterators
 	*/
-	bool operator !=(const This& x)const { return x.node != Base::node; }
+	bool operator !=(const This& x) const 
+	{ 
+		return x.node != Base::node; 
+	}
 };
 
 

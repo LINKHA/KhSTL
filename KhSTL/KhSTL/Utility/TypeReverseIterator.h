@@ -78,7 +78,7 @@ public:
 	// N.B. functions valid for random-access iterators only beyond this point
 
 	tReverseIterator& operator +=(int offset)
-	{	// increment by integer
+	{	// Increment by integer
 		_current -= offset;
 		return (*this);
 	}
@@ -89,7 +89,7 @@ public:
 	}
 
 	tReverseIterator& operator -=(int offset)
-	{	// decrement by integer
+	{	// Decrement by integer
 		_current += offset;
 		return (*this);
 	}

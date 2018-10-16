@@ -12,7 +12,7 @@ class tQueue
 {
 public:
 	/**
-	* @brief :  Construct empty
+	* @brief :  Construct Empty
 	*/
 	tQueue()
 		:_container()
@@ -58,7 +58,7 @@ public:
 	* @brief :
 	*/
 	bool Empty() const
-	{	// test if queue is empty
+	{	// test if queue is Empty
 		return _container.Empty();
 	}
 	/**

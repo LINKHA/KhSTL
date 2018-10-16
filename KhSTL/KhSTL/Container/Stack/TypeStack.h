@@ -54,11 +54,11 @@ public:
 	}
 
 	/**
-	* @brief : Test if stack is empty
+	* @brief : Test if stack is Empty
 	*/
 	bool Empty() const
 	{	
-		return (_container.empty());
+		return (_container.Empty());
 	}
 	/**
 	* @brief : Test length of stack

@@ -45,7 +45,7 @@ public:
 	using MoveTag = typename Alloc::MoveTag;
 public:
 	/**
-	* @brief : Construct empty
+	* @brief : Construct Empty
 	*/
 	tVector() noexcept = default;
 	/**
@@ -132,7 +132,7 @@ public:
 	*/
 	tVector<_Ty>& operator +=(const _Ty& rhs)
 	{
-		Push(rhs);
+		PushBack(rhs);
 		return *this;
 	}
 	/**
@@ -140,7 +140,7 @@ public:
 	*/
 	tVector<_Ty>& operator +=(const tVector<_Ty>& rhs)
 	{
-		Push(rhs);
+		PushBack(rhs);
 		return *this;
 	}
 	/**
@@ -149,7 +149,7 @@ public:
 	tVector<_Ty> operator +(const _Ty& rhs) const
 	{
 		tVector<_Ty> ret(*this);
-		ret.Push(rhs);
+		ret.PushBack(rhs);
 		return ret;
 	}
 	/**
@@ -158,7 +158,7 @@ public:
 	tVector<_Ty> operator +(const tVector<_Ty>& rhs) const
 	{
 		tVector<_Ty> ret(*this);
-		ret.Push(rhs);
+		ret.PushBack(rhs);
 		return ret;
 	}
 	/**
@@ -396,7 +396,7 @@ public:
 		}
 		else
 		{
-			// Swap elements from the end of the array into the empty space
+			// Swap elements from the end of the array into the Empty space
 			_Ty* buffer = Value::Buffer();
 			std::move(buffer + newSize, buffer + Value::_size, buffer + pos);
 			Resize(newSize);
@@ -592,7 +592,7 @@ public:
 	*/
 	unsigned Capacity() const { return Value::_capacity; }
 	/**
-	* @brief : Return whether vector is empty
+	* @brief : Return whether vector is Empty
 	*/
 	bool Empty() const { return Value::_size == 0; }
 

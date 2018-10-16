@@ -5,48 +5,32 @@
 
 namespace KhSTL {
 
-	template<class T1, class  T2>
-	inline void construct(T1* p, const T2& value)
-	{
-		new (p)T1(value);
-	}
-
-	template<typename T>
-	inline void destroy(T* pointer)
-	{
-		pointer->~T();
-	}
-
-	template<class ForwardIterator>
-	inline void destroy(ForwardIterator first, ForwardIterator last)
-	{
-		for (; first < last; ++first)
-			destroy(&*first);
-	}
-
 template <typename _Ty
 	, unsigned _Size = 0
 	, typename _Alloc = tAllocator<_Ty>>
 	class tDeque : public tDequeAlloc<_Ty, _Size, _Alloc>
 {
 public:
-	///Value type
+	/// Value type
 	using ValueType = _Ty;
-	///Map poiint is valueType**
+	/// Map poiint is valueType**
 	using MapPoint = _Ty**;
-	///Base class
+	/// tDequeAlloc<_Ty, _Size, _Alloc>
 	using Base = tDequeAlloc<_Ty, _Size, _Alloc>;
-	///This class
+	/// tDeque<_Ty, _Size, _Alloc>
 	using This = tDeque<_Ty, _Size, _Alloc>;
-	///Alloc class
+	/// tDequeAlloc<_Ty, _Size, _Alloc>
 	using Alloc = tDequeAlloc<_Ty, _Size, _Alloc>;
-	///Data value
-	using Value = typename Alloc::Value; //tDequeValue <_Ty, _Size>
-	///Value iterator
+	/// Data value
+	using Value = typename Alloc::Value;
+	/// Value iterator
 	using Iterator = typename Value::Iterator;
-	///Const value iterator
+	/// Const value iterator
 	using ConstIterator = typename Value::ConstIterator;
-
+	/// Deque reverse iterator
+	using ReverseIterator = tReverseIterator<Iterator>;
+	/// Deque const reverse iterator
+	using ConstReverseIterator = tReverseIterator<ConstIterator>;
 public:
 	/**
 	* @brief : Construct
@@ -80,12 +64,104 @@ public:
 			PushBack(*it);
 		}
 	}
-
 	/**
 	* @brief : Destroy the deque
 	*/
 	~tDeque() 
-	{}
+	{
+		Clear();
+	}
+	/**
+	* @brief : Assign by moving rhs
+	*/
+	This& operator =(const This& rhs)
+	{
+		if (&rhs != this)
+		{
+			This copy(rhs);
+			Swap(copy);
+		}
+		return *this;
+	}
+	/**
+	* @brief : Assign by moving rhs
+	*/
+	This& operator =(This && rhs)
+	{	// assign by moving _Right
+		assert(&rhs != this);
+		Swap(rhs);
+		return *this;
+	}
+	/**
+	* @brief : Add-assign an element
+	*/
+	This& operator +=(const _Ty& rhs)
+	{
+		PushBack(rhs);
+		return *this;
+	}
+	/**
+	* @brief : Add-assign another vector
+	*/
+	This& operator +=(const This& rhs)
+	{
+		PushBack(rhs);
+		return *this;
+	}
+	/**
+		* @brief : Add an element
+		*/
+	This operator +(const _Ty& rhs) const
+	{
+		This ret(*this);
+		ret.PushBack(rhs);
+		return ret;
+	}
+	/**
+	* @brief : Add another vector
+	*/
+	This operator +(const This& rhs) const
+	{
+		This ret(*this);
+		ret.PushBack(rhs);
+		return ret;
+	}
+	/**
+	* @brief : Test for equality with another deque
+	*/
+	bool operator ==(const This& rhs) const
+	{	
+		if (rhs._mapSize != Value::_mapSize)
+			return false;
+
+		Iterator buffer = Value::_start;
+		Iterator rhsBuffer = rhs._start;
+		for (unsigned i = 0; i < Value::_size; ++i)
+		{
+			if (buffer[i] != rhsBuffer[i])
+				return false;
+		}
+
+		return true;
+	}
+	/**
+	* @brief : Test for iterator inequality
+	*/
+	bool operator !=(const This& rhs) const
+	{
+		if (rhs._mapSize != Value::_mapSize)
+			return true;
+
+		Iterator buffer = Value::_start;
+		Iterator rhsBuffer = rhs._start;
+		for (unsigned i = 0; i < Value::_size; ++i)
+		{
+			if (*buffer[i] != *rhsBuffer[i])
+				return true;
+		}
+
+		return false;
+	}
 	/**
 	* @brief : Get the nth element of cghDeque
 	*/
@@ -93,8 +169,13 @@ public:
 	{
 		return Value::_start[index];
 	}
-
-	
+	/**
+	* @brief : Get the nth element of cghDeque
+	*/
+	const _Ty& operator [](unsigned index) const
+	{
+		return Value::_start[index];
+	}
 	/**
 	* @brief : Subscript mutable sequence with checking
 	*/
@@ -148,32 +229,39 @@ public:
 	/**
 	* @brief : Get the head of the cghDeque
 	*/
-	Iterator Begin()
+	inline Iterator Begin()
 	{ 
 		return Value::_start;
 	}
 	/**
 	* @brief : Get const the head of the cghDeque
 	*/
-	ConstIterator Begin() const noexcept
+	inline ConstIterator Begin() const noexcept
 	{
 		return Value::_start;
 	}
 	/**
 	* @brief : Get the tail of the cghDeque
 	*/
-	Iterator End()
+	inline Iterator End()
 	{ 
 		return Value::_finish;
 	}
 	/**
 	* @brief : Get const the tail of the cghDeque
 	*/
-	ConstIterator End() const noexcept
+	inline ConstIterator End() const noexcept
 	{
 		return Value::_finish;
 	}
-	
+	inline ReverseIterator RBegin() { return ReverseIterator(End()); }
+
+	inline ConstReverseIterator RBegin() const { return ReverseIterator(End()); }
+
+	inline ReverseIterator REnd() { return ReverseIterator(Begin()); }
+
+	inline ConstReverseIterator REnd() const { return ReverseIterator(Begin()); }
+
 	/**
 	* @brief : Return deque size
 	*/
@@ -211,20 +299,7 @@ public:
 			PopBack();
 		}
 	}
-	/**
-	* @brief : Get the maximum length of the deque
-	*/
-	unsigned MaxSize() const 
-	{ 
-		return Value::_finish - Value::_start;
-	}
-	/**
-	* @brief : To determine whether or not to be empty
-	*/
-	bool Empty() const 
-	{ 
-		return Value::_finish == Value::_start;
-	}
+	
 	/**
 	* @brief : Add an element at the end
 	*/
@@ -285,6 +360,26 @@ public:
 			Alloc::popFrontAux();
 		}
 	}
+	///**
+	//* @brief : Erase an element by iterator. Return iterator to the next element
+	//*/
+	//Iterator Erase(Iterator it)
+	//{
+	//	freeNode(*it);
+
+	//	return Iterator();
+	//}
+	///**
+	//* @brief : Erase a range by iterators. Return an iterator to the next element
+	//*/
+	//Iterator Erase(const Iterator& start, const Iterator& end)
+	//{
+	//	Iterator it = start;
+	//	while (it != end)
+	//		it = Erase(it);
+
+	//	return it;
+	//}
 	/**
 	* @brief : Insert an element to a cosnt specified location
 	*/
@@ -332,13 +427,12 @@ public:
 		return Back();
 	}
 	/**
-	* @brief :
+	* @brief : Create an element at the postion
 	*/
 	template<class... _TyArg>
 	Iterator Emplace(ConstIterator pos, _TyArg&&... args)
 	{
 		unsigned index = pos - Value::_start;
-
 
 		if (index <= Size() / 2)
 		{
@@ -360,14 +454,12 @@ public:
 		for (MapPoint node = Value::_start.node + 1; node < Value::_finish.node; ++node)
 		{
 			destroy(*node, *node + Alloc::bufferSize());
-			//Alloc::deallocData(*node, Alloc::bufferSize());
 			Alloc::freeNode(*node);
 		}
 		if (Value::_start.node != Value::_finish.node)
 		{
 			destroy(Value::_start.cur, Value::_start.last);
 			destroy(Value::_finish.first, Value::_finish.last);
-			//Alloc::deallocData(Value::_finish.first, Alloc::bufferSize());
 			Alloc::freeNode(Value::_finish.first);
 		}
 		else 
@@ -375,6 +467,40 @@ public:
 			destroy(Value::_start.cur, Value::_finish.cur);
 		}
 		Value::_finish = Value::_start; 
+	}
+	/**
+	* @brief : Get the maximum length of the deque
+	*/
+	unsigned MaxSize() const
+	{
+		return Value::_finish - Value::_start;
+	}
+	/**
+	* @brief : To determine whether or not to be Empty
+	*/
+	bool Empty() const
+	{
+		return Value::_finish == Value::_start;
+	}
+private:
+
+	template<class _Ty1, class  _Ty2>
+	inline void construct(_Ty1* pointer, const _Ty2& value)
+	{
+		new (pointer)_Ty1(value);
+	}
+
+	template<typename T>
+	inline void destroy(T* pointer)
+	{
+		pointer->~T();
+	}
+
+	template<class ForwardIterator>
+	inline void destroy(ForwardIterator first, ForwardIterator last)
+	{
+		for (; first < last; ++first)
+			destroy(&*first);
 	}
 
 };

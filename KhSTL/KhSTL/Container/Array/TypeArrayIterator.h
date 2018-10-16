@@ -92,7 +92,7 @@ public:
 		return (temp += offset);
 	}
 	/**
-	* @brief : decrement by integer
+	* @brief : Decrement by integer
 	*/
 	tArrayIterator& operator -=(const unsigned offset)
 	{
@@ -272,7 +272,7 @@ public:
 		return (temp += offset);
 	}
 	/**
-	* @brief : decrement by integer
+	* @brief : Decrement by integer
 	*/
 	tArrayConstIterator& operator -=(const unsigned offset)
 	{

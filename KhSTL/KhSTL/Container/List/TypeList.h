@@ -40,12 +40,11 @@ public:
 	using ConstReverseIterator = tReverseIterator<ConstIterator>;
 public:
 	/**
-	* @brief : Construct empty
+	* @brief : Construct Empty
 	*/
 	tList()
 		: Base()
-	{
-	}
+	{}
 	/**
 	* @brief : Construct from another list
 	*/
@@ -309,28 +308,28 @@ public:
 	/**
 	* @brief : Return iterator to the first element
 	*/
-	Iterator Begin() { return Iterator(Base::head()); }
+	inline Iterator Begin() { return Iterator(Base::head()); }
 	/**
 	* @brief : Return iterator to the first element
 	*/
-	ConstIterator Begin() const { return ConstIterator(Base::head()); }
+	inline ConstIterator Begin() const { return ConstIterator(Base::head()); }
 
 	/**
 	* @brief : Return iterator to the end
 	*/
-	Iterator End() { return Iterator(Base::tail()); }
+	inline Iterator End() { return Iterator(Base::tail()); }
 	/**
 	* @brief : Return iterator to the end
 	*/
-	ConstIterator End() const { return ConstIterator(Base::tail()); }
+	inline ConstIterator End() const { return ConstIterator(Base::tail()); }
 
-	ReverseIterator RBegin() { return ReverseIterator(End()); }
+	inline ReverseIterator RBegin() { return ReverseIterator(End()); }
 
-	ConstReverseIterator RBegin() const { return ReverseIterator(End()); }
+	inline ConstReverseIterator RBegin() const { return ReverseIterator(End()); }
 
-	ReverseIterator REnd() { return ReverseIterator(Begin()); }
+	inline ReverseIterator REnd() { return ReverseIterator(Begin()); }
 
-	ConstReverseIterator REnd() const { return ReverseIterator(Begin()); }
+	inline ConstReverseIterator REnd() const { return ReverseIterator(Begin()); }
 
 	/**
 	* @brief : Return first element
@@ -353,7 +352,7 @@ public:
 	*/
 	unsigned Size() const { return Base::_size; }
 	/**
-	* @brief : Return whether list is empty
+	* @brief : Return whether list is Empty
 	*/
 	bool Empty() const { return Base::_size == 0; }
 
@@ -367,6 +366,13 @@ template <typename _Ty> typename tList<_Ty>::Iterator begin(tList<_Ty>& v) { ret
 
 template <typename _Ty> typename tList<_Ty>::Iterator end(tList<_Ty>& v) { return v.End(); }
 
+template <typename _Ty> typename tList<_Ty>::ConstIterator rbegin(const tList<_Ty>& v) { return v.End(); }
+
+template <typename _Ty> typename tList<_Ty>::ConstIterator rend(const tList<_Ty>& v) { return v.Begin(); }
+
+template <typename _Ty> typename tList<_Ty>::Iterator rbegin(tList<_Ty>& v) { return v.End(); }
+
+template <typename _Ty> typename tList<_Ty>::Iterator rend(tList<_Ty>& v) { return v.Begin(); }
 
 }
 #endif //!KH_STL_TYPE_LIST_H_

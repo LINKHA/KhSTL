@@ -57,9 +57,9 @@ public:
 	{
 		return Base::End();
 	}
-	bool empty()
+	bool Empty()
 	{
-		return Base::empty();
+		return Base::Empty();
 	}
 	size_type size()
 	{

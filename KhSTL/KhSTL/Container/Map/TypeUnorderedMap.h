@@ -224,7 +224,7 @@ public:
 	};
 
 	/**
-	* Construct empty
+	* Construct Empty
 	*/
 	tUnorderedMap()
 	{
