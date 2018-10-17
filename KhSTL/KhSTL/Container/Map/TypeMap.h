@@ -55,11 +55,11 @@ public:
 		return Base::KeyComp(); 
 	}
 
-	int Iterator Begin() 
+	inline Iterator Begin() 
 	{
 		return Base::Begin();
 	}
-	int Iterator End() 
+	inline Iterator End()
 	{ 
 		return Base::End();
 	}
