@@ -12,19 +12,24 @@ enum class RBTreeColorType
 	BLACK
 };
 
-template<class _Ty>
+template<typename _Traits>
 class tRBTreeNode
 {
 public:
+	using KeyType = typename _Traits::KeyType;
+
+	using ValueType = typename _Traits::ValueType;
+
 	using ColorType = RBTreeColorType;
 
-	using LinkType = tRBTreeNode<_Ty>*;
+	using LinkType = tRBTreeNode<_Traits>*;
 
 public:
 	tRBTreeNode() = default;
 
-	explicit tRBTreeNode(const _Ty& svalue)
-		: value(svalue)
+	tRBTreeNode(const KeyType& skey, const ValueType& svalue)
+		: key(skey)
+		, value(svalue)
 	{}
 	~tRBTreeNode() = default;
 	/**
@@ -49,16 +54,18 @@ public:
 		}
 		return x;
 	}
-	///Node color
+	/// Node color
 	ColorType color;
-	///Node parent
+	/// Node parent
 	tRBTreeNode* parent;
-	///Node left child
+	/// Node left child
 	tRBTreeNode* left;
-	///Node right child
+	/// Node right child
 	tRBTreeNode* right;
-	///Node value
-	_Ty value; 
+	/// Node key
+	KeyType key;
+	/// Node value
+	ValueType value; 
 };
 
 }

@@ -1,6 +1,7 @@
 #ifndef KH_STL_TYPE_MULTI_MAP_H_
 #define KH_STL_TYPE_MULTI_MAP_H_
 
+#include "TypeMapTraits.h"
 
 namespace KhSTL {
 
@@ -8,11 +9,11 @@ namespace KhSTL {
 template<typename _Kty
 	, typename _Ty
 	, typename _Comp = tLess<tPair<_Kty, _Ty>>
-	, typename _Alloc = tAllocator<tRBTreeNode<_Kty>>>
-	class tMultiMap : public RBTree<tPair<_Kty, _Ty>, _Comp, _Alloc>
+	, typename _Alloc = tAllocator<tRBTreeNode<tMapTraits<_Kty,_Ty>>>>
+	class tMultiMap : public RBTree<tMapTraits<_Kty, _Ty>, _Comp, _Alloc>
 {
-	using Base = RBTree<tPair<_Kty, _Ty>, _Comp, _Alloc>;
-	using RBTreeType = RBTree<tPair<_Kty, _Ty>, _Comp, _Alloc>;
+	using Base = RBTree<tMapTraits<_Kty, _Ty>, _Comp, _Alloc>;
+	using RBTreeType = RBTree<tMapTraits<_Kty, _Ty>, _Comp, _Alloc>;
 	using KeyType = _Kty;
 	using ValueType = typename Base::ValueType;
 	using KeyCompare = _Comp;

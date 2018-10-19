@@ -16,54 +16,42 @@
 
 namespace KhSTL{
 
-template<typename _Kty
-	, typename _Comp
-	, typename _Alloc = tAllocator<tRBTreeNode<_Kty>>>
-	class RBTree : public tRBTreeAlloc<tRBTreeNode<_Kty>, _Kty, _Comp, _Alloc>
+template<typename _Traits
+	,typename _Comp
+	,typename _Alloc>
+	class RBTree : public tRBTreeAlloc<_Traits, _Comp, _Alloc>
 {
-
 protected:
-	using ValueType = _Kty;
+	using KeyType = typename _Traits::KeyType;
 
-	using color_type = RBTreeColorType; 
+	using ValueType = typename _Traits::ValueType;
 
-	using Base = tRBTreeAlloc<tRBTreeNode<_Kty>, _Kty, _Comp, _Alloc>;
+	using Compare = _Comp;
 
-	using Alloc = tRBTreeAlloc<tRBTreeNode<_Kty>, _Kty, _Comp, _Alloc>;
+	using ColorType = RBTreeColorType; 
 
-protected:
+	using Base = tRBTreeAlloc<_Traits, _Comp, _Alloc>;
 
-	/// Red black tree count
-	unsigned _count; 
-	tRBTreeNode<ValueType>* _header;
-	_Comp _comp;
+	using Alloc = tRBTreeAlloc<_Traits, _Comp, _Alloc>;
 
-public:
-	typedef tRBTreeIterator<ValueType, ValueType&, ValueType*> Iterator;
-	typedef const tRBTreeIterator<ValueType, ValueType&, ValueType*> ConstIterator;
+	using Iterator = tRBTreeIterator<_Traits>;
 
-private:
-	/**
-	* @brief : Init red and black tree
-	*/
-	void init()
-	{
-		_header = Alloc::getNode();
-		GetColor(_header) = RBTreeColorType::RED;
-		root() = 0;
-		leftmost() = _header;
-		rightmost() = _header;
-	}
+	using ConstIterator = const tRBTreeIterator<_Traits>;
 
+	using NodeType = typename Alloc::NodeType;
 public:
 	/**
 	* @brief : Constructed
 	*/
 	RBTree() 
 		: _count(0)
-		, _comp(_Comp())
+		, _comp(Compare())
 	{ 
-		init(); 
+		_header = Alloc::getNode();
+		getColor(_header) = RBTreeColorType::RED;
+		root() = 0;
+		leftmost() = _header;
+		rightmost() = _header;
 	}
 	/**
 	* @brief : Destructing
@@ -77,101 +65,111 @@ protected:
 	/**
 	* @brief : Get the root node
 	*/
-	tRBTreeNode<ValueType>*& root()const 
+	NodeType*& root()const 
 	{ 
-		return (tRBTreeNode<ValueType>*&)_header->parent; 
+		return (NodeType*&)_header->parent; 
 	}
 	/**
 	* @brief : Get the leftmost node
 	*/
-	tRBTreeNode<ValueType>*& leftmost()const 
+	NodeType*& leftmost()const 
 	{ 
-		return (tRBTreeNode<ValueType>*&)_header->left; 
+		return (NodeType*&)_header->left; 
 	}
 	/**
 	* @brief : Get the rightmost node
 	*/
-	tRBTreeNode<ValueType>*& rightmost()const 
+	NodeType*& rightmost()const 
 	{ 
-		return (tRBTreeNode<ValueType>*&)_header->right; 
+		return (NodeType*&)_header->right; 
 	}
 	/**
 	* @brief : Returns the left child node of the node
 	*/
-	static tRBTreeNode<ValueType>*& left(tRBTreeNode<ValueType>* x) 
+	NodeType*& left(NodeType* node)
 	{ 
-		return (tRBTreeNode<ValueType>*&)(x->left); 
+		return (NodeType*&)(node->left);
 	}
 	/**
 	* @brief : Returns the right child node of the node
 	*/
-	static tRBTreeNode<ValueType>*& right(tRBTreeNode<ValueType>* x) 
+	NodeType*& right(NodeType* node)
 	{ 
-		return (tRBTreeNode<ValueType>*&)(x->right);
+		return (NodeType*&)(node->right);
 	}
 	/**
 	* @brief : Returns the parent node of the node
 	*/
-	static tRBTreeNode<ValueType>*& parent(tRBTreeNode<ValueType>* x) 
+	NodeType*& parent(NodeType* node)
 	{ 
-		return (tRBTreeNode<ValueType>*&)(x->parent); 
+		return (NodeType*&)(node->parent);
+	}
+	KeyType& getKey(NodeType* node)
+	{
+		return node->key;
 	}
 	/**
 	* @brief : Returns the value of the node
 	*/
-	static ValueType& GetValue(tRBTreeNode<ValueType>* x) 
-	{ 
-		return x->value; 
+	ValueType& getValue(NodeType* node)
+	{
+		return node->value;
 	}
+
 	/**
 	* @brief : Returns the color of the node
 	*/
-	static color_type& GetColor(tRBTreeNode<ValueType>* x)
+	ColorType& getColor(NodeType* node)
 	{ 
-		return (color_type&)(x->color); 
+		return (ColorType&)(node->color);
 	}
 
 	/**
 	* @brief : Return minimum node
 	*/
-	static tRBTreeNode<ValueType>* minimum(tRBTreeNode<ValueType>* x)
+	NodeType* minimum(NodeType* node)
 	{
-		return (tRBTreeNode<ValueType>*)tRBTreeNode<ValueType>::Minimum(x);
+		return (NodeType*)NodeType::Minimum(node);
 	}
 	/**
 	* @brief : Return maximum node
 	*/
-	static tRBTreeNode<ValueType>* maximum(tRBTreeNode<ValueType>* x)
+	NodeType* maximum(NodeType* node)
 	{
-		return (tRBTreeNode<ValueType>*)tRBTreeNode<ValueType>::Maximum(x); 
+		return (NodeType*)NodeType::Maximum(node);
 	}
 
 public:
 	/**
 	* @brief : Get the value of the root node
 	*/
-	ValueType RootValue() 
+	ValueType RootValue()
 	{ 
-		return GetValue((tRBTreeNode<ValueType>*)_header->parent); 
+		return getValue((NodeType*)_header->parent); 
 	}
 	/**
 	* @brief : Return a function that compares the size
 	*/
-	_Comp KeyComp()const 
+	Compare KeyComp()const
 	{
 		return _comp;
 	}
 	/**
 	* @brief : Return leftmost iterator
 	*/
-	Iterator Begin() 
-	{ 
-		return leftmost(); 
-	}
+	inline Iterator Begin() { return leftmost(); }
+	/**
+	* @brief : Return leftmost const iterator
+	*/
+	inline ConstIterator Begin() const { return leftmost(); }
 	/**
 	* @brief : Return head iterator
 	*/
-	Iterator End() { return _header; }
+	inline Iterator End() { return _header; }
+	/**
+	* @brief : Return head const iterator
+	*/
+	inline ConstIterator End() const { return _header; }
 	/**
 	* @brief : To determine if the red-black tree is Empty
 	*/
@@ -186,23 +184,20 @@ public:
 	{ 
 		return _count; 
 	}
-
-
-public:
 	/**
 	* @brief : Insert new value, node key value cannot be repeated, 
 	*			insert invalid if repeated
 	*/
-	tPair<Iterator, bool> InsertUnique(const ValueType& v)
+	tPair<Iterator, bool> InsertUnique(const KeyType& key,const ValueType& value)
 	{
-		tRBTreeNode<ValueType>* y = _header; 
-		tRBTreeNode<ValueType>* x = root(); 
+		NodeType* y = _header; 
+		NodeType* x = root(); 
 		bool comp = true; 
 
 		while (x != 0) 
 		{
 			y = x; 
-			comp = _comp(v, GetValue(x));
+			comp = _comp(key, getKey(x));
 			x = comp ? left(x) : right(x);
 		}
 		Iterator j = Iterator(y);
@@ -210,43 +205,43 @@ public:
 		{
 			if (Begin() == j)
 			{
-				return tPair<Iterator, bool>(insertNode(x, y, v), true);
+				return tPair<Iterator, bool>(insertNode(x, y, key ,value), true);
 			}
 			else
 			{
 				j--;
 			}
 		}
-		if (_comp(GetValue(j.node), v))
+		if (_comp(getKey(j.node), key))
 		{
-			return tPair<Iterator, bool>(insertNode(x, y, v), true);
+			return tPair<Iterator, bool>(insertNode(x, y, key, value), true);
 		}
 		return tPair<Iterator, bool>(j, false);
 	}
 	/**
 	* @brief : Insert a new value, the node's key value allows repetition
 	*/
-	Iterator InsertEqual(const ValueType& v)
+	Iterator InsertEqual(const KeyType& key, const ValueType& value)
 	{
-		tRBTreeNode<ValueType>* y = _header;
-		tRBTreeNode<ValueType>* x = root();
+		NodeType* y = _header;
+		NodeType* x = root();
 		while (x != 0)
 		{
 			y = x;
-			x = _comp(v, GetValue(x)) ? left(x) : right(x);
+			x = _comp(key, getKey(x)) ? left(x) : right(x);
 		}
-		return insertNode(x, y, v);
+		return insertNode(x, y, key, value);
 	}
 	/**
 	* @brief : Look for a node in a red-black tree with a key value of key
 	*/
-	Iterator Find(const ValueType& key)
+	Iterator Find(const KeyType& key)
 	{
-		tRBTreeNode<ValueType>* y = _header; 
-		tRBTreeNode<ValueType>* x = root(); 
+		NodeType* y = _header; 
+		NodeType* x = root(); 
 		while (x != 0)
 		{
-			if (!_comp(GetValue(x), key))
+			if (!_comp(getKey(x), key))
 			{
 				y = x;
 				x = left(x);
@@ -257,23 +252,24 @@ public:
 			}
 		}
 		Iterator j = Iterator(y);
-		return (j == End() || _comp(key, GetValue(j.node))) ? End() : j;
+		return (j == End() || _comp(key, getKey(j.node))) ? End() : j;
 	}
+
 private:
 	/**
 	* @brief : Insert node
 	* @param : insertWith : To insert node 
 	*		 : insertTarget : Insert the parent node of the node
 	*/
-	Iterator insertNode(tRBTreeNode<ValueType>* insertWith, tRBTreeNode<ValueType>* insertTarget, const ValueType& v)
+	Iterator insertNode(NodeType* insertWith, NodeType* insertTarget, const KeyType& key , const ValueType& value)
 	{
-		tRBTreeNode<ValueType>* tmpWith = (tRBTreeNode<ValueType>*)insertWith; 
-		tRBTreeNode<ValueType>* tmpTarget = (tRBTreeNode<ValueType>*)insertTarget; 
-		tRBTreeNode<ValueType>* tmp;
+		NodeType* tmpWith = (NodeType*)insertWith; 
+		NodeType* tmpTarget = (NodeType*)insertTarget; 
+		NodeType* tmp;
 
-		if (tmpTarget == _header || tmpWith != 0 || _comp(v, GetValue(tmpTarget)))
+		if (tmpTarget == _header || tmpWith != 0 || _comp(key, getKey(tmpTarget)))
 		{
-			tmp = Alloc::getNode(v); 
+			tmp = Alloc::getNode(key,value);
 			left(tmpTarget) = tmp; 
 			if (tmpTarget == _header) 
 			{
@@ -287,7 +283,7 @@ private:
 		}
 		else
 		{
-			tmp = Alloc::getNode(v);
+			tmp = Alloc::getNode(key,value);
 			right(tmpTarget) = tmp;
 			if (tmpTarget == rightmost())
 			{
@@ -305,14 +301,14 @@ private:
 	/**
 	* @brief : Rebalance the red-black tree
 	*/
-	void RBTreeRebalance(tRBTreeNode<ValueType>* value, tRBTreeNode<ValueType>*& root)
+	void RBTreeRebalance(NodeType* value, NodeType*& root)
 	{
 		value->color = RBTreeColorType::RED;
 		while (value != root && value->parent->color == RBTreeColorType::RED)
 		{
 			if (value->parent == value->parent->parent->left)
 			{
-				tRBTreeNode<ValueType>* y = value->parent->parent->right;
+				NodeType* y = value->parent->parent->right;
 				if (y && y->color == RBTreeColorType::RED)
 				{
 					value->parent->color = RBTreeColorType::BLACK;
@@ -334,7 +330,7 @@ private:
 			}
 			else 
 			{
-				tRBTreeNode<ValueType>* y = value->parent->parent->left;
+				NodeType* y = value->parent->parent->left;
 				if (y && y->color == RBTreeColorType::RED)
 				{
 					value->parent->color = RBTreeColorType::BLACK;
@@ -361,9 +357,9 @@ private:
 	/**
 	* @brief : Light handed rotation 
 	*/
-	void RBTreeRotateLeft(tRBTreeNode<ValueType>* x, tRBTreeNode<ValueType>*& root)
+	void RBTreeRotateLeft(NodeType* x, NodeType*& root)
 	{
-		tRBTreeNode<ValueType>* y = x->right;
+		NodeType* y = x->right;
 		x->right = y->left;
 		if (y->left != 0)
 		{
@@ -389,9 +385,9 @@ private:
 	/**
 	* @brief : Right handed rotation 
 	*/
-	void RBTreeRotateRight(tRBTreeNode<ValueType>* value, tRBTreeNode<ValueType>*& root)
+	void RBTreeRotateRight(NodeType* value, NodeType*& root)
 	{
-		tRBTreeNode<ValueType>* y = value->left;
+		NodeType* y = value->left;
 		value->left = y->right;
 		if (y->right != 0)
 		{
@@ -413,6 +409,13 @@ private:
 		y->right = value;
 		value->parent = y;
 	}
+
+protected:
+	/// Red black tree count
+	unsigned _count;
+	NodeType* _header;
+	Compare _comp;
+
 };
 
 }

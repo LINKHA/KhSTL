@@ -8,6 +8,7 @@
 #include <initializer_list>
 #include <utility>
 #include <cassert>
+#include "../../Utility/TypeReverseIterator.h"
 
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -39,6 +40,10 @@ public:
 	using Iterator = tIterator<_Ty>;
 
 	using ConstIterator = tConstIterator<_Ty>;
+	/// List reverse iterator
+	using ReverseIterator = tReverseIterator<Iterator>;
+	/// List const reverse iterator
+	using ConstReverseIterator = tReverseIterator<ConstIterator>;
 
 	using CopyTag = typename Alloc::CopyTag;
 
@@ -232,7 +237,7 @@ public:
 	/**
 	* @brief : Create an element at the end
 	*/
-	template <typename... Args> 
+	template <typename... Args>
 	_Ty& EmplaceBack(Args&&... args)
 	{
 		if (Value::_size < Value::_capacity)
@@ -354,6 +359,14 @@ public:
 	* @brief : Insert a vector partially by iterators
 	*/
 	Iterator Insert(const Iterator& dest, const ConstIterator& start, const ConstIterator& end)
+	{
+		auto pos = (unsigned)(dest - Begin());
+		return doInsertElements(pos, start, end, CopyTag{});
+	}
+	/**
+	* @brief : Insert a vector partially by iterators
+	*/
+	Iterator Insert(const Iterator& dest, const Iterator& start, const Iterator& end)
 	{
 		auto pos = (unsigned)(dest - Begin());
 		return doInsertElements(pos, start, end, CopyTag{});
@@ -538,19 +551,29 @@ public:
 	/**
 	* @brief : Return iterator to the beginning
 	*/
-	Iterator Begin() { return Iterator(Value::Buffer()); }
+	inline Iterator Begin() { return Iterator(Value::Buffer()); }
 	/**
 	* @brief : Return const iterator to the beginning
 	*/
-	ConstIterator Begin() const { return ConstIterator(Value::Buffer()); }
+	inline ConstIterator Begin() const { return ConstIterator(Value::Buffer()); }
+
 	/**
 	* @brief : Return iterator to the end
 	*/
-	Iterator End() { return Iterator(Value::Buffer() + Value::_size); }
+	inline Iterator End() { return Iterator(Value::Buffer() + Value::_size); }
 	/**
 	* @brief : Return const iterator to the end
 	*/
-	ConstIterator End() const { return ConstIterator(Value::Buffer() + Value::_size); }
+	inline ConstIterator End() const { return ConstIterator(Value::Buffer() + Value::_size); }
+
+	inline ReverseIterator RBegin() { return ReverseIterator(End()); }
+
+	inline ConstReverseIterator RBegin() const { return ReverseIterator(End()); }
+
+	inline ReverseIterator REnd() { return ReverseIterator(Begin()); }
+
+	inline ConstReverseIterator REnd() const { return ReverseIterator(Begin()); }
+
 	/**
 	* @brief : Return first element
 	*/

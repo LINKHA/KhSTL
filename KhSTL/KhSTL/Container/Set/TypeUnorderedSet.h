@@ -308,7 +308,7 @@ public:
 		if (!_ptrs)
 		{
 			allocateBuckets(Size(), MIN_BUCKETS);
-			rehash();
+			reHash();
 		}
 
 		unsigned hashKey = hash(key);
@@ -325,7 +325,7 @@ public:
 		if (Size() > NumBuckets() * MAX_LOAD_FACTOR)
 		{
 			allocateBuckets(Size(), NumBuckets() << 1);
-			rehash();
+			reHash();
 		}
 
 		return Iterator(newNode);
@@ -369,7 +369,7 @@ public:
 		unsigned hashKey = Hash(key);
 
 		Node* previous;
-		Node* node = FindNode(key, hashKey, previous);
+		Node* node = findNode(key, hashKey, previous);
 		if (!node)
 			return false;
 
@@ -378,7 +378,7 @@ public:
 		else
 			ptrs()[hashKey] = node->down;
 
-		EraseNode(node);
+		eraseNode(node);
 		return true;
 	}
 	/**
@@ -409,7 +409,7 @@ public:
 		else
 			ptrs()[hashKey] = node->down;
 
-		EraseNode(node);
+		eraseNode(node);
 		return Iterator(next);
 	}
 	/**
@@ -495,8 +495,8 @@ public:
 		if (!_ptrs)
 			return End();
 
-		unsigned hashKey = Hash(key);
-		Node* node = FindNode(key, hashKey);
+		unsigned hashKey = hash(key);
+		Node* node = findNode(key, hashKey);
 		if (node)
 			return Iterator(node);
 		else
@@ -510,8 +510,8 @@ public:
 		if (!_ptrs)
 			return End();
 
-		unsigned hashKey = Hash(key);
-		Node* node = FindNode(key, hashKey);
+		unsigned hashKey = hash(key);
+		Node* node = findNode(key, hashKey);
 		if (node)
 			return ConstIterator(node);
 		else
@@ -525,8 +525,8 @@ public:
 		if (!_ptrs)
 			return false;
 
-		unsigned hashKey = Hash(key);
-		return FindNode(key, hashKey) != 0;
+		unsigned hashKey = hash(key);
+		return findNode(key, hashKey) != 0;
 	}
 	/**
 	* @brief : Return iterator to the beginning
@@ -675,7 +675,7 @@ private:
 	/**
 	* @brief : Rehash the buckets
 	*/
-	void rehash()
+	void reHash()
 	{
 		for (Iterator it = Begin(); it != End(); ++it)
 		{

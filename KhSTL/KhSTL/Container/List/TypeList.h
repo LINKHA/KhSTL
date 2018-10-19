@@ -68,7 +68,7 @@ public:
 	{
 		for (auto it = list.begin(); it != list.end(); it++)
 		{
-			Push(*it);
+			PushBack(*it);
 		}
 	}
 	/**

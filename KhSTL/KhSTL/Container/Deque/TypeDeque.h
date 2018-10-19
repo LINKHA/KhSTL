@@ -2,7 +2,7 @@
 #define KH_STL_TYPE_DEQUE_H_
 
 #include "TypeDequeAllocator.h"
-
+#include "../../Utility/TypeReverseIterator.h"
 namespace KhSTL {
 
 template <typename _Ty

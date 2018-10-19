@@ -2,21 +2,22 @@
 #define KH_STL_TYPE_MULTI_SET_H_
 
 #include "../../Utility/TypeRBTree.h"
+#include "TypeSetTraits.h"
 
 namespace KhSTL {
 
 
 template<typename _Kty
 	, typename _Comp = tLess<_Kty>
-	, typename _Alloc = tAllocator<tRBTreeNode<_Kty>>>
-	class tMultiSet : public RBTree<_Kty, _Comp, _Alloc>
+	, typename _Alloc = tAllocator<tRBTreeNode<tSetTraits<_Kty>>>>
+	class tMultiSet : public RBTree<tSetTraits<_Kty>, _Comp, _Alloc>
 {
+public:
 	using KeyType = _Kty;
 	using ValueType = _Kty;
 	using KeyCompare = _Comp;
-	using Base = RBTree<_Kty, _Comp, _Alloc>;
-	using RBTreeType = RBTree<_Kty, _Comp, _Alloc>;
-
+	using Base = RBTree<tSetTraits<_Kty>, _Comp, _Alloc>;
+	using RBTreeType = RBTree<tSetTraits<_Kty>, _Comp, _Alloc>;
 public:
 	using pointer = typename RBTreeType::pointer;
 
@@ -73,9 +74,9 @@ public:
 
 		Insert(k);
 	}
-	Iterator Insert(const ValueType& x)
+	Iterator Insert(const KeyType& x)
 	{
-		return Base::InsertEqual(x);
+		return Base::InsertEqual(x,x);
 	}
 	Iterator Find(const KeyType& x)
 	{

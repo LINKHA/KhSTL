@@ -3,22 +3,24 @@
 
 #include "../../Utility/TypeDef.h"
 #include "../../Utility/TypeRBTree.h"
+#include "TypeMapTraits.h"
 
 namespace KhSTL {
 
+
 template<typename _Kty
 	, typename _Ty
-	, typename _Comp = tLess<tPair<_Kty,_Ty>>
-	, typename _Alloc = tAllocator<tRBTreeNode<tPair<_Kty, _Ty>>>>
-	class tMap : public RBTree<tPair<_Kty, _Ty>, _Comp, _Alloc>
+	, typename _Comp = tLess<_Kty>
+	, typename _Alloc = tAllocator<tRBTreeNode<tMapTraits<_Kty, _Ty>>>>
+	class tMap : public RBTree<tMapTraits<_Kty, _Ty>, _Comp, _Alloc>
 {
 public:
-	///tMap<_Kty, _Ty, _Comp, _Alloc>
+	///
 	using This = tMap<_Kty, _Ty, _Comp, _Alloc>;
-	///RBTree<tPair<_Kty, _Ty>, _Comp, _Alloc>
-	using Base = RBTree<tPair<_Kty, _Ty>, _Comp, _Alloc>;
-	///RBTree<tPair<_Kty, _Ty>, _Comp, _Alloc>
-	using RBTreeType = RBTree<tPair<_Kty, _Ty>, _Comp, _Alloc>;
+	///
+	using Base = RBTree<tMapTraits<_Kty, _Ty>, _Comp, _Alloc>;
+	///
+	using RBTreeType = RBTree<tMapTraits<_Kty, _Ty>, _Comp, _Alloc>;
 
 	using KeyType = _Kty;
 
@@ -37,7 +39,7 @@ public:
 	using ConstReverseIterator = tReverseIterator<ConstIterator>;
 public:
 
-	tMap() noexcept = default;
+	tMap() = default;
 
 	tMap(const tMap& rhs)
 	{
@@ -55,14 +57,14 @@ public:
 		return Base::KeyComp(); 
 	}
 
-	inline Iterator Begin() 
-	{
-		return Base::Begin();
-	}
-	inline Iterator End()
-	{ 
-		return Base::End();
-	}
+	inline Iterator Begin() { return Base::Begin(); }
+
+	inline ConstIterator Begin() const { return Base::Begin(); }
+
+	inline Iterator End() { return Base::End(); }
+
+	inline ConstIterator End() const { return Base::End(); }
+
 	inline ReverseIterator RBegin() { return ReverseIterator(End()); }
 
 	inline ConstReverseIterator RBegin() const { return ReverseIterator(End()); }
@@ -79,29 +81,36 @@ public:
 	{ 
 		return Base::GetSize();
 	}
-	unsigned max_size()
-	{ 
-		return Base::max_size();
-	}
-	void operator[](const KeyType& k)
-	{
+	//_Ty& operator[](const KeyType& key)
+	//{
+	//	Iterator tmp1 = Insert(PairType(key, _Ty())).first;
+	//	return (*tmp1).second;
+	//}
+	//_Ty& At(const KeyType key)
+	//{
 
-		Insert(PairType(k, _Ty()));
-	}
-	tPair<Iterator, bool> Insert(const PairType& x)
+	//}
+	//const _Ty& At(const KeyType key)
+	//{
+
+	//}
+	tPair<Iterator, bool> Insert(const KeyType& key, const ValueType& value)
 	{
-		return Base::InsertUnique(x);
+		return Base::InsertUnique(key, value);
 	}
-	Iterator Find(const KeyType& x) 
+	tPair<Iterator, bool> Insert(const PairType& pair)
+	{
+		return Base::InsertUnique(pair.first, pair);
+	}
+	Iterator Find(const KeyType& key)
 	{ 
-		return Base::Find(x);
+		return Base::Find(key);
 	}
 
 	void Clear()
 	{
 
 	}
-
 
 };
 

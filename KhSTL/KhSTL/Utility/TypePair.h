@@ -10,6 +10,11 @@ template <typename _First
 	class tPair
 {
 public:
+	/// First type
+	using First = _First;
+	/// Second Type
+	using Second = _Second;
+public:
 	/**
 	* @brief : Construct undefined
 	*/

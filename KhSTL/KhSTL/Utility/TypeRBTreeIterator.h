@@ -6,13 +6,10 @@
 
 namespace KhSTL {
 
-template<typename _Ty>
+template<typename _Traits>
 struct tRBTreeBaseIterator
 {
-	typedef std::bidirectional_iterator_tag		iterator_category;
-	typedef ptrdiff_t							difference_type;
-
-	tRBTreeNode<_Ty>* node;
+	tRBTreeNode<_Traits>* node;
 
 	/**
 	* @brief : This function is called when subclasses of the iterator implement operator 
@@ -29,7 +26,7 @@ struct tRBTreeBaseIterator
 		}
 		else
 		{
-			tRBTreeNode<_Ty>* y = node->parent;
+			tRBTreeNode<_Traits>* y = node->parent;
 			while (node == y->right)
 			{
 				node = y;
@@ -52,7 +49,7 @@ struct tRBTreeBaseIterator
 		}
 		else if (node->left != 0)
 		{
-			tRBTreeNode<_Ty>* y = node->left;
+			tRBTreeNode<_Traits>* y = node->left;
 			while (y->right != 0)
 			{
 				y = y->right;
@@ -61,7 +58,7 @@ struct tRBTreeBaseIterator
 		}
 		else
 		{
-			tRBTreeNode<_Ty>* y = node->parent;
+			tRBTreeNode<_Traits>* y = node->parent;
 			while (node == y->left)
 			{
 				node = y;
@@ -72,33 +69,38 @@ struct tRBTreeBaseIterator
 	}
 };
 
-template<class _Ty, class ref, class ptr>
-struct tRBTreeIterator :public tRBTreeBaseIterator<_Ty>
+template<typename _Traits>
+struct tRBTreeIterator 
+	: public tRBTreeBaseIterator<_Traits>
 {
+	using ValueType = typename _Traits::ValueType;
+	using Base = tRBTreeBaseIterator<_Traits>;
+	using Iterator = tRBTreeIterator<_Traits>;
+	using This = tRBTreeIterator<_Traits>;
+	using LinkType = tRBTreeNode<_Traits>*;
 
-	using Base = tRBTreeBaseIterator<_Ty>;
-	typedef _Ty	ValueType;
+	tRBTreeIterator() = default;
 
-	typedef tRBTreeIterator<_Ty, _Ty&, _Ty*>		iterator;
-	using This = tRBTreeIterator<_Ty, ref, ptr>;
-	typedef tRBTreeNode<_Ty>*							link_type;
-	typedef size_t											size_type;
-
-	tRBTreeIterator() {}
-	tRBTreeIterator(link_type x) { Base::node = x; }
-	tRBTreeIterator(const iterator& it) { Base::node = it.node; }
+	tRBTreeIterator(LinkType x) 
+	{ 
+		Base::node = x; 
+	}
+	tRBTreeIterator(const Iterator& it) 
+	{ 
+		Base::node = it.node; 
+	}
 	/**
 	* @brief : Dereference, return node value
 	*/
-	_Ty& operator *()const { return link_type(Base::node)->value; }
+	ValueType& operator *()const { return LinkType(Base::node)->value; }
 	/**
 	* @brief : Dereference, return node value
 	*/
-	_Ty* operator ->()const { return *(operator *()); }
+	ValueType* operator ->()const { return *(operator *()); }
 	/**
 	* @brief : Returns the color of the node the iterator points to
 	*/
-	RBTreeColorType color() { return Base::node->color == RBTreeColorType::RED ? 0 : 1; }
+	RBTreeColorType Color() { return Base::node->color; }
 	/**
 	* @brief : Iterator stepIterator step
 	*/
@@ -131,16 +133,16 @@ struct tRBTreeIterator :public tRBTreeBaseIterator<_Ty>
 	/**
 	* @brief : Comparison of two iterators
 	*/
-	bool operator ==(const This& x) const 
+	bool operator ==(const This& rhs) const 
 	{ 
-		return x.node == Base::node; 
+		return rhs.node == Base::node;
 	}
 	/**
 	* @brief : Comparison of two iterators
 	*/
-	bool operator !=(const This& x) const 
+	bool operator !=(const This& rhs) const
 	{ 
-		return x.node != Base::node; 
+		return rhs.node != Base::node;
 	}
 };
 

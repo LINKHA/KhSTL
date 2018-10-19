@@ -3,18 +3,20 @@
 
 namespace KhSTL {
 
-template<typename _Ty
-	, typename _Kty
+
+template<typename _Traits
 	, typename _Comp
 	, typename _Alloc>
 	class tRBTreeAlloc
 {
 public:
-	using ValueType = _Kty;
-	using AllocType = typename _Alloc::ValueType;
+	using KeyType = typename _Traits::KeyType;
+	using ValueType = typename _Traits::ValueType;
+	using AllocType = _Alloc;
+	using NodeType = tRBTreeNode<_Traits>;
 public:
 	tRBTreeAlloc()
-		: _allocator(new _Alloc())
+		: _allocator(new AllocType())
 	{
 	}
 	~tRBTreeAlloc()
@@ -26,45 +28,45 @@ protected:
 	/**
 	* @brief : Reserve a node
 	*/
-	AllocType* getNode()
+	NodeType* getNode()
 	{
-		auto* newNode = static_cast<AllocType*>(allocation());
-		new(newNode) AllocType();
+		auto* newNode = static_cast<NodeType*>(allocation());
+		new(newNode) NodeType();
 		return newNode;
 	}
 	/**
 	* @brief : Reserve a node with initial value
 	*/
-	AllocType* getNode(const ValueType& value)
+	NodeType* getNode(const KeyType& key, const ValueType& value)
 	{
-		auto* newNode = static_cast<AllocType*>(allocation());
-		new(newNode) AllocType(value);
+		auto* newNode = static_cast<NodeType*>(allocation());
+		new(newNode) NodeType(key, value);
 		return newNode;
 	}
 
 	/**
 	* @brief : Free a node
 	*/
-	void putNode(AllocType* node)
+	void putNode(NodeType* node)
 	{
 		free(node);
 	}
 private:
-	AllocType* reserve()
+	NodeType* reserve()
 	{
 		return _allocator->Reserve();
 	}
 	/**
 	* @brief : Reserve and copy-construct an object
 	*/
-	AllocType* reserve(const AllocType& object)
+	NodeType* reserve(const NodeType& object)
 	{
 		return _allocator->Reserve(object);
 	}
 	/**
 	* @brief : Destruct and free an object
 	*/
-	void free(AllocType* object)
+	void free(NodeType* object)
 	{
 		_allocator->Free(object);
 	}
@@ -75,7 +77,7 @@ private:
 	}
 
 protected:
-	_Alloc* _allocator;
+	AllocType* _allocator;
 };
 
 

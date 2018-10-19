@@ -3,50 +3,29 @@
 
 #include "../../Utility/TypeDef.h"
 #include "../../Utility/TypeRBTree.h"
-
+#include "TypeSetTraits.h"
 
 namespace KhSTL {
 
 template<typename _Kty
 	, typename _Comp = tLess<_Kty>
-	, typename _Alloc = tAllocator<tRBTreeNode<_Kty>>>
-	class tSet : public RBTree<_Kty, _Comp, _Alloc>
+	, typename _Alloc = tAllocator<tRBTreeNode<tSetTraits<_Kty>>>>
+	class tSet : public RBTree<tSetTraits<_Kty>, _Comp, _Alloc>
 {
+public:
 	using KeyType = _Kty;
 	using ValueType = _Kty;
 	using KeyCompare = _Comp;
-	using Base = RBTree<_Kty, _Comp, _Alloc>;
-	using RBTreeType = RBTree<_Kty, _Comp, _Alloc>;
-
-public:
-	using pointer = typename RBTreeType::pointer;
-
-	using reference = typename RBTreeType::reference;
+	using Base = RBTree<tSetTraits<_Kty>, _Comp, _Alloc>;
+	using RBTreeType = RBTree<tSetTraits<_Kty>, _Comp, _Alloc>;
 
 	using Iterator = typename RBTreeType::Iterator;
 
-	using size_type = typename RBTreeType::size_type;
-
-	using difference_type = typename RBTreeType::difference_type;
-
 	tSet()
-		//:_reTree(_Comp()) 
 	{}
 
-	//	tMap(const tMap<_Kty, _Comp, _Alloc>& rhs) 
-	//		:_reTree(rhs._reTree)
-	//	{}
-
-		//tMap<_Kty, _Ty, _Comp, _Alloc>& operator =(const tMap<_Kty, _Ty, _Comp, _Alloc>& x)
-		//{
-		//	//_reTree = x._reTree;
-		//	return *this;
-		//}
 	~tSet()
-		//:_reTree(_Comp()) 
-	{
-
-	}
+	{}
 	_Comp KeyComp() const { return Base::KeyComp(); }
 
 	Iterator Begin()
@@ -61,11 +40,11 @@ public:
 	{
 		return Base::Empty();
 	}
-	size_type size()
+	unsigned Size()
 	{
 		return Base::GetSize();
 	}
-	size_type max_size()
+	unsigned max_size()
 	{
 		return Base::max_size();
 	}
@@ -74,9 +53,9 @@ public:
 
 		Insert(k);
 	}
-	tPair<Iterator, bool> Insert(const ValueType& x)
+	tPair<Iterator, bool> Insert(const KeyType& x)
 	{
-		return Base::InsertUnique(x);
+		return Base::InsertUnique(x,x);
 	}
 	Iterator Find(const KeyType& x)
 	{

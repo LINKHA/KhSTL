@@ -23,16 +23,16 @@ namespace KhSTL {
 ///
 	template<typename _Kty
 		, typename _Ty
-		, typename _Comp = tLess<tPair<_Kty, _Ty>>
-		, typename _Alloc = tAllocator<tRBTreeNode<tPair<_Kty, _Ty>>>>
+		, typename _Comp = tLess<_Kty>
+		, typename _Alloc = tAllocator<tRBTreeNode<tMapTraits<_Kty, _Ty>>>>
 	using Map = KhSTL::tMap<_Kty, _Ty, _Comp, _Alloc>;
 ///
 ///
 ///
 template<typename _Kty
 	, typename _Ty
-	, typename _Comp = tLess<tPair<_Kty, _Ty>>
-	, typename _Alloc = tAllocator<tRBTreeNode<tPair<_Kty, _Ty>>>>
+	, typename _Comp = tLess<_Kty>
+	, typename _Alloc = tAllocator<tRBTreeNode<tMapTraits<_Kty, _Ty>>>>
 	using MultiMap = KhSTL::tMultiMap<_Kty, _Ty, _Comp, _Alloc>;
 ///
 ///
