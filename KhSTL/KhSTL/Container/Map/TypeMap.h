@@ -41,20 +41,232 @@ public:
 
 	tMap() = default;
 
-	tMap(const tMap& rhs)
+	tMap(const tMap& map)
 	{
-		*this = rhs;
+		*this = map;
+	}
+	/**
+	* @brief : Move-construct from another map
+	*/
+	tMap(This && map) noexcept
+	{
+		Swap(map);
+	}
+
+	/**
+	* @brief : Aggregate initialization constructor
+	*/
+	tMap(const std::initializer_list<tPair<_Kty, _Ty>>& list)
+		: tMap()
+	{
+		for (auto it = list.begin(); it != list.end(); it++)
+		{
+			Insert((*it).first ,*it);
+		}
 	}
 
 	~tMap()
 	{
 		Clear();
 	}
+	/**
+	* @brief : Assign a map
+	*/
+	tMap& operator =(const This& rhs)
+	{
+		// In case of This-assignment do nothing
+		if (&rhs != this)
+		{
+			Clear();
+			Insert(rhs);
+		}
+		return *this;
+	}
+	/**
+	* @brief : Move-assign a map
+	*/
+	tMap& operator =(This && rhs) noexcept
+	{
+		assert(&rhs != this);
+		Swap(rhs);
+		return *this;
+	}
 
+	/**
+	* @brief : Add-assign a pair
+	*/
+	tMap& operator +=(const PairType& rhs)
+	{
+		Insert(rhs);
+		return *this;
+	}
+	/**
+	* @brief : Add-assign a map
+	*/
+	tMap& operator +=(const This& rhs)
+	{
+		Insert(rhs);
+		return *this;
+	}
+	/**
+	* @brief : _Keyest for equality with another map
+	*/
+	bool operator ==(const This& rhs) const
+	{
+		if (rhs.Size() != Size())
+			return false;
+
+		ConstIterator i = Begin();
+		while (i != End())
+		{
+			ConstIterator j = rhs.Find(i->first);
+			if (j == rhs.End() || j->second != i->second)
+				return false;
+			++i;
+		}
+
+		return true;
+	}
+	/**
+	* @brief : _Keyest for inequality with another map
+	*/
+	bool operator !=(const This& rhs) const
+	{
+		if (rhs.Size() != Size())
+			return true;
+
+		ConstIterator i = Begin();
+		while (i != End())
+		{
+			ConstIterator j = rhs.Find(i->first);
+			if (j == rhs.End() || j->second != i->second)
+				return true;
+			++i;
+		}
+
+		return false;
+	}
+	/**
+	* @brief : Index the map. Create a new pair if key not found
+	*/
+	_Ty& operator [](const _Kty& key)
+	{
+		Iterator it = Find(key);
+		return it != End() ? it.second : Insert(key, _Ty()).second;
+	}
+	/**
+	* @brief : Index the map. Return null if key is not found, does not create a new pair
+	*/
+	_Ty* operator [](const _Kty& key) const
+	{
+		Iterator it = Find(key);
+		return it != End() ? it.second : 0;
+	}
 
 	_Comp KeyComp() const 
 	{
 		return Base::KeyComp(); 
+	}
+
+	bool Empty() 
+	{ 
+		return Base::Empty();
+	}
+
+	unsigned Size() 
+	{ 
+		return Base::GetSize();
+	}
+
+	Iterator Insert(const KeyType& key, const ValueType& value)
+	{
+		return Base::InsertUnique(key, value);
+	}
+
+	Iterator Insert(const PairType& pair)
+	{
+		return Base::InsertUnique(pair.first, pair);
+	}
+	/**
+	* @brief : Insert a pair. Return iterator and set exists flag according to
+	*			whether the key already existed.
+	*/
+	Iterator Insert(const PairType& pair, bool& exists)
+	{
+		unsigned oldSize = Size();
+		Iterator ret(InsertUnique(pair.first, pair));
+		exists = (Size() == oldSize);
+		return ret;
+	}
+	/**
+	* @brief : Insert a map
+	*/
+	void Insert(const This& map)
+	{
+		ConstIterator it = map.Begin();
+		ConstIterator end = map.End();
+		while (it != end)
+		{
+			InsertUnique(it->first, *it);
+			++it;
+		}
+	}
+	/**
+	* @brief : Insert a pair by iterator. Return iterator to the value
+	*/
+	Iterator Insert(const ConstIterator& it)
+	{
+		return InsertUnique(it->first, *it);
+	}
+	/**
+	* @brief : Insert a range by iterators
+	*/
+	void Insert(const ConstIterator& start, const ConstIterator& end)
+	{
+		ConstIterator it = start;
+		while (it != end)
+		{
+			InsertUnique(it->first, *it);
+			++it;
+		}
+	}
+
+	Iterator Find(const KeyType& key)
+	{ 
+		return Base::Find(key);
+	}
+
+	ConstIterator Find(const KeyType& key) const
+	{
+		return Base::Find(key);
+	}
+
+	bool Erase(const _Kty& key)
+	{
+
+	}
+
+
+
+
+
+
+
+	void Clear()
+	{
+		
+		//resetPtrs();
+
+		if (Size())
+		{
+			for (Iterator i = Begin(); i != End();)
+			{
+				//FreeNode(static_cast<Node*>(i++.ptr));
+				//i.ptr->prev = 0;
+				i++;
+			}
+			//setSize(0);
+		}
 	}
 
 	inline Iterator Begin() { return Base::Begin(); }
@@ -72,45 +284,6 @@ public:
 	inline ReverseIterator REnd() { return ReverseIterator(Begin()); }
 
 	inline ConstReverseIterator REnd() const { return ReverseIterator(Begin()); }
-
-	bool Empty() 
-	{ 
-		return Base::Empty();
-	}
-	unsigned Size() 
-	{ 
-		return Base::GetSize();
-	}
-	//_Ty& operator[](const KeyType& key)
-	//{
-	//	Iterator tmp1 = Insert(PairType(key, _Ty())).first;
-	//	return (*tmp1).second;
-	//}
-	//_Ty& At(const KeyType key)
-	//{
-
-	//}
-	//const _Ty& At(const KeyType key)
-	//{
-
-	//}
-	tPair<Iterator, bool> Insert(const KeyType& key, const ValueType& value)
-	{
-		return Base::InsertUnique(key, value);
-	}
-	tPair<Iterator, bool> Insert(const PairType& pair)
-	{
-		return Base::InsertUnique(pair.first, pair);
-	}
-	Iterator Find(const KeyType& key)
-	{ 
-		return Base::Find(key);
-	}
-
-	void Clear()
-	{
-
-	}
 
 };
 

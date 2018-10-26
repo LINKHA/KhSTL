@@ -188,71 +188,71 @@ public:
 	* @brief : Insert new value, node key value cannot be repeated, 
 	*			insert invalid if repeated
 	*/
-	tPair<Iterator, bool> InsertUnique(const KeyType& key,const ValueType& value)
+	Iterator InsertUnique(const KeyType& key,const ValueType& value)
 	{
-		NodeType* y = _header; 
-		NodeType* x = root(); 
+		NodeType* pHeader = _header; 
+		NodeType* pRoot = root(); 
 		bool comp = true; 
 
-		while (x != 0) 
+		while (pRoot != 0) 
 		{
-			y = x; 
-			comp = _comp(key, getKey(x));
-			x = comp ? left(x) : right(x);
+			pHeader = pRoot; 
+			comp = _comp(key, getKey(pRoot));
+			pRoot = comp ? left(pRoot) : right(pRoot);
 		}
-		Iterator j = Iterator(y);
+		Iterator tmp = Iterator(pHeader);
 		if (comp)
 		{
-			if (Begin() == j)
+			if (Begin() == tmp)
 			{
-				return tPair<Iterator, bool>(insertNode(x, y, key ,value), true);
+				return Iterator(insertNode(pRoot, pHeader, key ,value));
 			}
 			else
 			{
-				j--;
+				tmp--;
 			}
 		}
-		if (_comp(getKey(j.node), key))
+		if (_comp(getKey(tmp.node), key))
 		{
-			return tPair<Iterator, bool>(insertNode(x, y, key, value), true);
+			return Iterator(insertNode(pRoot, pHeader, key, value));
 		}
-		return tPair<Iterator, bool>(j, false);
+		return Iterator(tmp);
 	}
 	/**
 	* @brief : Insert a new value, the node's key value allows repetition
 	*/
-	Iterator InsertEqual(const KeyType& key, const ValueType& value)
+	Iterator InsertEqual(const KeyType& key, const ValueType& val)
 	{
-		NodeType* y = _header;
-		NodeType* x = root();
-		while (x != 0)
+		NodeType* pHeader = _header;
+		NodeType* pRoot = root();
+		while (pRoot != 0)
 		{
-			y = x;
-			x = _comp(key, getKey(x)) ? left(x) : right(x);
+			pHeader = pRoot;
+			pRoot = _comp(key, getKey(pRoot)) ? left(pRoot) : right(pRoot);
 		}
-		return insertNode(x, y, key, value);
+		return insertNode(pRoot, pHeader, key, val);
 	}
 	/**
 	* @brief : Look for a node in a red-black tree with a key value of key
 	*/
 	Iterator Find(const KeyType& key)
 	{
-		NodeType* y = _header; 
-		NodeType* x = root(); 
-		while (x != 0)
+		NodeType* pHeader = _header; 
+		NodeType* pRoot = root(); 
+		while (pRoot != 0)
 		{
-			if (!_comp(getKey(x), key))
+			if (!_comp(getKey(pRoot), key))
 			{
-				y = x;
-				x = left(x);
+				pHeader = pRoot;
+				pRoot = left(pRoot);
 			}
 			else
 			{
-				x = right(x);
+				pRoot = right(pRoot);
 			}
 		}
-		Iterator j = Iterator(y);
-		return (j == End() || _comp(key, getKey(j.node))) ? End() : j;
+		Iterator tmp = Iterator(pHeader);
+		return (tmp == End() || _comp(key, getKey(tmp.node))) ? End() : tmp;
 	}
 
 private:
@@ -261,7 +261,7 @@ private:
 	* @param : insertWith : To insert node 
 	*		 : insertTarget : Insert the parent node of the node
 	*/
-	Iterator insertNode(NodeType* insertWith, NodeType* insertTarget, const KeyType& key , const ValueType& value)
+	Iterator insertNode(NodeType* insertWith, NodeType* insertTarget, const KeyType& key , const ValueType& val)
 	{
 		NodeType* tmpWith = (NodeType*)insertWith; 
 		NodeType* tmpTarget = (NodeType*)insertTarget; 
@@ -269,7 +269,7 @@ private:
 
 		if (tmpTarget == _header || tmpWith != 0 || _comp(key, getKey(tmpTarget)))
 		{
-			tmp = Alloc::getNode(key,value);
+			tmp = Alloc::getNode(key,val);
 			left(tmpTarget) = tmp; 
 			if (tmpTarget == _header) 
 			{
@@ -283,7 +283,7 @@ private:
 		}
 		else
 		{
-			tmp = Alloc::getNode(key,value);
+			tmp = Alloc::getNode(key,val);
 			right(tmpTarget) = tmp;
 			if (tmpTarget == rightmost())
 			{
@@ -301,54 +301,54 @@ private:
 	/**
 	* @brief : Rebalance the red-black tree
 	*/
-	void RBTreeRebalance(NodeType* value, NodeType*& root)
+	void RBTreeRebalance(NodeType* val, NodeType*& root)
 	{
-		value->color = RBTreeColorType::RED;
-		while (value != root && value->parent->color == RBTreeColorType::RED)
+		val->color = RBTreeColorType::RED;
+		while (val != root && val->parent->color == RBTreeColorType::RED)
 		{
-			if (value->parent == value->parent->parent->left)
+			if (val->parent == val->parent->parent->left)
 			{
-				NodeType* y = value->parent->parent->right;
-				if (y && y->color == RBTreeColorType::RED)
+				NodeType* tmp = val->parent->parent->right;
+				if (tmp && tmp->color == RBTreeColorType::RED)
 				{
-					value->parent->color = RBTreeColorType::BLACK;
-					y->color = RBTreeColorType::BLACK;
-					value->parent->parent->color = RBTreeColorType::RED;
-					value = value->parent->parent;
+					val->parent->color = RBTreeColorType::BLACK;
+					tmp->color = RBTreeColorType::BLACK;
+					val->parent->parent->color = RBTreeColorType::RED;
+					val = val->parent->parent;
 				}
 				else
 				{
-					if (value == value->parent->right)
+					if (val == val->parent->right)
 					{
-						value = value->parent;
-						RBTreeRotateLeft(value, root);
+						val = val->parent;
+						RBTreeRotateLeft(val, root);
 					}
-					value->parent->color = RBTreeColorType::BLACK;
-					value->parent->parent->color = RBTreeColorType::RED;
-					RBTreeRotateRight(value->parent->parent, root);
+					val->parent->color = RBTreeColorType::BLACK;
+					val->parent->parent->color = RBTreeColorType::RED;
+					RBTreeRotateRight(val->parent->parent, root);
 				}
 			}
 			else 
 			{
-				NodeType* y = value->parent->parent->left;
-				if (y && y->color == RBTreeColorType::RED)
+				NodeType* tmp = val->parent->parent->left;
+				if (tmp && tmp->color == RBTreeColorType::RED)
 				{
-					value->parent->color = RBTreeColorType::BLACK;
-					y->color = RBTreeColorType::BLACK;
-					value->parent->parent->color = RBTreeColorType::RED;
-					value = value->parent->parent;
+					val->parent->color = RBTreeColorType::BLACK;
+					tmp->color = RBTreeColorType::BLACK;
+					val->parent->parent->color = RBTreeColorType::RED;
+					val = val->parent->parent;
 				}
 				else
 				{
 					
-					if (value == value->parent->left)
+					if (val == val->parent->left)
 					{
-						value = value->parent;
-						RBTreeRotateRight(value, root);
+						val = val->parent;
+						RBTreeRotateRight(val, root);
 					}
-					value->parent->color = RBTreeColorType::BLACK;
-					value->parent->parent->color = RBTreeColorType::RED;
-					RBTreeRotateLeft(value->parent->parent, root); 
+					val->parent->color = RBTreeColorType::BLACK;
+					val->parent->parent->color = RBTreeColorType::RED;
+					RBTreeRotateLeft(val->parent->parent, root); 
 				}
 			}
 		}
@@ -357,57 +357,57 @@ private:
 	/**
 	* @brief : Light handed rotation 
 	*/
-	void RBTreeRotateLeft(NodeType* x, NodeType*& root)
+	void RBTreeRotateLeft(NodeType* val, NodeType*& root)
 	{
-		NodeType* y = x->right;
-		x->right = y->left;
-		if (y->left != 0)
+		NodeType* pRight = val->right;
+		val->right = pRight->left;
+		if (pRight->left != 0)
 		{
-			y->left->parent = x;
+			pRight->left->parent = val;
 		}
-		y->parent = x->parent;
+		pRight->parent = val->parent;
 
-		if (x == root)
+		if (val == root)
 		{
-			root = y;
+			root = pRight;
 		}
-		else if (x == x->parent->left)
+		else if (val == val->parent->left)
 		{
-			x->parent->left = y;
+			val->parent->left = pRight;
 		}
 		else
 		{
-			x->parent->right = y;
+			val->parent->right = pRight;
 		}
-		y->left = x;
-		x->parent = y;
+		pRight->left = val;
+		val->parent = pRight;
 	}
 	/**
 	* @brief : Right handed rotation 
 	*/
-	void RBTreeRotateRight(NodeType* value, NodeType*& root)
+	void RBTreeRotateRight(NodeType* val, NodeType*& root)
 	{
-		NodeType* y = value->left;
-		value->left = y->right;
-		if (y->right != 0)
+		NodeType* pLeft = val->left;
+		val->left = pLeft->right;
+		if (pLeft->right != 0)
 		{
-			y->right->parent = value;
+			pLeft->right->parent = val;
 		}
-		y->parent = value->parent;
-		if (value == root)
+		pLeft->parent = val->parent;
+		if (val == root)
 		{
-			root = y;
+			root = pLeft;
 		}
-		else if (value == value->parent->right)
+		else if (val == val->parent->right)
 		{
-			value->parent->right = y;
+			val->parent->right = pLeft;
 		}
 		else
 		{
-			value->parent->left = y;
+			val->parent->left = pLeft;
 		}
-		y->right = value;
-		value->parent = y;
+		pLeft->right = val;
+		val->parent = pLeft;
 	}
 
 protected:

@@ -6,7 +6,7 @@
 #include "../../Utility/TypeHash.h"
 
 namespace KhSTL {
-template <typename _Key>
+template <typename _Kty>
 class tUnorderedSet : public tHashBase
 {
 public:
@@ -22,7 +22,7 @@ public:
 		/**
 		* @brief : Construct with key
 		*/
-		explicit Node(const _Key& skey)
+		explicit Node(const _Kty& skey)
 			: key(skey)
 		{
 		}
@@ -40,7 +40,7 @@ public:
 		Node* Down() const { return static_cast<Node*>(down); }
 
 		/// Key.
-		_Key key;
+		_Kty key;
 
 	};
 	/**
@@ -96,11 +96,11 @@ public:
 		/**
 		* @brief : Point to the key
 		*/
-		const _Key* operator ->() const { return &(static_cast<Node*>(ptr))->key; }
+		const _Kty* operator ->() const { return &(static_cast<Node*>(ptr))->key; }
 		/**
 		* @brief : Dereference the key
 		*/
-		const _Key& operator *() const { return (static_cast<Node*>(ptr))->key; }
+		const _Kty& operator *() const { return (static_cast<Node*>(ptr))->key; }
 	};
 	/**
 	* Hash set node const iterator
@@ -170,11 +170,11 @@ public:
 		/**
 		* @brief : Point to the key
 		*/
-		const _Key* operator ->() const { return &(static_cast<Node*>(ptr))->key; }
+		const _Kty* operator ->() const { return &(static_cast<Node*>(ptr))->key; }
 		/**
 		* @brief : Dereference the key
 		*/
-		const _Key& operator *() const { return (static_cast<Node*>(ptr))->key; }
+		const _Kty& operator *() const { return (static_cast<Node*>(ptr))->key; }
 	};
 	/**
 	* @brief : Construct Empty
@@ -188,7 +188,7 @@ public:
 	/**
 	* @brief : Construct from another hash set
 	*/
-	tUnorderedSet(const tUnorderedSet<_Key>& set)
+	tUnorderedSet(const tUnorderedSet<_Kty>& set)
 	{
 		// Reserve the tail node + initial capacity according to the set's size
 		_allocator = AllocatorInitialize((unsigned)sizeof(Node), set.Size() + 1);
@@ -198,14 +198,14 @@ public:
 	/**
 	* @brief : Move-construct from another hash set
 	*/
-	tUnorderedSet(tUnorderedSet<_Key> && set) noexcept
+	tUnorderedSet(tUnorderedSet<_Kty> && set) noexcept
 	{
 		Swap(set);
 	}
 	/**
 	* @brief : Aggregate initialization constructor
 	*/
-	tUnorderedSet(const std::initializer_list<_Key>& list) : tUnorderedSet()
+	tUnorderedSet(const std::initializer_list<_Kty>& list) : tUnorderedSet()
 	{
 		for (auto it = list.begin(); it != list.end(); it++)
 		{
@@ -228,7 +228,7 @@ public:
 	/**
 	* @brief : Assign a hash set
 	*/
-	tUnorderedSet& operator =(const tUnorderedSet<_Key>& rhs)
+	tUnorderedSet& operator =(const tUnorderedSet<_Kty>& rhs)
 	{
 		// In case of This-assignment do nothing
 		if (&rhs != this)
@@ -241,7 +241,7 @@ public:
 	/**
 	* @brief : Move-assign a hash set
 	*/
-	tUnorderedSet& operator =(tUnorderedSet<_Key> && rhs) noexcept
+	tUnorderedSet& operator =(tUnorderedSet<_Kty> && rhs) noexcept
 	{
 		assert(&rhs != this);
 		Swap(rhs);
@@ -250,7 +250,7 @@ public:
 	/**
 	* @brief : Add-assign a value
 	*/
-	tUnorderedSet& operator +=(const _Key& rhs)
+	tUnorderedSet& operator +=(const _Kty& rhs)
 	{
 		Insert(rhs);
 		return *this;
@@ -258,7 +258,7 @@ public:
 	/**
 	* @brief : Add-assign a hash set
 	*/
-	tUnorderedSet& operator +=(const tUnorderedSet<_Key>& rhs)
+	tUnorderedSet& operator +=(const tUnorderedSet<_Kty>& rhs)
 	{
 		Insert(rhs);
 		return *this;
@@ -266,7 +266,7 @@ public:
 	/**
 	* @brief : Test for equality with another hash set
 	*/
-	bool operator ==(const tUnorderedSet<_Key>& rhs) const
+	bool operator ==(const tUnorderedSet<_Kty>& rhs) const
 	{
 		if (rhs.Size() != Size())
 			return false;
@@ -284,7 +284,7 @@ public:
 	/**
 	* @brief : Test for inequality with another hash set
 	*/
-	bool operator !=(const tUnorderedSet<_Key>& rhs) const
+	bool operator !=(const tUnorderedSet<_Kty>& rhs) const
 	{
 		if (rhs.Size() != Size())
 			return true;
@@ -302,7 +302,7 @@ public:
 	/**
 	* @brief : Insert a key. Return an iterator to it
 	*/
-	Iterator Insert(const _Key& key)
+	Iterator Insert(const _Kty& key)
 	{
 		// If no pointers yet, allocate with minimum bucket count
 		if (!_ptrs)
@@ -311,7 +311,7 @@ public:
 			reHash();
 		}
 
-		unsigned hashKey = hash(key);
+		unsigned hashKey = Hash(key);
 
 		Node* existing = findNode(key, hashKey);
 		if (existing)
@@ -334,7 +334,7 @@ public:
 	* @brief : Insert a key. Return an iterator and set exists
 	*			flag according to whether the key already existed
 	*/
-	Iterator Insert(const _Key& key, bool& exists)
+	Iterator Insert(const _Kty& key, bool& exists)
 	{
 		unsigned oldSize = Size();
 		Iterator ret = Insert(key);
@@ -344,7 +344,7 @@ public:
 	/**
 	* @brief : Insert a set
 	*/
-	void Insert(const tUnorderedSet<_Key>& set)
+	void Insert(const tUnorderedSet<_Kty>& set)
 	{
 		ConstIterator it = set.Begin();
 		ConstIterator end = set.End();
@@ -361,7 +361,7 @@ public:
 	/**
 	* @brief : Erase a key. Return true if was found
 	*/
-	bool Erase(const _Key& key)
+	bool Erase(const _Kty& key)
 	{
 		if (!_ptrs)
 			return false;
@@ -490,12 +490,12 @@ public:
 	/**
 	* @brief : Return iterator to the key, or end iterator if not found
 	*/
-	Iterator Find(const _Key& key)
+	Iterator Find(const _Kty& key)
 	{
 		if (!_ptrs)
 			return End();
 
-		unsigned hashKey = hash(key);
+		unsigned hashKey = Hash(key);
 		Node* node = findNode(key, hashKey);
 		if (node)
 			return Iterator(node);
@@ -505,12 +505,12 @@ public:
 	/**
 	* @brief : Return const iterator to the key, or end iterator if not found
 	*/
-	ConstIterator Find(const _Key& key) const
+	ConstIterator Find(const _Kty& key) const
 	{
 		if (!_ptrs)
 			return End();
 
-		unsigned hashKey = hash(key);
+		unsigned hashKey = Hash(key);
 		Node* node = findNode(key, hashKey);
 		if (node)
 			return ConstIterator(node);
@@ -520,12 +520,12 @@ public:
 	/**
 	* @brief : Return whether contains a key
 	*/
-	bool Contains(const _Key& key) const
+	bool Contains(const _Kty& key) const
 	{
 		if (!_ptrs)
 			return false;
 
-		unsigned hashKey = hash(key);
+		unsigned hashKey = Hash(key);
 		return findNode(key, hashKey) != 0;
 	}
 	/**
@@ -547,11 +547,11 @@ public:
 	/**
 	* @brief : Return first key
 	*/
-	const _Key& Front() const { return *Begin(); }
+	const _Kty& Front() const { return *Begin(); }
 	/**
 	* @brief : Return last key
 	*/
-	const _Key& Back() const { return *(--End()); }
+	const _Kty& Back() const { return *(--End()); }
 
 private:
 	/**
@@ -566,7 +566,7 @@ private:
 	* @brief : Find a node from the buckets. Do not call if
 	*			the buckets have not been allocated
 	*/
-	Node* findNode(const _Key& key, unsigned hashKey) const
+	Node* findNode(const _Kty& key, unsigned hashKey) const
 	{
 		auto* node = static_cast<Node*>(ptrs()[hashKey]);
 		while (node)
@@ -582,7 +582,7 @@ private:
 	* @brief : Find a node and the previous node from the buckets.
 	*			Do not call if the buckets have not been allocated
 	*/
-	Node* findNode(const _Key& key, unsigned hashKey, Node*& previous) const
+	Node* findNode(const _Kty& key, unsigned hashKey, Node*& previous) const
 	{
 		previous = 0;
 
@@ -600,7 +600,7 @@ private:
 	/**
 	* @brief : Insert a node into the list. Return the new node
 	*/
-	Node* insertNode(Node* dest, const _Key& key)
+	Node* insertNode(Node* dest, const _Kty& key)
 	{
 		if (!dest)
 			return 0;
@@ -658,7 +658,7 @@ private:
 	/**
 	* @brief : Reserve a node with specified key
 	*/
-	Node* reserveNode(const _Key& key)
+	Node* reserveNode(const _Kty& key)
 	{
 		auto* newNode = static_cast<Node*>(AllocatorReserve(_allocator));
 		new(newNode) Node(key);
@@ -680,7 +680,7 @@ private:
 		for (Iterator it = Begin(); it != End(); ++it)
 		{
 			auto* node = static_cast<Node*>(it.ptr);
-			unsigned hashKey = hash(*it);
+			unsigned hashKey = Hash(*it);
 			node->down = ptrs()[hashKey];
 			ptrs()[hashKey] = node;
 		}
@@ -692,15 +692,15 @@ private:
 	/**
 	* @brief : Compute a hash based on the key and the bucket size
 	*/
-	unsigned hash(const _Key& key) const { return MakeHash(key) & (NumBuckets() - 1); }
+	unsigned Hash(const _Kty& key) const { return MakeHash(key) & (NumBuckets() - 1); }
 };
-template <typename _Key> typename tUnorderedSet<_Key>::ConstIterator begin(const tUnorderedSet<_Key>& v) { return v.Begin(); }
+template <typename _Kty> typename tUnorderedSet<_Kty>::ConstIterator begin(const tUnorderedSet<_Kty>& v) { return v.Begin(); }
 
-template <typename _Key> typename tUnorderedSet<_Key>::ConstIterator end(const tUnorderedSet<_Key>& v) { return v.End(); }
+template <typename _Kty> typename tUnorderedSet<_Kty>::ConstIterator end(const tUnorderedSet<_Kty>& v) { return v.End(); }
 
-template <typename _Key> typename tUnorderedSet<_Key>::Iterator begin(tUnorderedSet<_Key>& v) { return v.Begin(); }
+template <typename _Kty> typename tUnorderedSet<_Kty>::Iterator begin(tUnorderedSet<_Kty>& v) { return v.Begin(); }
 
-template <typename _Key> typename tUnorderedSet<_Key>::Iterator end(tUnorderedSet<_Key>& v) { return v.End(); }
+template <typename _Kty> typename tUnorderedSet<_Kty>::Iterator end(tUnorderedSet<_Kty>& v) { return v.End(); }
 
 
 }

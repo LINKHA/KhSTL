@@ -29,24 +29,8 @@ public:
 
 	using difference_type = typename RBTreeType::difference_type;
 
-	tMultiSet()
-		//:_reTree(_Comp()) 
-	{}
-
-	//	tMap(const tMap<_Kty, _Comp, _Alloc>& rhs) 
-	//		:_reTree(rhs._reTree)
-	//	{}
-
-		//tMap<_Kty, _Ty, _Comp, _Alloc>& operator =(const tMap<_Kty, _Ty, _Comp, _Alloc>& x)
-		//{
-		//	//_reTree = x._reTree;
-		//	return *this;
-		//}
-	~tMultiSet()
-		//:_reTree(_Comp()) 
-	{
-
-	}
+	tMultiSet() = default;
+	~tMultiSet() = default;
 	_Comp KeyComp() const { return Base::KeyComp(); }
 
 	Iterator Begin()
@@ -68,11 +52,6 @@ public:
 	size_type max_size()
 	{
 		return Base::max_size();
-	}
-	void operator[](const KeyType& k)
-	{
-
-		Insert(k);
 	}
 	Iterator Insert(const KeyType& x)
 	{

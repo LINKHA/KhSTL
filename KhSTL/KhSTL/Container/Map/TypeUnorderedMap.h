@@ -12,11 +12,11 @@
 
 namespace KhSTL {
 
-template <typename _Key
+template <typename _Kty
 	, typename _Ty>
 	class tUnorderedMap : public tHashBase
 {
-	using KeyType = _Key;
+	using KeyType = _Kty;
 	using ValueType = _Ty;
 public:
 	/**
@@ -29,12 +29,12 @@ public:
 		* @brief : Construct with default key
 		*/
 		KeyValue()
-			: first(_Key())
+			: first(_Kty())
 		{}
 		/**
 		* @brief : Construct with key and value
 		*/
-		KeyValue(const _Key& sfirst, const _Ty& ssecond)
+		KeyValue(const _Kty& sfirst, const _Ty& ssecond)
 			: first(sfirst)
 			, second(ssecond)
 		{}
@@ -59,7 +59,7 @@ public:
 		bool operator !=(const KeyValue& rhs) const { return first != rhs.first || second != rhs.second; }
 
 		/// Map key
-		const _Key first;
+		const _Kty first;
 		/// Map value
 		_Ty second;
 	};
@@ -73,7 +73,7 @@ public:
 		/**
 		* @brief : Construct with key and value
 		*/
-		Node(const _Key& key, const _Ty& value)
+		Node(const _Kty& key, const _Ty& value)
 			: pair(key, value)
 		{
 		}
@@ -235,7 +235,7 @@ public:
 	/**
 	* @brief : Construct from another hash map
 	*/
-	tUnorderedMap(const tUnorderedMap<_Key, _Ty>& map)
+	tUnorderedMap(const tUnorderedMap<_Kty, _Ty>& map)
 	{
 		// Reserve the tail node + initial capacity according to the map's size
 		_allocator = AllocatorInitialize((unsigned)sizeof(Node), map.Size() + 1);
@@ -245,14 +245,14 @@ public:
 	/**
 	* @brief : Move-construct from another hash map
 	*/
-	tUnorderedMap(tUnorderedMap<_Key, _Ty> && map) noexcept
+	tUnorderedMap(tUnorderedMap<_Kty, _Ty> && map) noexcept
 	{
 		Swap(map);
 	}
 	/**
 	* @brief : Aggregate initialization constructor
 	*/
-	tUnorderedMap(const std::initializer_list<tPair<_Key, _Ty>>& list) : tUnorderedMap()
+	tUnorderedMap(const std::initializer_list<tPair<_Kty, _Ty>>& list) : tUnorderedMap()
 	{
 		for (auto it = list.begin(); it != list.end(); it++)
 		{
@@ -275,7 +275,7 @@ public:
 	/**
 	* @brief : Assign a hash map
 	*/
-	tUnorderedMap& operator =(const tUnorderedMap<_Key, _Ty>& rhs)
+	tUnorderedMap& operator =(const tUnorderedMap<_Kty, _Ty>& rhs)
 	{
 		// In case of This-assignment do nothing
 		if (&rhs != this)
@@ -288,7 +288,7 @@ public:
 	/**
 	* @brief : Move-assign a hash map
 	*/
-	tUnorderedMap& operator =(tUnorderedMap<_Key, _Ty> && rhs) noexcept
+	tUnorderedMap& operator =(tUnorderedMap<_Kty, _Ty> && rhs) noexcept
 	{
 		assert(&rhs != this);
 		Swap(rhs);
@@ -297,7 +297,7 @@ public:
 	/**
 	* @brief : Add-assign a pair
 	*/
-	tUnorderedMap& operator +=(const tPair<_Key, _Ty>& rhs)
+	tUnorderedMap& operator +=(const tPair<_Kty, _Ty>& rhs)
 	{
 		Insert(rhs);
 		return *this;
@@ -305,7 +305,7 @@ public:
 	/**
 	* @brief : Add-assign a hash map
 	*/
-	tUnorderedMap& operator +=(const tUnorderedMap<_Key, _Ty>& rhs)
+	tUnorderedMap& operator +=(const tUnorderedMap<_Kty, _Ty>& rhs)
 	{
 		Insert(rhs);
 		return *this;
@@ -313,7 +313,7 @@ public:
 	/**
 	* @brief : _Keyest for equality with another hash map
 	*/
-	bool operator ==(const tUnorderedMap<_Key, _Ty>& rhs) const
+	bool operator ==(const tUnorderedMap<_Kty, _Ty>& rhs) const
 	{
 		if (rhs.Size() != Size())
 			return false;
@@ -330,9 +330,9 @@ public:
 		return true;
 	}
 	/**
-	* @brief : _Keyest for inequality with another hash map
+	* @brief : _Keyest for inequality with another hash map计算机专业大学生 大神
 	*/
-	bool operator !=(const tUnorderedMap<_Key, _Ty>& rhs) const
+	bool operator !=(const tUnorderedMap<_Kty, _Ty>& rhs) const
 	{
 		if (rhs.Size() != Size())
 			return true;
@@ -351,7 +351,7 @@ public:
 	/**
 	* @brief : Index the map. Create a new pair if key not found
 	*/
-	_Ty& operator [](const _Key& key)
+	_Ty& operator [](const _Kty& key)
 	{
 		if (!_ptrs)
 			return InsertNode(key, _Ty(), false)->pair.second;
@@ -364,7 +364,7 @@ public:
 	/**
 	* @brief : Index the map. Return null if key is not found, does not create a new pair
 	*/
-	_Ty* operator [](const _Key& key) const
+	_Ty* operator [](const _Kty& key) const
 	{
 		if (!_ptrs)
 			return 0;
@@ -377,7 +377,7 @@ public:
 	/**
 	* @brief : Populate the map using variadic template. _Keyhis handles the Base case
 	*/
-	tUnorderedMap& Populate(const _Key& key, const _Ty& value)
+	tUnorderedMap& Populate(const _Kty& key, const _Ty& value)
 	{
 		this->operator [](key) = value;
 		return *this;
@@ -385,7 +385,7 @@ public:
 	/**
 	* @brief : Populate the map using variadic template
 	*/
-	template <typename... Args> tUnorderedMap& Populate(const _Key& key, const _Ty& value, const Args&... args)
+	template <typename... Args> tUnorderedMap& Populate(const _Kty& key, const _Ty& value, const Args&... args)
 	{
 		this->operator [](key) = value;
 		return Populate(args...);
@@ -393,7 +393,7 @@ public:
 	/**
 	* @brief : Insert a pair. Return an iterator to it
 	*/
-	Iterator Insert(const tPair<_Key, _Ty>& pair)
+	Iterator Insert(const tPair<_Kty, _Ty>& pair)
 	{
 		return Iterator(InsertNode(pair.first, pair.second));
 	}
@@ -401,7 +401,7 @@ public:
 	* @brief : Insert a pair. Return iterator and set exists flag according to
 	*			whether the key already existed.
 	*/
-	Iterator Insert(const tPair<_Key, _Ty>& pair, bool& exists)
+	Iterator Insert(const tPair<_Kty, _Ty>& pair, bool& exists)
 	{
 		unsigned oldSize = Size();
 		Iterator ret(InsertNode(pair.first, pair.second));
@@ -411,7 +411,7 @@ public:
 	/**
 	* @brief : Insert a map
 	*/
-	void Insert(const tUnorderedMap<_Key, _Ty>& map)
+	void Insert(const tUnorderedMap<_Kty, _Ty>& map)
 	{
 		ConstIterator it = map.Begin();
 		ConstIterator end = map.End();
@@ -440,7 +440,7 @@ public:
 	/**
 	* @brief : Erase a pair by key. Return true if was found
 	*/
-	bool Erase(const _Key& key)
+	bool Erase(const _Kty& key)
 	{
 		if (!_ptrs)
 			return false;
@@ -568,7 +568,7 @@ public:
 	/**
 	* @brief : Return iterator to the pair with key, or end iterator if not found
 	*/
-	Iterator Find(const _Key& key)
+	Iterator Find(const _Kty& key)
 	{
 		if (!_ptrs)
 			return End();
@@ -583,7 +583,7 @@ public:
 	/**
 	* @brief : Return const iterator to the pair with key, or end iterator if not found
 	*/
-	ConstIterator Find(const _Key& key) const
+	ConstIterator Find(const _Kty& key) const
 	{
 		if (!_ptrs)
 			return End();
@@ -598,7 +598,7 @@ public:
 	/**
 	* @brief : Return whether contains a pair with key
 	*/
-	bool Contains(const _Key& key) const
+	bool Contains(const _Kty& key) const
 	{
 		if (!_ptrs)
 			return false;
@@ -609,7 +609,7 @@ public:
 	/**
 	* @brief : try to copy value to output. Return true if was found
 	*/
-	bool TryGetValue(const _Key& key, _Ty& out) const
+	bool TryGetValue(const _Kty& key, _Ty& out) const
 	{
 		if (!_ptrs)
 			return false;
@@ -626,9 +626,9 @@ public:
 	/**
 	* @brief : Return all the keys
 	*/
-	tVector<_Key> Keys() const
+	tVector<_Kty> Keys() const
 	{
-		tVector<_Key> result;
+		tVector<_Kty> result;
 		result.Reserve(Size());
 		for (ConstIterator i = Begin(); i != End(); ++i)
 			result.Push(i->first);
@@ -682,7 +682,7 @@ private:
 	/**
 	* @brief : Find a node from the buckets. Do not call if the buckets have not been allocated
 	*/
-	Node* FindNode(const _Key& key, unsigned hashKey) const
+	Node* FindNode(const _Kty& key, unsigned hashKey) const
 	{
 		auto* node = static_cast<Node*>(ptrs()[hashKey]);
 		while (node)
@@ -697,7 +697,7 @@ private:
 	/**
 	* @brief : Find a node and the previous node from the buckets. Do not call if the buckets have not been allocated
 	*/
-	Node* FindNode(const _Key& key, unsigned hashKey, Node*& previous) const
+	Node* FindNode(const _Kty& key, unsigned hashKey, Node*& previous) const
 	{
 		previous = 0;
 
@@ -715,7 +715,7 @@ private:
 	/**
 	* @brief : Insert a key and value and return either the new or existing node
 	*/
-	Node* InsertNode(const _Key& key, const _Ty& value, bool findExisting = true)
+	Node* InsertNode(const _Kty& key, const _Ty& value, bool findExisting = true)
 	{
 		// If no pointers yet, allocate with minimum bucket count
 		if (!_ptrs)
@@ -753,7 +753,7 @@ private:
 	/**
 	* @brief : Insert a node into the list. Return the new node
 	*/
-	Node* InsertNode(Node* dest, const _Key& key, const _Ty& value)
+	Node* InsertNode(Node* dest, const _Kty& key, const _Ty& value)
 	{
 		if (!dest)
 			return 0;
@@ -811,7 +811,7 @@ private:
 	/**
 	* @brief : Reserve a node with specified key and value
 	*/
-	Node* ReserveNode(const _Key& key, const _Ty& value)
+	Node* ReserveNode(const _Kty& key, const _Ty& value)
 	{
 		auto* newNode = static_cast<Node*>(AllocatorReserve(_allocator));
 		new(newNode) Node(key, value);
@@ -846,16 +846,16 @@ private:
 	/**
 	* @brief : Compute a hash based on the key and the bucket size
 	*/
-	unsigned Hash(const _Key& key) const { return MakeHash(key) & (NumBuckets() - 1); }
+	unsigned Hash(const _Kty& key) const { return MakeHash(key) & (NumBuckets() - 1); }
 };
 
-template <typename _Key, typename _Ty> typename tUnorderedMap<_Key, _Ty>::ConstIterator begin(const tUnorderedMap<_Key, _Ty>& v) { return v.Begin(); }
+template <typename _Kty, typename _Ty> typename tUnorderedMap<_Kty, _Ty>::ConstIterator begin(const tUnorderedMap<_Kty, _Ty>& v) { return v.Begin(); }
 
-template <typename _Key, typename _Ty> typename tUnorderedMap<_Key, _Ty>::ConstIterator end(const tUnorderedMap<_Key, _Ty>& v) { return v.End(); }
+template <typename _Kty, typename _Ty> typename tUnorderedMap<_Kty, _Ty>::ConstIterator end(const tUnorderedMap<_Kty, _Ty>& v) { return v.End(); }
 
-template <typename _Key, typename _Ty> typename tUnorderedMap<_Key, _Ty>::Iterator begin(tUnorderedMap<_Key, _Ty>& v) { return v.Begin(); }
+template <typename _Kty, typename _Ty> typename tUnorderedMap<_Kty, _Ty>::Iterator begin(tUnorderedMap<_Kty, _Ty>& v) { return v.Begin(); }
 
-template <typename _Key, typename _Ty> typename tUnorderedMap<_Key, _Ty>::Iterator end(tUnorderedMap<_Key, _Ty>& v) { return v.End(); }
+template <typename _Kty, typename _Ty> typename tUnorderedMap<_Kty, _Ty>::Iterator end(tUnorderedMap<_Kty, _Ty>& v) { return v.End(); }
 
 
 }

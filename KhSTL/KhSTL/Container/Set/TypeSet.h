@@ -26,6 +26,7 @@ public:
 
 	~tSet()
 	{}
+
 	_Comp KeyComp() const { return Base::KeyComp(); }
 
 	Iterator Begin()
@@ -50,10 +51,9 @@ public:
 	}
 	void operator[](const KeyType& k)
 	{
-
 		Insert(k);
 	}
-	tPair<Iterator, bool> Insert(const KeyType& x)
+	Iterator Insert(const KeyType& x)
 	{
 		return Base::InsertUnique(x,x);
 	}

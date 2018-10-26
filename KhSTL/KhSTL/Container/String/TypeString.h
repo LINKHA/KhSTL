@@ -625,22 +625,11 @@ public:
 	* @brief : Right shift import istream
 	*/
 	friend std::istream& operator >>(std::istream &in, tString& rhs);
-	/*std::istream& operator >>(std::istream &in)
-	{
-		in >> _buffer;
-		return in;
-	}*/
-
 	/**
 	* @brief : Left shift import ostream
 	*/
 	friend std::ostream& operator <<(std::ostream &out, tString& rhs);
-	/*std::ostream& operator <<(std::ostream &out)
-	{
-		out << _buffer;
-		return out;
-	}*/
-
+	
 	/**
 	* @brief :  Return char at index
 	*/
@@ -1946,21 +1935,10 @@ private:
 	static char endZero;
 };
 
-std::istream& operator >>(std::istream &in, tString& rhs) 
-{
-	in >> rhs._buffer;
-	return in;
-}
+std::istream& operator >>(std::istream &in, tString& rhs);
 
-std::ostream& operator <<(std::ostream& out, tString& rhs)
-{
-	out << rhs._buffer;
-	return out;
-}
+std::ostream& operator <<(std::ostream& out, tString& rhs);
 
-char tString::endZero = 0;
-
-const tString tString::EMPTY;
 
 
  template <> void Swap<tString>(tString& rhs, tString& lfs)
