@@ -20,7 +20,8 @@ namespace KhSTL {
 class tString;
 
 #define GET_NEXT_CONTINUATION_BYTE(ptr) *(ptr); if ((unsigned char)*(ptr) < 0x80 || (unsigned char)*(ptr) >= 0xc0) return '?'; else ++(ptr);
-
+#define Khs(value)	KhSTL::tString(value)
+#define Khts(value)	KhSTL::tWString(value)
 static const int BUFFER_LENGTH = 128;
 
 
@@ -238,6 +239,18 @@ public:
 		*this = cBuffer;
 	}
 	/**
+	* @brief : Construct from the unsigned short
+	*/
+	explicit tString(unsigned short value)
+		: _length(0)
+		, _capacity(0)
+		, _buffer(&endZero)
+	{
+		char cBuffer[BUFFER_LENGTH];
+		sprintf(cBuffer, "%u", value);
+		*this = cBuffer;
+	}
+	/**
 	* @brief : Construct from the short
 	*/
 	explicit tString(short value)
@@ -277,18 +290,6 @@ public:
 	* @brief : Construct from the unsigned
 	*/
 	explicit tString(unsigned value)
-		: _length(0)
-		, _capacity(0)
-		, _buffer(&endZero)
-	{
-		char cBuffer[BUFFER_LENGTH];
-		sprintf(cBuffer, "%u", value);
-		*this = cBuffer;
-	}
-	/**
-	* @brief : Construct from the unsigned short
-	*/
-	explicit tString(unsigned short value)
 		: _length(0)
 		, _capacity(0)
 		, _buffer(&endZero)
@@ -343,6 +344,18 @@ public:
 	{
 		char cBuffer[BUFFER_LENGTH];
 		sprintf(cBuffer, "%.15g", value);
+		*this = cBuffer;
+	}
+	/**
+	* @brief : Construct from the bool
+	*/
+	explicit tString(long double value)
+		: _length(0)
+		, _capacity(0)
+		, _buffer(&endZero)
+	{
+		char cBuffer[BUFFER_LENGTH];
+		sprintf(cBuffer, "%.15lg", value);
 		*this = cBuffer;
 	}
 	/**
@@ -1941,11 +1954,69 @@ std::ostream& operator <<(std::ostream& out, tString& rhs);
 
 
 
- template <> void Swap<tString>(tString& rhs, tString& lfs)
+template <> void Swap<tString>(tString& rhs, tString& lfs)
 {
 	rhs.Swap(lfs);
 }
 
+// ToString NARROW CONVERSIONS
+inline tString ToString(int value)
+{	// convert int to string
+	return tString(value);
+}
+
+inline tString ToString(unsigned int value)
+{	// convert unsigned int to string
+	return tString(value);
+}
+
+inline tString ToString(long value)
+{	// convert long to string
+	return tString(value);
+}
+
+inline tString ToString(unsigned long value)
+{	// convert unsigned long to string
+	return tString(value);
+}
+
+inline tString ToString(long long value)
+{	// convert long long to string
+	return tString(value);
+}
+
+inline tString ToString(unsigned long long value)
+{	// convert unsigned long long to string
+	return tString(value);
+}
+
+inline tString ToString(float value)
+{	// convert float to string
+	return tString(value);
+}
+
+inline tString ToString(double value)
+{	// convert double to string
+	return tString(value);
+}
+
+inline tString ToString(long double value)
+{	// convert long double to string
+	return tString(value);
+}
+inline tString ToString(bool value)
+{
+	return tString(value);
+}
+
+inline tString ToString(char value)
+{
+	return tString(value);
+}
+template <typename _Sty> inline tString ToString(const _Sty& value)
+{
+	return tString(value);
+}
 
 }
 #endif //!KH_STL_TYPE_STRING_H_
