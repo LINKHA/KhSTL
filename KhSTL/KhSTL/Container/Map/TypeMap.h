@@ -152,7 +152,7 @@ public:
 	_Ty& operator [](const _Kty& key)
 	{
 		Iterator it = Find(key);
-		return it != End() ? it->second : Insert(key, _Ty()).second;
+		return it != End() ? it->second : Insert(key, _Ty())->second;
 	}
 	/**
 	* @brief : Index the map. Return null if key is not found, does not create a new pair
@@ -160,7 +160,7 @@ public:
 	_Ty* operator [](const _Kty& key) const
 	{
 		Iterator it = Find(key);
-		return it != End() ? it.second : 0;
+		return it != End() ? it->second : nullptr;
 	}
 
 	_Comp KeyComp() const
@@ -180,7 +180,7 @@ public:
 
 	Iterator Insert(const KeyType& key, const ValueType& value)
 	{
-		return Base::InsertUnique(key, value);
+		return Base::InsertUnique(key, PairType(key, value));
 	}
 
 	Iterator Insert(const PairType& pair)

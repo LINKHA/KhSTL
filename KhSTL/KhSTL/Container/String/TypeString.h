@@ -131,7 +131,7 @@ private:
 /**
 * String class for LINKH STL
 */
-class tString 
+class tString
 {
 	using Iterator = tIterator<char>;
 	using ConstIterator = tConstIterator<char>;
@@ -642,7 +642,7 @@ public:
 	* @brief : Left shift import ostream
 	*/
 	friend std::ostream& operator <<(std::ostream &out, tString& rhs);
-	
+
 	/**
 	* @brief :  Return char at index
 	*/
@@ -1016,44 +1016,44 @@ public:
 	/**
 	* @brief : Return iterator to the beginning
 	*/
-	Iterator Begin() 
+	Iterator Begin()
 	{
-		return Iterator(_buffer); 
+		return Iterator(_buffer);
 	}
 	/**
 	* @brief : Return const iterator to the beginning
 	*/
-	ConstIterator Begin() const 
+	ConstIterator Begin() const
 	{
-		return ConstIterator(_buffer); 
+		return ConstIterator(_buffer);
 	}
 	/**
 	* @brief : Return iterator to the end
 	*/
-	Iterator End() 
-	{ 
-		return Iterator(_buffer + _length); 
+	Iterator End()
+	{
+		return Iterator(_buffer + _length);
 	}
 	/**
 	* @brief : Return const iterator to the end
 	*/
-	ConstIterator End() const 
-	{ 
-		return ConstIterator(_buffer + _length); 
+	ConstIterator End() const
+	{
+		return ConstIterator(_buffer + _length);
 	}
 	/**
 	* @brief : Return first char, or 0 if Empty
 	*/
-	char Front() const 
-	{ 
+	char Front() const
+	{
 		return _buffer[0];
 	}
 	/**
 	* @brief : Return last char, or 0 if Empty
 	*/
-	char Back() const 
-	{ 
-		return _length ? _buffer[_length - 1] : _buffer[0]; 
+	char Back() const
+	{
+		return _length ? _buffer[_length - 1] : _buffer[0];
 	}
 	/**
 	* @brief : Return a substring from position to end
@@ -1313,30 +1313,30 @@ public:
 	/**
 	* @brief : Return C str
 	*/
-	const char* CStr() const 
-	{ 
-		return _buffer; 
+	const char* CStr() const
+	{
+		return _buffer;
 	}
 	/**
 	* @brief : Return length
 	*/
-	unsigned Length() const 
-	{ 
-		return _length; 
+	unsigned Length() const
+	{
+		return _length;
 	}
 	/**
 	* @brief : Return buffer capacity
 	*/
-	unsigned Capacity() const 
-	{ 
-		return _capacity; 
+	unsigned Capacity() const
+	{
+		return _capacity;
 	}
 	/**
 	* @brief : Return whether the string is Empty
 	*/
-	bool Empty() const 
-	{ 
-		return _length == 0; 
+	bool Empty() const
+	{
+		return _length == 0;
 	}
 	/**
 	* @brief : Return comparison result with a string
@@ -1355,16 +1355,16 @@ public:
 	/**
 	* @brief : Return whether contains a specific occurrence of a string
 	*/
-	bool Contains(const tString& str, bool caseSensitive = true) const 
-	{ 
-		return Find(str, 0, caseSensitive) != NO_POS; 
+	bool Contains(const tString& str, bool caseSensitive = true) const
+	{
+		return Find(str, 0, caseSensitive) != NO_POS;
 	}
 	/**
 	* @brief : Return whether contains a specific char
 	*/
-	bool Contains(char c, bool caseSensitive = true) const 
-	{ 
-		return Find(c, 0, caseSensitive) != NO_POS; 
+	bool Contains(char c, bool caseSensitive = true) const
+	{
+		return Find(c, 0, caseSensitive) != NO_POS;
 	}
 	/**
 	* @brief : Construct UTF8 content from Latin1
@@ -1945,7 +1945,7 @@ private:
 	char* _buffer;
 
 	/// end zero for Empty strings
-	static char endZero;
+	char endZero{};
 };
 
 std::istream& operator >>(std::istream &in, tString& rhs);

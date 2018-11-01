@@ -52,7 +52,7 @@ public:
 	/**
 	* @brief : Construct Empty
 	*/
-	tVector() noexcept = default;
+	tVector() = default;
 	/**
 	* @brief : Construct with initial size
 	*/
@@ -119,7 +119,7 @@ public:
 		if (&rhs != this)
 		{
 			tVector<_Ty> copy(rhs);
-			Swap(copy);
+			Value::Swap(copy);
 		}
 		return *this;
 	}
@@ -129,7 +129,7 @@ public:
 	tVector<_Ty>& operator =(tVector<_Ty> && rhs)
 	{
 		assert(&rhs != this);
-		Swap(rhs);
+		Value::Swap(rhs);
 		return *this;
 	}
 	/**
