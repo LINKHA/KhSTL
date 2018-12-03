@@ -13,7 +13,7 @@
 
 
 #include "../../Utility/TypeIterator.h"
-#include "../Vector/TypeVector.h"
+
 
 namespace KhSTL {
 
@@ -23,6 +23,7 @@ class tString;
 #define Khs(value)	KhSTL::tString(value)
 #define Khts(value)	KhSTL::tWString(value)
 static const int BUFFER_LENGTH = 128;
+
 
 
 class tWString
@@ -38,10 +39,7 @@ public:
 	/**
 	* @brief : Construct from a string
 	*/
-	explicit tWString(const tString& str)
-		: _length(0)
-		, _buffer(nullptr)
-	{}
+	explicit tWString(const tString& str);
 	/**
 	* @brief : Destruct
 	*/
@@ -49,6 +47,15 @@ public:
 	{
 		delete[] _buffer;
 	}
+	/**
+	* @brief : Right shift import istream
+	*/
+	friend std::wistream& operator >>(std::wistream &in, tWString& rhs);
+	/**
+	* @brief : Left shift import ostream
+	*/
+	friend std::wostream& operator <<(std::wostream &out, tWString& rhs);
+
 	/**
 	* @brief : Return char at index
 	*/
@@ -121,7 +128,6 @@ public:
 	*/
 	const wchar_t* CStr() const { return _buffer; }
 
-private:
 	/// String length
 	unsigned _length;
 	/// String buffer, null if not allocated
@@ -1171,7 +1177,7 @@ public:
 	/**
 	* @brief : Return index to the first occurrence of a string, or NO_POS if not found
 	*/
-	unsigned Find(const tString& str, unsigned startPos, bool caseSensitive) const
+	unsigned Find(const tString& str, unsigned startPos = 0, bool caseSensitive = true) const
 	{
 		if (!str._length || str._length > _length)
 			return NO_POS;
@@ -1952,6 +1958,28 @@ std::istream& operator >>(std::istream &in, tString& rhs);
 
 std::ostream& operator <<(std::ostream& out, tString& rhs);
 
+std::wistream& operator >>(std::wistream &in, tWString& rhs);
+
+std::wostream& operator <<(std::wostream& out, tWString& rhs);
+/**
+* @brief : Add a string to a C string
+*/
+inline tString operator +(const char* lhs, const tString& rhs)
+{
+	tString ret(lhs);
+	ret += rhs;
+	return ret;
+}
+
+/**
+* @brief : Add a string to a wide char C string
+*/
+inline tString operator +(const wchar_t* lhs, const tString& rhs)
+{
+	tString ret(lhs);
+	ret += rhs;
+	return ret;
+}
 
 
 template <> void Swap<tString>(tString& rhs, tString& lfs)

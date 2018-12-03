@@ -1,0 +1,3 @@
+#ifndef KH_STL_THREAD_H_
+#	include "KhThread.h"
+#endif //!KH_STL_THREAD_H_
