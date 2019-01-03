@@ -119,7 +119,7 @@ public:
 		if (&rhs != this)
 		{
 			tVector<_Ty> copy(rhs);
-			Value::Swap(copy);
+			Swap(copy);
 		}
 		return *this;
 	}
@@ -129,7 +129,7 @@ public:
 	tVector<_Ty>& operator =(tVector<_Ty> && rhs)
 	{
 		assert(&rhs != this);
-		Value::Swap(rhs);
+		Swap(rhs);
 		return *this;
 	}
 	/**

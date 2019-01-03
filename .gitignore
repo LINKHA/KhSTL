@@ -10,3 +10,8 @@ KhSTL/KhSTL/Debug/KhSTL.log
 KhSTL/KhSTL/Debug/
 KhSTL/KhSTL/x64/Debug/KhSTL.idb
 KhSTL/KhSTL/x64/
+.vs/
+KhSTL_lib.vcxproj.user
+KhSTL_lib.vcxproj.filters
+KhSTL_lib.vcxproj
+Test/

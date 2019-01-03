@@ -180,7 +180,7 @@ public:
 
 	Iterator Insert(const KeyType& key, const ValueType& value)
 	{
-		return Base::InsertUnique(key, PairType(key, value));
+		return Base::InsertUnique(key, value);
 	}
 
 	Iterator Insert(const PairType& pair)
