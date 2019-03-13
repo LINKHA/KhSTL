@@ -2,58 +2,63 @@
 
 #include "Hash.h"
 
+namespace KhSTL
+{
+
 /// %Pair template class.
-template <class _Ty, class U> class Pair
+template <typename _Ty1, class _Ty2> class Pair
 {
 public:
-    /// Construct undefined.
-    Pair()
-    {
-    }
-    
-    /// Construct with values.
-    Pair(const _Ty& first_, const U& second_) :
-        first(first_),
-        second(second_)
-    {
-    }
-    
-    /// Test for equality with another pair.
-    bool operator == (const Pair<_Ty, U>& rhs) const { return first == rhs.first && second == rhs.second; }
-    /// Test for inequality with another pair.
-    bool operator != (const Pair<_Ty, U>& rhs) const { return !(*this == rhs); }
-    
-    /// Test for less than with another pair.
-    bool operator < (const Pair<_Ty, U>& rhs) const
-    {
-        if (first < rhs.first)
-            return true;
-        if (first != rhs.first)
-            return false;
-        return second < rhs.second;
-    }
-    
-    /// Test for greater than with another pair.
-    bool operator > (const Pair<_Ty, U>& rhs) const
-    {
-        if (first > rhs.first)
-            return true;
-        if (first != rhs.first)
-            return false;
-        return second > rhs.second;
-    }
-    
-    /// Return hash value for HashSet & HashMap.
-    unsigned ToHash() const { return (MakeHash(first) & 0xffff) | (MakeHash(second) << 16); }
-    
-    /// First value.
-    _Ty first;
-    /// Second value.
-    U second;
+	/// Construct undefined.
+	Pair()
+	{
+	}
+
+	/// Construct with values.
+	Pair(const _Ty1& first, const _Ty2& second) :
+		_first(first),
+		_second(second)
+	{
+	}
+
+	/// Test for equality with another pair.
+	bool operator == (const Pair<_Ty1, _Ty2>& rhs) const { return _first == rhs._first && _second == rhs._second; }
+	/// Test for inequality with another pair.
+	bool operator != (const Pair<_Ty1, _Ty2>& rhs) const { return !(*this == rhs); }
+
+	/// Test for less than with another pair.
+	bool operator < (const Pair<_Ty1, _Ty2>& rhs) const
+	{
+		if (_first < rhs._first)
+			return true;
+		if (_first != rhs._first)
+			return false;
+		return _second < rhs._second;
+	}
+
+	/// Test for greater than with another pair.
+	bool operator > (const Pair<_Ty1, _Ty2>& rhs) const
+	{
+		if (_first > rhs._first)
+			return true;
+		if (_first != rhs._first)
+			return false;
+		return _second > rhs._second;
+	}
+
+	/// Return hash value for HashSet & HashMap.
+	unsigned ToHash() const { return (MakeHash(_first) & 0xffff) | (MakeHash(_second) << 16); }
+
+	/// First value.
+	_Ty1 _first;
+	/// Second value.
+	_Ty2 _second;
 };
 
 /// Construct a pair.
-template <class _Ty, class U> Pair<_Ty, U> MakePair(const _Ty& first, const U& second)
+template <typename _Ty1, class _Ty2> Pair<_Ty1, _Ty2> MakePair(const _Ty1& first, const _Ty2& second)
 {
-    return Pair<_Ty, U>(first, second);
+	return Pair<_Ty1, _Ty2>(first, second);
+}
+
 }

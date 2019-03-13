@@ -9,7 +9,7 @@ namespace KhSTL
 {
 
 /// Pointer which takes ownership of an object and deletes it when the pointer goes out of scope. Ownership can be transferred to another pointer, in which case the source pointer becomes null.
-template <class _Ty> class AutoPtr
+template <typename _Ty> class AutoPtr
 {
 public:
     /// Construct a null pointer.
@@ -87,7 +87,7 @@ private:
 };
 
 /// Pointer which takes ownership of an array allocated with new[] and deletes it when the pointer goes out of scope.
-template <class _Ty> class AutoArrayPtr
+template <typename _Ty> class AutoArrayPtr
 {
 public:
     /// Construct a null pointer.

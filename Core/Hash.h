@@ -10,19 +10,19 @@ namespace KhSTL
 struct AllocatorBlock;
 
 /// Pointer hash function.
-template <class _Ty> unsigned MakeHash(_Ty* value)
+template <typename _Ty> unsigned MakeHash(_Ty* value)
 {
     return ((unsigned)(size_t)value) / sizeof(_Ty);
 }
 
 /// Const pointer hash function.
-template <class _Ty> unsigned MakeHash(const _Ty* value)
+template <typename _Ty> unsigned MakeHash(const _Ty* value)
 {
     return ((unsigned)(size_t)value) / sizeof(_Ty);
 }
 
 /// Generic hash function.
-template <class _Ty> unsigned MakeHash(const _Ty& value)
+template <typename _Ty> unsigned MakeHash(const _Ty& value)
 {
     return value.ToHash();
 }

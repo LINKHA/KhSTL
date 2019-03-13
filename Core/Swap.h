@@ -11,9 +11,9 @@ class VectorBase;
 class String;
 
 /// Swap two values.
-template<class _Ty> inline void Swap(_Ty& first, _Ty& second)
+template<class _Ty1> inline void Swap(_Ty1& first, _Ty1& second)
 {
-    _Ty temp = first;
+    _Ty1 temp = first;
     first = second;
     second = temp;
 }

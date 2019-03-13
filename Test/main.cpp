@@ -1,6 +1,8 @@
 #include <iostream>
 #include "../Core/Vector.h"
 #include "../Core/List.h"
+#include "../Core/String.h"
+#include "../Core/HashMap.h"
 
 using namespace KhSTL;
 
@@ -33,16 +35,38 @@ void ListTest()
 {
 	Print("List_begin-----------------------------------------");
 	List<int> list;
-	
+	list.Push(1);
+	ForEach(list);
+	list.PushFront(0);
+	ForEach(list);
+	list.Pop();
+	ForEach(list);
 	Print("List_end-----------------------------------------");
 }
+void StringTest()
+{
+	Print("String_begin-----------------------------------------");
+	String str;
+	
 
+	Print("String_end-----------------------------------------");
+}
+
+void HashMapTest()
+{
+	Print("HashMap_begin-----------------------------------------");
+	HashMap<int, int> hashMap;
+	hashMap.Insert(MakePair(1, 2));
+	hashMap.Insert(MakePair(1, 3));
+
+	Print("HashMap_end-----------------------------------------");
+}
 int main()
 {
 	//VectorTest();
-	ListTest();
-
-
+	//ListTest();
+	//StringTest();
+	HashMapTest();
 
 	system("pause");
 	return 0;

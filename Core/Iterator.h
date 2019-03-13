@@ -8,7 +8,7 @@ namespace KhSTL
 {
 
 /// Random access iterator.
-template <class _Ty> struct RandomAccessIterator
+template <typename _Ty1> struct RandomAccessIterator
 {
     /// Construct a null iterator.
     RandomAccessIterator() :
@@ -17,39 +17,39 @@ template <class _Ty> struct RandomAccessIterator
     }
 
     /// Construct from a raw pointer.
-    explicit RandomAccessIterator(_Ty* ptr_) :
+    explicit RandomAccessIterator(_Ty1* ptr_) :
         ptr(ptr_)
     {
     }
 
     /// Point to the object.
-    _Ty* operator -> () const { return ptr; }
+    _Ty1* operator -> () const { return ptr; }
     /// Dereference the object.
-    _Ty& operator * () const { return *ptr; }
+    _Ty1& operator * () const { return *ptr; }
     /// Preincrement the pointer.
-    RandomAccessIterator<_Ty>& operator ++ () { ++ptr; return *this; }
+    RandomAccessIterator<_Ty1>& operator ++ () { ++ptr; return *this; }
     /// Postincrement the pointer.
-    RandomAccessIterator<_Ty> operator ++ (int) { RandomAccessIterator<_Ty> i = *this; ++ptr; return i; }
+    RandomAccessIterator<_Ty1> operator ++ (int) { RandomAccessIterator<_Ty1> i = *this; ++ptr; return i; }
     /// Predecrement the pointer.
-    RandomAccessIterator<_Ty>& operator -- () { --ptr; return *this; }
+    RandomAccessIterator<_Ty1>& operator -- () { --ptr; return *this; }
     /// Postdecrement the pointer.
-    RandomAccessIterator<_Ty> operator -- (int) { RandomAccessIterator<_Ty> i = *this; --ptr; return i; }
+    RandomAccessIterator<_Ty1> operator -- (int) { RandomAccessIterator<_Ty1> i = *this; --ptr; return i; }
     /// Add an offset to the pointer.
-    RandomAccessIterator<_Ty>& operator += (int value) { ptr += value; return *this; }
+    RandomAccessIterator<_Ty1>& operator += (int value) { ptr += value; return *this; }
     /// Subtract an offset from the pointer.
-    RandomAccessIterator<_Ty>& operator -= (int value) { ptr -= value; return *this; }
+    RandomAccessIterator<_Ty1>& operator -= (int value) { ptr -= value; return *this; }
     /// Add an offset to the pointer.
-    RandomAccessIterator<_Ty>& operator += (size_t value) { ptr += value; return *this; }
+    RandomAccessIterator<_Ty1>& operator += (size_t value) { ptr += value; return *this; }
     /// Subtract an offset from the pointer.
-    RandomAccessIterator<_Ty>& operator -= (size_t value) { ptr -= value; return *this; }
+    RandomAccessIterator<_Ty1>& operator -= (size_t value) { ptr -= value; return *this; }
     /// Add an offset to the pointer.
-    RandomAccessIterator<_Ty> operator + (int value) const { return RandomAccessIterator<_Ty>(ptr + value); }
+    RandomAccessIterator<_Ty1> operator + (int value) const { return RandomAccessIterator<_Ty1>(ptr + value); }
     /// Subtract an offset from the pointer.
-    RandomAccessIterator<_Ty> operator - (int value) const { return RandomAccessIterator<_Ty>(ptr - value); }
+    RandomAccessIterator<_Ty1> operator - (int value) const { return RandomAccessIterator<_Ty1>(ptr - value); }
     /// Add an offset to the pointer.
-    RandomAccessIterator<_Ty> operator + (size_t value) const { return RandomAccessIterator<_Ty>(ptr + value); }
+    RandomAccessIterator<_Ty1> operator + (size_t value) const { return RandomAccessIterator<_Ty1>(ptr + value); }
     /// Subtract an offset from the pointer.
-    RandomAccessIterator<_Ty> operator - (size_t value) const { return RandomAccessIterator<_Ty>(ptr - value); }
+    RandomAccessIterator<_Ty1> operator - (size_t value) const { return RandomAccessIterator<_Ty1>(ptr - value); }
     /// Calculate offset to another iterator.
     int operator - (const RandomAccessIterator& rhs) const { return (int)(ptr - rhs.ptr); }
     /// Test for equality with another iterator.
@@ -66,11 +66,11 @@ template <class _Ty> struct RandomAccessIterator
     bool operator >= (const RandomAccessIterator& rhs) const { return ptr >= rhs.ptr; }
 
     /// Pointer to the random-accessed object(s).
-    _Ty* ptr;
+    _Ty1* ptr;
 };
 
 /// Random access const iterator.
-template <class _Ty> struct RandomAccessConstIterator
+template <typename _Ty1> struct RandomAccessConstIterator
 {
     /// Construct a null iterator.
     RandomAccessConstIterator() :
@@ -79,47 +79,47 @@ template <class _Ty> struct RandomAccessConstIterator
     }
 
     /// Construct from a raw pointer.
-    explicit RandomAccessConstIterator(_Ty* ptr_) :
+    explicit RandomAccessConstIterator(_Ty1* ptr_) :
         ptr(ptr_)
     {
     }
 
     /// Construct from a non-const iterator.
-    RandomAccessConstIterator(const RandomAccessIterator<_Ty>& it) :
+    RandomAccessConstIterator(const RandomAccessIterator<_Ty1>& it) :
         ptr(it.ptr)
     {
     }
 
     /// Assign from a non-const iterator.
-    RandomAccessConstIterator<_Ty>& operator = (const RandomAccessIterator<_Ty>& rhs) { ptr = rhs.ptr; return *this; }
+    RandomAccessConstIterator<_Ty1>& operator = (const RandomAccessIterator<_Ty1>& rhs) { ptr = rhs.ptr; return *this; }
     /// Point to the object.
-    const _Ty* operator -> () const { return ptr; }
+    const _Ty1* operator -> () const { return ptr; }
     /// Dereference the object.
-    const _Ty& operator * () const { return *ptr; }
+    const _Ty1& operator * () const { return *ptr; }
     /// Preincrement the pointer.
-    RandomAccessConstIterator<_Ty>& operator ++ () { ++ptr; return *this; }
+    RandomAccessConstIterator<_Ty1>& operator ++ () { ++ptr; return *this; }
     /// Postincrement the pointer.
-    RandomAccessConstIterator<_Ty> operator ++ (int) { RandomAccessConstIterator<_Ty> i = *this; ++ptr; return i; }
+    RandomAccessConstIterator<_Ty1> operator ++ (int) { RandomAccessConstIterator<_Ty1> i = *this; ++ptr; return i; }
     /// Predecrement the pointer.
-    RandomAccessConstIterator<_Ty>& operator -- () { --ptr; return *this; }
+    RandomAccessConstIterator<_Ty1>& operator -- () { --ptr; return *this; }
     /// Postdecrement the pointer.
-    RandomAccessConstIterator<_Ty> operator -- (int) { RandomAccessConstIterator<_Ty> i = *this; --ptr; return i; }
+    RandomAccessConstIterator<_Ty1> operator -- (int) { RandomAccessConstIterator<_Ty1> i = *this; --ptr; return i; }
     /// Add an offset to the pointer.
-    RandomAccessConstIterator<_Ty>& operator += (int value) { ptr += value; return *this; }
+    RandomAccessConstIterator<_Ty1>& operator += (int value) { ptr += value; return *this; }
     /// Subtract an offset from the pointer.
-    RandomAccessConstIterator<_Ty>& operator -= (int value) { ptr -= value; return *this; }
+    RandomAccessConstIterator<_Ty1>& operator -= (int value) { ptr -= value; return *this; }
     /// Add an offset to the pointer.
-    RandomAccessConstIterator<_Ty>& operator += (size_t value) { ptr += value; return *this; }
+    RandomAccessConstIterator<_Ty1>& operator += (size_t value) { ptr += value; return *this; }
     /// Subtract an offset from the pointer.
-    RandomAccessConstIterator<_Ty>& operator -= (size_t value) { ptr -= value; return *this; }
+    RandomAccessConstIterator<_Ty1>& operator -= (size_t value) { ptr -= value; return *this; }
     /// Add an offset to the pointer.
-    RandomAccessConstIterator<_Ty> operator + (int value) const { return RandomAccessConstIterator<_Ty>(ptr + value); }
+    RandomAccessConstIterator<_Ty1> operator + (int value) const { return RandomAccessConstIterator<_Ty1>(ptr + value); }
     /// Subtract an offset from the pointer.
-    RandomAccessConstIterator<_Ty> operator - (int value) const { return RandomAccessConstIterator<_Ty>(ptr - value); }
+    RandomAccessConstIterator<_Ty1> operator - (int value) const { return RandomAccessConstIterator<_Ty1>(ptr - value); }
     /// Add an offset to the pointer.
-    RandomAccessConstIterator<_Ty> operator + (size_t value) const { return RandomAccessConstIterator<_Ty>(ptr + value); }
+    RandomAccessConstIterator<_Ty1> operator + (size_t value) const { return RandomAccessConstIterator<_Ty1>(ptr + value); }
     /// Subtract an offset from the pointer.
-    RandomAccessConstIterator<_Ty> operator - (size_t value) const { return RandomAccessConstIterator<_Ty>(ptr - value); }
+    RandomAccessConstIterator<_Ty1> operator - (size_t value) const { return RandomAccessConstIterator<_Ty1>(ptr - value); }
     /// Calculate offset to another iterator.
     int operator - (const RandomAccessConstIterator& rhs) const { return (int)(ptr - rhs.ptr); }
     /// Test for equality with another iterator.
@@ -136,7 +136,7 @@ template <class _Ty> struct RandomAccessConstIterator
     bool operator >= (const RandomAccessConstIterator& rhs) const { return ptr >= rhs.ptr; }
 
     /// Pointer to the random-accessed object(s).
-    _Ty* ptr;
+    _Ty1* ptr;
 };
 
 }

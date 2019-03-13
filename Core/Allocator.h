@@ -43,7 +43,7 @@ KH_STL_API void* AllocatorGet(AllocatorBlock* allocator);
 KH_STL_API void AllocatorFree(AllocatorBlock* allocator, void* node);
 
 /// %Allocator template class. Allocates objects of a specific class.
-template <class _Ty> class Allocator
+template <typename _Ty> class Allocator
 {
 public:
     /// Construct with optional initial capacity.
@@ -76,7 +76,7 @@ public:
         if (!allocator)
             allocator = AllocatorInitialize(sizeof(_Ty));
         _Ty* newObject = static_cast<_Ty*>(AllocatorGet(allocator));
-        new(newObject) _Ty();
+        new(newObject) _Ty1();
         
         return newObject;
     }
@@ -87,7 +87,7 @@ public:
         if (!allocator)
             allocator = AllocatorInitialize(sizeof(_Ty));
         _Ty* newObject = static_cast<_Ty*>(AllocatorGet(allocator));
-        new(newObject) _Ty(object);
+        new(newObject) _Ty1(object);
         
         return newObject;
     }

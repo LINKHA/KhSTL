@@ -9,7 +9,7 @@ namespace KhSTL
 {
 
 class RefCounted;
-template <class _Ty> class WeakPtr;
+template <typename _Ty> class WeakPtr;
 
 /// Reference count structure. Used in both intrusive and non-intrusive reference counting.
 struct KH_STL_API RefCount
@@ -39,6 +39,10 @@ public:
 
     /// Destruct. If no weak references, destroy also the reference count, else mark it expired.
     virtual ~RefCounted();
+	/// Prevent copy construction.
+	RefCounted(const RefCounted& rhs) = delete;
+	/// Prevent assignment.
+	RefCounted& operator = (const RefCounted& rhs) = delete;
 
     /// Add a strong reference. Allocate the reference count structure first if necessary.
     void AddRef();
@@ -53,17 +57,12 @@ public:
     RefCount* RefCountPtr();
 
 private:
-    /// Prevent copy construction.
-    RefCounted(const RefCounted& rhs);
-    /// Prevent assignment.
-    RefCounted& operator = (const RefCounted& rhs);
-
     /// Reference count structure, allocated on demand.
     RefCount* refCount;
 };
 
 /// Pointer which holds a strong reference to a RefCounted subclass and allows shared ownership.
-template <class _Ty> class SharedPtr
+template <typename _Ty> class SharedPtr
 {
 public:
     /// Construct a null pointer.
@@ -129,13 +128,13 @@ public:
     }
     
     /// Perform a static cast from a shared pointer of another type.
-    template <class U> void StaticCast(const SharedPtr<U>& rhs)
+    template <typename _Oth> void StaticCast(const SharedPtr<_Oth>& rhs)
     {
         *this = static_cast<_Ty*>(rhs.ptr);
     }
 
     /// Perform a dynamic cast from a weak pointer of another type.
-    template <class U> void DynamicCast(const WeakPtr<U>& rhs)
+    template <typename _Oth> void DynamicCast(const WeakPtr<_Oth>& rhs)
     {
         Reset();
         _Ty* rhsObject = dynamic_cast<_Ty*>(rhs.ptr);
@@ -173,7 +172,7 @@ private:
 };
 
 /// Perform a static cast between shared pointers of two types.
-template <class _Ty, class U> SharedPtr<_Ty> StaticCast(const SharedPtr<U>& rhs)
+template <typename _Ty, class U> SharedPtr<_Ty> StaticCast(const SharedPtr<U>& rhs)
 {
     SharedPtr<_Ty> ret;
     ret.StaticCast(rhs);
@@ -181,7 +180,7 @@ template <class _Ty, class U> SharedPtr<_Ty> StaticCast(const SharedPtr<U>& rhs)
 }
 
 /// Perform a dynamic cast between shared pointers of two types.
-template <class _Ty, class U> SharedPtr<_Ty> DynamicCast(const SharedPtr<U>& rhs)
+template <typename _Ty, class U> SharedPtr<_Ty> DynamicCast(const SharedPtr<U>& rhs)
 {
     SharedPtr<_Ty> ret;
     ret.DynamicCast(rhs);
@@ -189,7 +188,7 @@ template <class _Ty, class U> SharedPtr<_Ty> DynamicCast(const SharedPtr<U>& rhs
 }
 
 /// Pointer which holds a weak reference to a RefCounted subclass. Can track destruction but does not keep the object alive.
-template <class _Ty> class WeakPtr
+template <typename _Ty> class WeakPtr
 {
 public:
     /// Construct a null pointer.
@@ -286,13 +285,13 @@ public:
     }
 
     /// Perform a static cast from a weak pointer of another type.
-    template <class U> void StaticCast(const WeakPtr<U>& rhs)
+    template <typename _Ty2> void StaticCast(const WeakPtr<_Ty2>& rhs)
     {
         *this = static_cast<_Ty*>(rhs.ptr);
     }
 
     /// Perform a dynamic cast from a weak pointer of another type.
-    template <class U> void DynamicCast(const WeakPtr<U>& rhs)
+    template <typename _Ty2> void DynamicCast(const WeakPtr<_Ty2>& rhs)
     {
         Reset();
         _Ty* rhsObject = dynamic_cast<_Ty*>(rhs.ptr);
@@ -345,7 +344,7 @@ private:
 };
 
 /// Perform a static cast between weak pointers of two types.
-template <class _Ty, class U> WeakPtr<_Ty> StaticCast(const WeakPtr<U>& rhs)
+template <typename _Ty, class _Ty2> WeakPtr<_Ty> StaticCast(const WeakPtr<_Ty2>& rhs)
 {
     WeakPtr<_Ty> ret;
     ret.StaticCast(rhs);
@@ -353,7 +352,7 @@ template <class _Ty, class U> WeakPtr<_Ty> StaticCast(const WeakPtr<U>& rhs)
 }
 
 /// Perform a dynamic cast between weak pointers of two types.
-template <class _Ty, class U> WeakPtr<_Ty> DynamicCast(const WeakPtr<U>& rhs)
+template <typename _Ty, class _Ty2> WeakPtr<_Ty> DynamicCast(const WeakPtr<_Ty2>& rhs)
 {
     WeakPtr<_Ty> ret;
     ret.DynamicCast(rhs);
@@ -361,7 +360,7 @@ template <class _Ty, class U> WeakPtr<_Ty> DynamicCast(const WeakPtr<U>& rhs)
 }
 
 /// Pointer which holds a strong reference to an array and allows shared ownership. Uses non-intrusive reference counting.
-template <class _Ty> class SharedArrayPtr
+template <typename _Ty> class SharedArrayPtr
 {
 public:
     /// Construct a null pointer.
@@ -463,7 +462,7 @@ public:
     }
     
     /// Perform a static cast from a shared array pointer of another type.
-    template <class U> void StaticCast(const SharedArrayPtr<U>& rhs)
+    template <typename _Ty2> void StaticCast(const SharedArrayPtr<_Ty2>& rhs)
     {
         Reset();
         ptr = static_cast<_Ty*>(rhs.Get());
@@ -473,7 +472,7 @@ public:
     }
     
    /// Perform a reinterpret cast from a shared array pointer of another type.
-    template <class U> void ReinterpretCast(const SharedArrayPtr<U>& rhs)
+    template <typename _Ty2> void ReinterpretCast(const SharedArrayPtr<_Ty2>& rhs)
     {
         Reset();
         ptr = reinterpret_cast<_Ty*>(rhs.Get());
@@ -495,7 +494,7 @@ public:
 
 private:
     /// Prevent direct assignment from an array pointer of different type.
-    template <class U> SharedArrayPtr<_Ty>& operator = (const SharedArrayPtr<U>& rhs);
+    template <typename _Ty2> SharedArrayPtr<_Ty>& operator = (const SharedArrayPtr<_Ty2>& rhs);
     
     /// Pointer to the array.
     _Ty* ptr;
@@ -504,7 +503,7 @@ private:
 };
 
 /// Perform a static cast from one shared array pointer type to another.
-template <class _Ty, class U> SharedArrayPtr<_Ty> StaticCast(const SharedArrayPtr<U>& ptr)
+template <typename _Ty, class _Ty2> SharedArrayPtr<_Ty> StaticCast(const SharedArrayPtr<_Ty2>& ptr)
 {
     SharedArrayPtr<_Ty> ret;
     ret.StaticCast(ptr);
@@ -512,7 +511,7 @@ template <class _Ty, class U> SharedArrayPtr<_Ty> StaticCast(const SharedArrayPt
 }
 
 /// Perform a reinterpret cast from one shared array pointer type to another.
-template <class _Ty, class U> SharedArrayPtr<_Ty> ReinterpretCast(const SharedArrayPtr<U>& ptr)
+template <typename _Ty, class _Ty2> SharedArrayPtr<_Ty> ReinterpretCast(const SharedArrayPtr<_Ty2>& ptr)
 {
     SharedArrayPtr<_Ty> ret;
     ret.ReinterpretCast(ptr);
@@ -520,7 +519,7 @@ template <class _Ty, class U> SharedArrayPtr<_Ty> ReinterpretCast(const SharedAr
 }
 
 /// Pointer which holds a weak reference to an array. Can track destruction but does not keep the object alive. Uses non-intrusive reference counting.
-template <class _Ty> class WeakArrayPtr
+template <typename _Ty> class WeakArrayPtr
 {
 public:
     /// Construct a null pointer.
@@ -640,7 +639,7 @@ public:
     }
     
     /// Perform a static cast from a weak array pointer of another type.
-    template <class U> void StaticCast(const WeakArrayPtr<U>& rhs)
+    template <typename _Ty2> void StaticCast(const WeakArrayPtr<_Ty2>& rhs)
     {
         Reset();
         ptr = static_cast<_Ty*>(rhs.Get());
@@ -650,7 +649,7 @@ public:
     }
     
     /// Perform a reinterpret cast from a weak array pointer of another type.
-    template <class U> void ReinterpretCast(const WeakArrayPtr<U>& rhs)
+    template <typename _Oth> void ReinterpretCast(const WeakArrayPtr<_Oth>& rhs)
     {
         Reset();
         ptr = reinterpret_cast<_Ty*>(rhs.Get());
@@ -679,7 +678,7 @@ public:
 
 private:
     /// Prevent direct assignment from a weak array pointer of different type.
-    template <class U> WeakArrayPtr<_Ty>& operator = (const WeakArrayPtr<U>& rhs);
+    template <typename _Oth> WeakArrayPtr<_Ty>& operator = (const WeakArrayPtr<_Oth>& rhs);
 
     /// Pointer to the array.
     _Ty* ptr;
@@ -688,17 +687,17 @@ private:
 };
 
 /// Perform a static cast from one weak array pointer type to another.
-template <class _Ty, class U> WeakArrayPtr<_Ty> StaticCast(const WeakArrayPtr<U>& ptr)
+template <typename _Ty1, typename _Ty2> WeakArrayPtr<_Ty1> StaticCast(const WeakArrayPtr<_Ty2>& ptr)
 {
-    WeakArrayPtr<_Ty> ret;
+    WeakArrayPtr<_Ty1> ret;
     ret.StaticCast(ptr);
     return ret;
 }
 
 /// Perform a reinterpret cast from one weak pointer type to another.
-template <class _Ty, class U> WeakArrayPtr<_Ty> ReinterpretCast(const WeakArrayPtr<U>& ptr)
+template <typename _Ty1, typename _Ty2> WeakArrayPtr<_Ty1> ReinterpretCast(const WeakArrayPtr<_Ty2>& ptr)
 {
-    WeakArrayPtr<_Ty> ret;
+    WeakArrayPtr<_Ty1> ret;
     ret.ReinterpretCast(ptr);
     return ret;
 }
