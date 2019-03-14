@@ -4,6 +4,8 @@
 #include "../Core/String.h"
 #include "../Core/HashMap.h"
 
+#include "../Core/AutoPtr.h"
+
 using namespace KhSTL;
 
 #define Print(_x) std::cout<< _x <<std::endl

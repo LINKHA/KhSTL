@@ -10,8 +10,8 @@ namespace KhSTL
 
 void HashBase::Swap(HashBase& hash)
 {
-    KhSTL::Swap(ptrs, hash.ptrs);
-    KhSTL::Swap(allocator, hash.allocator);
+    KhSTL::Swap(_ptrs, hash._ptrs);
+    KhSTL::Swap(_allocator, hash._allocator);
 }
 
 void HashBase::AllocateBuckets(size_t _size, size_t numBuckets)
@@ -21,7 +21,7 @@ void HashBase::AllocateBuckets(size_t _size, size_t numBuckets)
     // Remember old head & tail pointers
     HashNodeBase* head = Head();
     HashNodeBase* tail = Tail();
-    delete[] ptrs;
+    delete[] _ptrs;
 
     HashNodeBase** newPtrs = new HashNodeBase*[numBuckets + 4];
     size_t* _data = reinterpret_cast<size_t*>(newPtrs);
@@ -29,14 +29,14 @@ void HashBase::AllocateBuckets(size_t _size, size_t numBuckets)
     _data[1] = numBuckets;
     newPtrs[2] = head;
     newPtrs[3] = tail;
-    ptrs = newPtrs;
+    _ptrs = newPtrs;
     
     ResetPtrs();
 }
 
 void HashBase::ResetPtrs()
 {
-    if (ptrs)
+    if (_ptrs)
     {
         size_t numBuckets = NumBuckets();
         HashNodeBase** _data = Ptrs();

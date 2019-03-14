@@ -535,7 +535,7 @@ void String::Resize(size_t newLength)
 {
     if (!_buffer)
     {
-        // If zero length requested, do not allocate _buffer yet
+        // If zero length requested, do not allocate buffer yet
         if (!newLength)
             return;
         
@@ -558,7 +558,7 @@ void String::Resize(size_t newLength)
                 capacity += (capacity + 1) >> 1;
             
             char* newBuffer = new char[capacity + 2 * sizeof(size_t)];
-            // Move the existing data to the new _buffer, then delete the old _buffer
+            // Move the existing data to the new buffer, then delete the old buffer
             if (Length())
                 CopyChars(newBuffer + 2 * sizeof(size_t), Buffer(), Length());
             delete[] _buffer;
@@ -581,7 +581,7 @@ void String::Reserve(size_t newCapacity)
         return;
     
     char* newBuffer = new char[newCapacity + 2 * sizeof(size_t)];
-    // Move the existing data to the new _buffer (including the end zero), then delete the old _buffer
+    // Move the existing data to the new buffer (including the end zero), then delete the old buffer
     if (length)
         CopyChars(newBuffer + 2 * sizeof(size_t), Buffer(), length + 1);
     delete[] _buffer;
@@ -1199,13 +1199,13 @@ float String::ToFloat(const char* str)
     return (float)strtod(str, 0);
 }
 
-size_t String::CountElements(const char* _buffer, char separator)
+size_t String::CountElements(const char* buffer, char separator)
 {
-    if (!_buffer)
+    if (!buffer)
         return 0;
     
-    const char* endPos = _buffer + String::CStringLength(_buffer);
-    const char* pos = _buffer;
+    const char* endPos = buffer + String::CStringLength(buffer);
+    const char* pos = buffer;
     size_t ret = 0;
     
     while (pos < endPos)

@@ -10,7 +10,7 @@ namespace KhSTL
 
 static const size_t CONVERSION_BUFFER_LENGTH = 256;
 
-template <typename _Ty1> class Vector;
+template <typename _Ty> class Vector;
 class WString;
 
 /// %String class.
@@ -83,7 +83,7 @@ public:
     explicit String(char value, size_t numChars);
     
     /// Construct from a convertible value.
-    template <typename _Ty1> explicit String(const _Ty1& value) :
+    template <typename _Ty> explicit String(const _Ty& value) :
         _buffer(nullptr)
     {
         *this = value.ToString();
@@ -129,7 +129,7 @@ public:
     /// Add-assign a bool.
     String& operator += (bool rhs);
     /// Add-assign an arbitrary type.
-    template <typename _Ty1> String operator += (const _Ty1& rhs) { return *this += rhs.ToString(); }
+    template <typename _Ty> String operator += (const _Ty& rhs) { return *this += rhs.ToString(); }
     
     /// Add a string.
     String operator + (const String& rhs) const;
@@ -253,11 +253,11 @@ public:
     bool EndsWith(const String& str, bool caseSensitive = true) const;
     /// Return the C string.
     const char* CString() const { return _buffer ? _buffer + 2 * sizeof(size_t) : &endZero; }
-    /// Return the char _buffer.
+    /// Return the char buffer.
     char* Buffer() const { return _buffer ? _buffer + 2 * sizeof(size_t) : &endZero; }
     /// Return number of characters in the string.
     size_t Length() const { return _buffer ? reinterpret_cast<size_t*>(_buffer)[0] : 0; }
-    /// Return _buffer capacity.
+    /// Return buffer capacity.
     size_t Capacity() const { return _buffer ? reinterpret_cast<size_t*>(_buffer)[1] : 0; }
     /// Return whether the string is zero characters long.
     bool IsEmpty() const { return Length() == 0; }
