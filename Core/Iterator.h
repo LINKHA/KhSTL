@@ -139,4 +139,123 @@ template <typename _Ty> struct RandomAccessConstIterator
     _Ty* _ptr;
 };
 
+
+template <typename _Ty> struct ReverseIterator
+{	// wrap iterator to run it backwards
+public:
+	using ValueType = typename _Ty::ValueType;
+
+	ReverseIterator()
+		: _ptr()
+	{	// construct with value-initialized wrapped iterator
+	}
+
+	explicit ReverseIterator(_Ty rhs)
+		: _ptr(rhs)
+	{	// construct wrapped iterator from _Right
+	}
+
+	template<class _Other>
+	ReverseIterator(const ReverseIterator<_Other>& rhs)
+		: _ptr(rhs.Base())
+	{	// initialize with compatible Base
+	}
+
+	template<class _Other>
+	ReverseIterator& operator =(const ReverseIterator<_Other>& rhs)
+	{	// assign from compatible Base
+		_ptr = rhs.Base();
+		return *this;
+	}
+
+	_Ty Base() const
+	{	// return wrapped iterator
+		return _ptr;
+	}
+
+	ValueType& operator *() const
+	{	// return designated value
+		_Ty temp = _ptr;
+		temp--;
+		return *temp;
+	}
+
+	ValueType* operator ->() const
+	{	// return pointer to class object
+		_Ty tmp = _ptr;
+		tmp--;
+		ValueType valueTmp = *tmp;
+		return &valueTmp;
+	}
+
+	ReverseIterator& operator ++()
+	{	// preincrement
+		--_ptr;
+		return *this;
+	}
+
+	ReverseIterator operator ++(int)
+	{	// postincrement
+		ReverseIterator _Tmp = *this;
+		--_ptr;
+		return (_Tmp);
+	}
+
+	ReverseIterator& operator --()
+	{	// predecrement
+		++_ptr;
+		return (*this);
+	}
+
+	ReverseIterator operator --(int)
+	{	// postdecrement
+		ReverseIterator _Tmp = *this;
+		++_ptr;
+		return (_Tmp);
+	}
+
+	// N.B. functions valid for random-access iterators only beyond this point
+
+	ReverseIterator& operator +=(int offset)
+	{	// Increment by integer
+		_ptr -= offset;
+		return (*this);
+	}
+
+	ReverseIterator operator +(int offset) const
+	{	// return this + integer
+		return (ReverseIterator(_ptr - offset));
+	}
+
+	ReverseIterator& operator -=(int offset)
+	{	// Decrement by integer
+		_ptr += offset;
+		return (*this);
+	}
+
+	ReverseIterator operator -(int offset) const
+	{	// return this - integer
+		return (ReverseIterator(_ptr + offset));
+	}
+
+	ValueType& operator [](int offset) const
+	{	// subscript
+		return (*(*this + offset));
+	}
+
+	bool operator ==(const ReverseIterator& right) const
+	{
+		return _ptr == right._ptr;
+	}
+	/**
+	* @brief : Test for iterator inequality
+	*/
+	bool operator !=(const ReverseIterator& right) const
+	{
+		return _ptr != right._ptr;
+	}
+
+	_Ty _ptr;	// the wrapped iterator
+};
+
 }

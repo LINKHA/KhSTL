@@ -11,6 +11,9 @@ namespace KhSTL
 /// Hash set template class.
 template <typename _Ty> class HashSet : public HashBase
 {
+	using KeyType = _Ty;
+
+	using ValueType = _Ty;
 public:
     /// Hash set node.
     struct Node : public HashNodeBase

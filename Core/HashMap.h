@@ -12,6 +12,10 @@ namespace KhSTL
 template <typename _Ty1, typename _Ty2> class HashMap : public HashBase
 {
 public:
+	using KeyType = _Ty1;
+
+	using ValueType = _Ty2;
+public:
     /// Hash map _key-value pair with const _key.
     class KeyValue
     {

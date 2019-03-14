@@ -114,6 +114,9 @@ protected:
 template <typename _Ty> class List : public ListBase
 {
 public:
+	/// Value type
+	using ValueType = _Ty;
+public:
     /// %List node.
     struct Node : public ListNodeBase
     {

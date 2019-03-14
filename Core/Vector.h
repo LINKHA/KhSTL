@@ -48,9 +48,12 @@ protected:
 template <typename _Ty> class Vector : public VectorBase
 {
 public:
-    typedef RandomAccessIterator<_Ty> Iterator;
-    typedef RandomAccessConstIterator<_Ty> ConstIterator;
-
+	using ValueType = _Ty;
+	
+	using Iterator = RandomAccessIterator<_Ty>;
+	
+	using ConstIterator = RandomAccessConstIterator<_Ty>;
+public:
     /// Construct empty.
     Vector()
     {

@@ -9,6 +9,11 @@ namespace KhSTL
 template <typename _Ty1, typename _Ty2> class Pair
 {
 public:
+	/// Value type
+	using First = _Ty1;
+	/// Value type
+	using Second = _Ty2;
+public:
     /// Construct undefined.
     Pair()
     {
