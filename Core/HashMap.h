@@ -501,7 +501,7 @@ private:
         return newNode;
     }
 
-    /// Insert a _key and value and return either the new or existing node.
+    /// Insert a key and value and return either the new or existing node.
     Node* InsertNode(const _Ty1& key, const _Ty2& value)
     {
         unsigned hashKey = Hash(key);

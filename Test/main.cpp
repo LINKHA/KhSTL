@@ -3,7 +3,7 @@
 #include "../Core/List.h"
 #include "../Core/String.h"
 #include "../Core/HashMap.h"
-
+#include "../Core/StringHash.h"
 #include "../Core/AutoPtr.h"
 
 using namespace KhSTL;
@@ -58,10 +58,19 @@ void HashMapTest()
 {
 	Print("HashMap_begin-----------------------------------------");
 	HashMap<int, int> hashMap;
-	hashMap.Insert(MakePair(1, 2));
 	hashMap.Insert(MakePair(1, 3));
-
+	hashMap.Insert(MakePair(2, 3));
+	hashMap.Insert(MakePair(3, 3));
+	hashMap.Erase(1);
 	Print("HashMap_end-----------------------------------------");
+}
+
+void StringHashTest()
+{
+	Print("StringHash_begin-----------------------------------------");
+	StringHash stringHash("Hash");
+	StringHash stringHash2("Hash");
+	Print("StringHash_end-----------------------------------------");
 }
 int main()
 {
@@ -69,6 +78,8 @@ int main()
 	//ListTest();
 	//StringTest();
 	HashMapTest();
+	StringHashTest();
+
 
 	system("pause");
 	return 0;
