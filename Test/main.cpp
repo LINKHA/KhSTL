@@ -5,7 +5,7 @@
 #include "../Core/HashMap.h"
 #include "../Core/StringHash.h"
 #include "../Core/AutoPtr.h"
-
+#include <vector>
 using namespace KhSTL;
 
 #define Print(_x) std::cout<< _x <<std::endl
@@ -58,10 +58,11 @@ void HashMapTest()
 {
 	Print("HashMap_begin-----------------------------------------");
 	HashMap<int, int> hashMap;
-	hashMap.Insert(MakePair(1, 3));
-	hashMap.Insert(MakePair(2, 3));
-	hashMap.Insert(MakePair(3, 3));
-	hashMap.Erase(1);
+	hashMap.Insert(MakePair(10, 3));
+	hashMap.Insert(MakePair(20, 3));
+	hashMap.Insert(MakePair(30000, 3));
+	hashMap[300] = 1;
+	hashMap.Erase(10);
 	Print("HashMap_end-----------------------------------------");
 }
 
@@ -72,13 +73,14 @@ void StringHashTest()
 	StringHash stringHash2("Hash");
 	Print("StringHash_end-----------------------------------------");
 }
+
 int main()
 {
-	//VectorTest();
+	VectorTest();
 	//ListTest();
 	//StringTest();
-	HashMapTest();
-	StringHashTest();
+	//HashMapTest();
+	//StringHashTest();
 
 
 	system("pause");

@@ -5,7 +5,7 @@
 namespace KhSTL {
 // T must be: no-throw default constructible and no-throw destructible
 template <typename _Ty>
-struct tSingleton
+struct Singleton
 {
 private:
 	struct ObjectCreator
@@ -15,17 +15,17 @@ private:
 		*  is called before main() begins, thus creating the static
 		*  T object before multithreading race issues can come up
 		*/
-		ObjectCreator() { tSingleton<_Ty>::Instance(); }
+		ObjectCreator() { Singleton<_Ty>::Instance(); }
 		inline void DoNothing() const { }
 	};
 	static ObjectCreator createObject;
 
-	tSingleton();
+	Singleton();
 
 public:
 	typedef _Ty ObjectType;
 	/**
-	* @brief : If, at any point (in user code), tSingleton<T>::instance()
+	* @brief : If, at any point (in user code), Singleton<T>::instance()
 	*		  is called, then the following function is instantiated
 	*/
 	static ObjectType& Instance()
@@ -38,7 +38,7 @@ public:
 		static ObjectType obj;
 		/**
 		* @brief :The following line does nothing else than force the instantiation
-		*  of tSingleton<T>::createObject, whose constructor is
+		*  of Singleton<T>::createObject, whose constructor is
 		*  called before main() begins
 		*/
 		createObject.DoNothing();
@@ -47,6 +47,6 @@ public:
 	}
 };
 template <typename _Ty>
-typename tSingleton<_Ty>::ObjectCreator
-	tSingleton<_Ty>::createObject;
+typename Singleton<_Ty>::ObjectCreator
+	Singleton<_Ty>::createObject;
 }
