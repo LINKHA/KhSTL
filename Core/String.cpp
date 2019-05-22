@@ -1565,6 +1565,13 @@ String String::Format(const char* formatString, ...)
     return ret;
 }
 
+String String::FormatV(const char* formatString, va_list args)
+{
+	String ret;
+	ret.AppendWithFormatArgs(formatString, args);
+	return ret;
+}
+
 template<> void Swap<String>(String& first, String& second)
 {
     first.Swap(second);
